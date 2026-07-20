@@ -1,0 +1,32 @@
+generated: '2026-07-18'
+method: derived
+source: openapi/athenian-openapi-original.yml
+summary:
+  types:
+  - apiKey
+  - http
+  api_key_in:
+  - header
+schemes:
+- name: apiKeyAuth
+  type: apiKey
+  in: header
+  parameter: X-API-Key
+  description: |-
+    Authorization by the value of `X-API-Key` header aka API token.
+    The tokens are user- and account-specific. Create them by calling `/token/create`.
+    The server automatically inserts `account` in the request's body if it was not
+    supplied by the user.
+  sources:
+  - openapi/athenian-openapi-original.yml
+- name: bearerAuth
+  type: http
+  scheme: bearer
+  bearerFormat: JWT
+  description: |-
+    Regular JSON Web Token authorization powered by Auth0.
+    The server expects an `Authorization: Bearer <token>` header and checks `<token>` by
+    sending it to Auth0. Visit [{{ server_url | replace("api", "app") }}/bearer]({{ server_url | replace("api", "app") }}/bearer)
+    to copy your current JWT that will expire within 24 hours.
+  sources:
+  - openapi/athenian-openapi-original.yml
