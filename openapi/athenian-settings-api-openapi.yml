@@ -1,0 +1,1235 @@
+openapi: 3.0.3
+info:
+  contact:
+    email: admin@athenian.co
+    name: the administrator by email
+  description: 'Server version: {{ server_version }} built on {{ build_date }} @ [{{ commit }}](https://github.com/athenianco/athenian-api/commit/{{ commit }})
+
+
+    Origin GitHub repository: [athenianco/api-spec](https://github.com/athenianco/api-spec).
+
+
+    Authorization persists between sessions. Marks:
+
+    * 🛡️ endpoint requires account admin privileges.
+
+    * 👤 endpoint only works with JWT authentication.
+
+    <details>
+
+    <summary>List of common server errors.</summary>
+
+    * __500__ endpoint crashed. We reported the incident to Sentry and will fix it soon! Please include the value of `instance` in the response if you contact the support. Repeating the request will not help, most probably.
+
+    * __501__ some functions are missing, either because they are not implemented yet or a non-critical runtime dependency is not satisfied. Repeating the request will not help, guaranteed.
+
+    * __502__ server crashed badly, either due to a memory access violation in native code or running out of memory. We reported this incident to Sentry and will fix it soon! Try repeating the request.
+
+    * __503__ server has not fully launched yet, e.g. hasn''t connected to the database; server is shutting down; we are experiencing a partial outage. Try repeating the request.
+
+    * __504__ endpoint took too much time and was interrupted. We reported the incident to Sentry and will see how to improve the performance. Repeating the request will not help, most probably.
+
+    </details>'
+  license:
+    name: CC-BY-4.0
+  title: '{{ title }} align settings API'
+  version: 2.1.86
+servers:
+- description: '{{ server_description }} - {{ server_url }}'
+  url: '{{ server_url }}/v1'
+tags:
+- name: settings
+paths:
+  /settings/jira/identities:
+    patch:
+      operationId: set_jira_identities
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetMappedJIRAIdentitiesRequest'
+        x-body-name: body
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MappedJIRAIdentities'
+          description: List with the Github<>JIRA identity mapping.
+        400:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidRequestError'
+          description: Request is invalid.
+        403:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The user is not an admin of this account.
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The user or the account was not found.
+        422:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoSourceDataError'
+          description: The JIRA installation does not exist.
+      security:
+      - bearerAuth: []
+      summary: 👤 Add, remove or override GitHub<>JIRA user identity mapping.
+      tags:
+      - settings
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: athenian.api.controllers.settings_controller
+  /settings/jira/identities/{id}:
+    get:
+      operationId: get_jira_identities
+      parameters:
+      - $ref: '#/components/parameters/pathAccountID'
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MappedJIRAIdentities'
+          description: List with the Github<>JIRA identity mapping.
+        400:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidRequestError'
+          description: Request is invalid.
+        403:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The user is not an admin of this account.
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The user or the account was not found.
+        422:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoSourceDataError'
+          description: The JIRA installation does not exist.
+      security:
+      - bearerAuth: []
+      - apiKeyAuth: []
+      summary: Fetch the GitHub<>JIRA user identity mapping.
+      tags:
+      - settings
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: athenian.api.controllers.settings_controller
+  /settings/jira/projects:
+    put:
+      operationId: set_jira_projects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JIRAProjectsRequest'
+        x-body-name: body
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JIRAProjects'
+          description: Current JIRA project settings.
+        400:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidRequestError'
+          description: Request is invalid.
+        403:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The user is not an admin of this account.
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The user or the account was not found.
+        422:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoSourceDataError'
+          description: The JIRA installation does not exist.
+      security:
+      - bearerAuth: []
+      summary: 🛡️👤 Set the enabled JIRA projects.
+      tags:
+      - settings
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: athenian.api.controllers.settings_controller
+  /settings/jira/projects/{id}:
+    get:
+      operationId: get_jira_projects
+      parameters:
+      - $ref: '#/components/parameters/pathAccountID'
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JIRAProjects'
+          description: Current JIRA project settings.
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The user does not belong to the specified account or account not found.
+        422:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The JIRA installation does not exist.
+      security:
+      - bearerAuth: []
+      - apiKeyAuth: []
+      summary: List the currently enabled JIRA project settings.
+      tags:
+      - settings
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: athenian.api.controllers.settings_controller
+  /settings/logical_repositories/{id}:
+    get:
+      operationId: list_logical_repositories
+      parameters:
+      - $ref: '#/components/parameters/pathAccountID'
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogicalRepositories'
+          description: Configured logical repositories belonging to the account.
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The user does not belong to the specified account.
+        422:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoSourceDataError'
+          description: The installation has not finished yet.
+      security:
+      - bearerAuth: []
+      - apiKeyAuth: []
+      summary: 'List the currently configured logical repositories.
+
+        A logical repository is a set of rules to match PRs, releases, and deployments
+
+        that has a name and pretends to be a regular GitHub repository everywhere in UI
+
+        and API requests.
+
+        This feature is particularly useful to reap monorepos into separate, joint or disjoint
+
+        parts.
+
+        '
+      tags:
+      - settings
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: athenian.api.controllers.settings_controller
+  /settings/logical_repository:
+    put:
+      operationId: set_logical_repository
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LogicalRepositoryRequest'
+        x-body-name: body
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogicalRepository'
+          description: Created or updated logical repository.
+        400:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidRequestError'
+          description: Request is invalid.
+        403:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The user is not an admin of this account.
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The user or the account was not found.
+        422:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoSourceDataError'
+          description: The installation has not finished yet.
+      security:
+      - bearerAuth: []
+      summary: '🛡️👤 Insert or update a logical repository - a named set of rules to match PRs, releases,
+
+        and deployments that pretends to be a regular GitHub repository everywhere in UI and
+
+        API requests.
+
+        '
+      tags:
+      - settings
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: athenian.api.controllers.settings_controller
+  /settings/logical_repository/delete:
+    post:
+      operationId: delete_logical_repository
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LogicalRepositoryGetRequest'
+        x-body-name: body
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: object
+          description: Empty object indicates a successful removal.
+        403:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The user is not an admin of the account.
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The specified logical repository does not exist.
+      security:
+      - bearerAuth: []
+      - apiKeyAuth: []
+      summary: 🛡️ Delete a logical repository.
+      tags:
+      - settings
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: athenian.api.controllers.settings_controller
+  /settings/release_match:
+    put:
+      operationId: set_release_match
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReleaseMatchRequest'
+        x-body-name: body
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RepositorySet'
+          description: List the repositories affected.
+        400:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidRequestError'
+          description: Request is invalid.
+        403:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The user is not an admin of this account.
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The user or the account was not found.
+        422:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoSourceDataError'
+          description: The installation has not finished yet.
+      security:
+      - bearerAuth: []
+      summary: '👤 Set the release matching rule for a list of repositories. Only for account admins.
+
+        Release settings are rules by which to mark releases in GitHub repositories.
+
+        '
+      tags:
+      - settings
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: athenian.api.controllers.settings_controller
+  /settings/release_match/{id}:
+    get:
+      operationId: list_release_match_settings
+      parameters:
+      - $ref: '#/components/parameters/pathAccountID'
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReleaseMatchSettings'
+          description: Current release matching settings per repo.
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The user does not belong to the specified account.
+        422:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoSourceDataError'
+          description: The installation has not finished yet.
+      security:
+      - bearerAuth: []
+      - apiKeyAuth: []
+      summary: 'List the current release matching settings.
+
+        Release settings are rules by which to mark releases in GitHub repositories.
+
+        '
+      tags:
+      - settings
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: athenian.api.controllers.settings_controller
+  /settings/work_type:
+    put:
+      operationId: set_work_type
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkTypePutRequest'
+        x-body-name: body
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkType'
+          description: Created or updated work type definition.
+        400:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidRequestError'
+          description: Request is invalid.
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The user or the account was not found.
+      security:
+      - bearerAuth: []
+      summary: 👤 Create or update a work type - a rule set to group PRs, releases, etc. together.
+      tags:
+      - settings
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: athenian.api.controllers.settings_controller
+  /settings/work_type/delete:
+    post:
+      operationId: delete_work_type
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkTypeGetRequest'
+        x-body-name: body
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: object
+          description: Empty response indicates a successful operation.
+        400:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidRequestError'
+          description: Request is invalid.
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The user or the account was not found. The work type was not found.
+      security:
+      - bearerAuth: []
+      summary: 👤 Remove the work type given the name.
+      tags:
+      - settings
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: athenian.api.controllers.settings_controller
+  /settings/work_type/get:
+    post:
+      operationId: get_work_type
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkTypeGetRequest'
+        x-body-name: body
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkType'
+          description: Created or updated work type definition.
+        400:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidRequestError'
+          description: Request is invalid.
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The user or the account was not found. The work type was not found.
+      security:
+      - bearerAuth: []
+      - apiKeyAuth: []
+      summary: Fetch the definition of the work type given the name.
+      tags:
+      - settings
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: athenian.api.controllers.settings_controller
+  /settings/work_types/{id}:
+    get:
+      operationId: list_work_types
+      parameters:
+      - $ref: '#/components/parameters/pathAccountID'
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkTypes'
+          description: Existing work types in the account.
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The user does not belong to the specified account.
+      security:
+      - bearerAuth: []
+      - apiKeyAuth: []
+      summary: List the current work types - rule sets to group PRs, releases, etc. together.
+      tags:
+      - settings
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: athenian.api.controllers.settings_controller
+components:
+  parameters:
+    pathAccountID:
+      description: Numeric identifier of the account.
+      explode: false
+      in: path
+      name: id
+      required: true
+      schema:
+        type: integer
+      style: simple
+  schemas:
+    MappedJIRAIdentity:
+      additionalProperties: false
+      description: GitHub user (developer) mapped to a JIRA user.
+      example:
+        developer_id: github.com/vmarkovtsev
+        developer_name: Vadim Markovtsev
+        jira_name: Vadim Markovtsev
+        confidence: 1.0
+      properties:
+        developer_id:
+          anyOf:
+          - $ref: '#/components/schemas/DeveloperID'
+          - nullable: true
+            type: string
+        developer_name:
+          description: Full name of the mapped GitHub user.
+          nullable: true
+          type: string
+        jira_name:
+          description: Full name of the mapped JIRA user.
+          type: string
+        confidence:
+          description: Value from 0 to 1 indicating how similar are the users.
+          format: float
+          maximum: 1
+          minimum: 0
+          type: number
+      required:
+      - confidence
+      - developer_id
+      - developer_name
+      - jira_name
+      type: object
+    DeveloperID:
+      description: 'User name which uniquely identifies any developer on any service provider.
+
+        The format matches the profile URL without the protocol part.
+
+        '
+      example: github.com/vmarkovtsev
+      type: string
+    WorkTypes:
+      description: 'List of work types. Response from `/settings/work_types/{account}`.
+
+        '
+      items:
+        $ref: '#/components/schemas/WorkType'
+      type: array
+    ReleaseMatchStrategy:
+      description: 'Release workflow choice: how we should detect releases.
+
+        * `branch`: merges to certain branches are considered releases and nothing else.
+
+        * `event`: releases are manually registered with `POST /events/releases`.
+
+        * `tag`: tags with certain name patterns are considered releases and nothing else.
+
+        * `tag_or_branch`: follow "tag"; if the repository does not have tags, fallback to "branch".'
+      enum:
+      - branch
+      - event
+      - tag
+      - tag_or_branch
+      type: string
+    WorkTypeGetRequest:
+      description: Identifier of a work type - a set of rules to group PRs, releases, etc. together.
+      example:
+        account: 1
+        name: Bug Fixing
+      properties:
+        account:
+          description: User's account ID.
+          type: integer
+        name:
+          $ref: '#/components/schemas/WorkTypeName'
+      required:
+      - account
+      - name
+      type: object
+    NoSourceDataError:
+      $ref: '#/components/schemas/GenericError'
+    RepositoryID:
+      description: 'Repository name which uniquely identifies any repository in any service provider.
+
+        The format matches the repository URL without the protocol part. No ".git" should be appended.
+
+        We support a special syntax for repository sets: "{reposet id}" adds all the repositories
+
+        from the given set.
+
+        '
+      example: github.com/athenianco/athenian-webapp
+      type: string
+    GenericError:
+      example:
+        detail: 'Unsupported metric: pr-xxx-time'
+        status: 400
+        title: Bad request syntax or unsupported method.
+        type: /errors/InvalidRequestError
+      properties:
+        detail:
+          description: Human-readable explanation specific to this occurrence of the problem.
+          example: 'Unsupported metric: pr-xxx-time'
+          type: string
+        instance:
+          description: URI reference that identifies the specific occurrence of the problem. It is `null` for 4xx, Sentry event ID for 5xx.
+          example: 2763c4eabd7240f59829ee1a02546293
+          type: string
+        status:
+          description: Duplicated HTTP status code.
+          example: 400
+          type: integer
+        title:
+          description: Short, human-readable summary of the problem type.
+          example: Bad request syntax or unsupported method.
+          type: string
+        type:
+          description: URI reference that identifies the problem type (RFC 7807).
+          example: /errors/InvalidRequestError
+          type: string
+      required:
+      - status
+      - title
+      - type
+      type: object
+    JIRAProject:
+      additionalProperties: false
+      description: JIRA project setting.
+      example:
+        name: Product Development
+        key: DEV
+        id: '10009'
+        avatar_url: https://athenianco.atlassian.net/secure/projectavatar?pid=10009&avatarId=10551
+        enabled: true
+        issues_count: 100
+        last_update: 2021-08-10 12:47:00+00:00
+      properties:
+        name:
+          description: Long name of the project.
+          type: string
+        key:
+          description: Short prefix of the project.
+          type: string
+        id:
+          description: 'Internal project identifier that corresponds to `project` in `/filter/jira`.
+
+            Note: this is a string even though this looks like an integer. That''s what JIRA API
+
+            sends us.
+
+            '
+          type: string
+        avatar_url:
+          description: Avatar URL of the project.
+          format: url
+          type: string
+        enabled:
+          description: Indicates whether this project is enabled for analysis.
+          type: boolean
+        issues_count:
+          description: Total number of issues in the project.
+          type: integer
+        last_update:
+          description: 'Timestamp of the last event in the project. Can be `null` if there are no issues.
+
+            '
+          format: date-time
+          nullable: true
+          type: string
+      required:
+      - avatar_url
+      - enabled
+      - id
+      - issues_count
+      - key
+      - last_update
+      - name
+      type: object
+    MappedJIRAIdentityChange:
+      additionalProperties: false
+      description: Individual GitHub<>JIRA user mapping change.
+      example:
+        developer_id: github.com/vmarkovtsev
+        jira_name: Vadim Markovtsev
+      properties:
+        developer_id:
+          $ref: '#/components/schemas/DeveloperID'
+        jira_name:
+          description: Full name of the mapped JIRA user. `null` means the removal.
+          nullable: true
+          type: string
+      required:
+      - developer_id
+      - jira_name
+      type: object
+    LogicalDeploymentRules:
+      additionalProperties: false
+      description: Rules to match deployments to logical repository.
+      example:
+        title: .*[Aa]lpha
+        labels_include:
+          repositories:
+          - alpha
+      properties:
+        title:
+          description: 'Regular expression to match the deployment name. It must be a match starting from
+
+            the start of the string.
+
+            '
+          example: .*[Aa]lpha
+          type: string
+        labels_include:
+          additionalProperties:
+            items:
+              type: string
+            minItems: 1
+            type: array
+          description: 'Match deployments labeled by any key and having at least one value in the list.
+
+            '
+          type: object
+      type: object
+    ReleaseMatchSettings:
+      additionalProperties:
+        $ref: '#/components/schemas/ReleaseMatchSetting'
+      description: Mapping from repository names to their release match settings.
+      type: object
+    MappedJIRAIdentities:
+      description: 'List of currently mapped GitHub<>JIRA users.
+
+        Additionally, we include unmapped JIRA users to provide a complete list of them.'
+      items:
+        $ref: '#/components/schemas/MappedJIRAIdentity'
+      type: array
+    WorkTypePutRequest:
+      description: Request body of `PUT /settings/work_type`.
+      example:
+        work_type:
+          name: Bug Fixing
+          color: FF0000
+          rules:
+          - name: pull_request/label_include
+            body:
+              crazy_args:
+              - javascript
+              - really
+              sucks: true
+        account: 1
+      properties:
+        account:
+          description: Account ID.
+          type: integer
+        work_type:
+          $ref: '#/components/schemas/WorkType'
+      required:
+      - account
+      - work_type
+      type: object
+    Color:
+      description: RGB 24-bit color in hex.
+      pattern: ^[0-9a-fA-F]{6}$
+      type: string
+    InvalidRequestError:
+      allOf:
+      - $ref: '#/components/schemas/GenericError'
+      - properties:
+          pointer:
+            description: Path to the offending request item.
+            example: .granularity
+            type: string
+        type: object
+    LogicalRepository:
+      additionalProperties: false
+      description: 'Set of rules to match PRs, releases, and deployments that has a name and
+
+        pretends to be a regular GitHub repository everywhere in UI and API requests.
+
+        Release settings are also visible in `/settings/release_match`.
+
+        '
+      example:
+        prs:
+          title: .*[Cc]omponent [Aa]lpha
+          labels_include:
+          - alpha
+          - webapp
+        parent: github.com/athenianco/athenian-monorepo
+        deployments: {}
+        name: Webapp
+        releases:
+          branches: '{{ "{{default}}" }}'
+          tags: webapp-.*
+          match: tag
+      properties:
+        name:
+          description: 'The logical part of the repository name.
+
+            Compared to GitHub repository name requirements, we additionally allow /
+
+            to express the hierarchy further.
+
+            '
+          maxLength: 100
+          pattern: ^([a-zA-Z0-9-_]+/?)*[a-zA-Z0-9-_]+$
+          type: string
+        parent:
+          $ref: '#/components/schemas/RepositoryID'
+        prs:
+          $ref: '#/components/schemas/LogicalPRRules'
+        releases:
+          $ref: '#/components/schemas/ReleaseMatchSetting'
+        deployments:
+          $ref: '#/components/schemas/LogicalDeploymentRules'
+      required:
+      - name
+      - parent
+      - prs
+      - releases
+      type: object
+    LogicalRepositoryGetRequest:
+      additionalProperties: false
+      description: Pointer to a logical repository.
+      example:
+        account: 1
+        name: github.com/athenianco/athenian-api/alpha
+      properties:
+        account:
+          description: Account ID.
+          type: integer
+        name:
+          $ref: '#/components/schemas/RepositoryID'
+      required:
+      - account
+      - name
+      type: object
+    JIRAProjectsRequest:
+      additionalProperties: false
+      description: Enable or disable a JIRA project.
+      example:
+        account: 1
+        projects:
+          ENG: false
+          DEV: true
+      properties:
+        account:
+          description: Account ID.
+          type: integer
+        projects:
+          additionalProperties:
+            type: boolean
+          description: Map from project keys to their enabled/disabled flags.
+          type: object
+      required:
+      - account
+      - projects
+      type: object
+    LogicalPRRules:
+      additionalProperties: false
+      description: Rules to match PRs to logical repository.
+      example:
+        title: .*[Cc]omponent [Aa]lpha
+        labels_include:
+        - alpha
+        - webapp
+      properties:
+        title:
+          description: 'Regular expression to match the PR title. It must be a match starting from
+
+            the start of the string.
+
+            '
+          example: .*[Cc]omponent [Aa]lpha
+          type: string
+        labels_include:
+          description: Any matching label puts the PR into the logical repository.
+          items:
+            type: string
+          type: array
+      type: object
+    RepositorySet:
+      description: Set of repositories. An empty list raises a bad response 400. Duplicates are automatically ignored.
+      example:
+      - github.com/athenianco/athenian-webapp
+      - github.com/athenianco/athenian-api
+      items:
+        $ref: '#/components/schemas/RepositoryID'
+      type: array
+    JIRAProjects:
+      description: List of JIRA project activity settings.
+      items:
+        $ref: '#/components/schemas/JIRAProject'
+      type: array
+    LogicalRepositoryRequest:
+      additionalProperties: false
+      description: 'Set of rules to match PRs, releases, and deployments that has a name and
+
+        pretends to be a regular GitHub repository everywhere in UI and API requests.
+
+        Release settings become visible in `/settings/release_match`.
+
+        '
+      example:
+        account: 1
+        prs:
+          title: .*[Cc]omponent [Aa]lpha
+          labels_include:
+          - alpha
+          - webapp
+        parent: github.com/athenianco/athenian-monorepo
+        deployments: {}
+        name: Webapp
+        releases:
+          branches: '{{ "{{default}}" }}'
+          tags: webapp-.*
+          match: tag
+      properties:
+        account:
+          description: Account ID.
+          type: integer
+        name:
+          description: 'The logical part of the repository name.
+
+            Compared to GitHub repository name requirements, we additionally allow /
+
+            to express the hierarchy further.
+
+            '
+          maxLength: 100
+          pattern: ^([a-zA-Z0-9-_]+/?)*[a-zA-Z0-9-_]+$
+          type: string
+        parent:
+          $ref: '#/components/schemas/RepositoryID'
+        prs:
+          $ref: '#/components/schemas/LogicalPRRules'
+        releases:
+          $ref: '#/components/schemas/ReleaseMatchSetting'
+        deployments:
+          $ref: '#/components/schemas/LogicalDeploymentRules'
+      required:
+      - account
+      - name
+      - parent
+      - prs
+      - releases
+      type: object
+    SetMappedJIRAIdentitiesRequest:
+      additionalProperties: false
+      description: Request body of `/settings/jira/identities`. Describes a patch to the GitHub<>JIRA identity mapping.
+      example:
+        account: 123
+        changes:
+        - developer_id: github.com/vmarkovtsev
+          jira_name: Vadim Markovtsev
+        - developer_id: github.com/warenlg
+          jira_name: null
+      properties:
+        account:
+          description: Account ID.
+          type: integer
+        changes:
+          description: Individual GitHub<>JIRA user mapping change.
+          items:
+            $ref: '#/components/schemas/MappedJIRAIdentityChange'
+          type: array
+      required:
+      - account
+      - changes
+      type: object
+    LogicalRepositories:
+      description: List of configured logical repositories.
+      items:
+        $ref: '#/components/schemas/LogicalRepository'
+      type: array
+    WorkType:
+      description: Definition of a work type - a set of rules to group PRs, releases, etc. together.
+      example:
+        name: Bug Fixing
+        color: FF0000
+        rules:
+        - name: pull_request/label_include
+          body:
+            crazy_args:
+            - javascript
+            - really
+            sucks: true
+      properties:
+        name:
+          $ref: '#/components/schemas/WorkTypeName'
+        color:
+          $ref: '#/components/schemas/Color'
+        rules:
+          items:
+            $ref: '#/components/schemas/WorkTypeRule'
+          type: array
+      required:
+      - color
+      - name
+      - rules
+      type: object
+    ReleaseMatchSetting:
+      additionalProperties: false
+      description: Release matching setting for a specific repository.
+      example:
+        branches: '{{ "{{default}}" }}'
+        default_branch: master
+        tags: .*
+        match: tag_or_branch
+      properties:
+        branches:
+          description: 'Regular expression to match branch names.
+
+            The match starts from the beginning of the string.
+
+            Special value `{{ "{{default}}" }}` matches to the default branch name - usually, `main` or `master`.
+
+            Reference: https://www.postgresql.org/docs/current/functions-matching.html#FUNCTIONS-SIMILARTO-REGEXP
+
+            '
+          example: .*-production
+          type: string
+        tags:
+          description: 'Regular expression to match tag names.
+
+            The match starts from the beginning of the string.
+
+            Reference: https://www.postgresql.org/docs/current/functions-matching.html#FUNCTIONS-SIMILARTO-REGEXP
+
+            '
+          example: .*
+          type: string
+        events:
+          description: 'Regular expression to match event releases (submitted by the user via `/events/releases`).
+
+            The match starts from the beginning of the string.
+
+            Reference: https://www.postgresql.org/docs/current/functions-matching.html#FUNCTIONS-SIMILARTO-REGEXP
+
+            '
+          type: string
+        match:
+          $ref: '#/components/schemas/ReleaseMatchStrategy'
+        default_branch:
+          description: 'Name of the default branch of this repository.
+
+            Returned in responses and ignored in requests.
+
+            '
+          type: string
+      required:
+      - branches
+      - match
+      - tags
+      type: object
+    WorkTypeRule:
+      description: 'Specific rule details: name and parameters.'
+      example:
+        name: pull_request/label_include
+        body:
+          crazy_args:
+          - javascript
+          - really
+          sucks: true
+      properties:
+        name:
+          description: Rule name - must be unique within the parent work type.
+          minLength: 1
+          type: string
+        body:
+          description: Freeform parameters of the rule.
+          type: object
+      required:
+      - body
+      - name
+      type: object
+    WorkTypeName:
+      description: Work type name. It is unique within the account scope.
+      minLength: 1
+      type: string
+    ReleaseMatchRequest:
+      additionalProperties: false
+      description: Release matching rule update.
+      example:
+        account: 1
+        repositories:
+        - github.com/athenianco/athenian-webapp
+        - github.com/athenianco/athenian-api
+        match: branch
+        branches: master
+        tags: .*
+      properties:
+        account:
+          description: Account ID.
+          type: integer
+        repositories:
+          $ref: '#/components/schemas/RepositorySet'
+        branches:
+          description: 'Regular expression to match branch names.
+
+            The match starts from the beginning of the string.
+
+            Special value `{{ "{{default}}" }}` matches to the default branch name - usually, `main` or `master`.
+
+            Reference: https://www.postgresql.org/docs/current/functions-matching.html#FUNCTIONS-SIMILARTO-REGEXP
+
+            '
+          example: .*-production
+          type: string
+        tags:
+          description: 'Regular expression to match tag names.
+
+            The match starts from the beginning of the string.
+
+            Reference: https://www.postgresql.org/docs/current/functions-matching.html#FUNCTIONS-SIMILARTO-REGEXP
+
+            '
+          example: .*
+          type: string
+        events:
+          description: 'Regular expression to match event releases (submitted by the user via `/events/releases`).
+
+            The match starts from the beginning of the string.
+
+            Reference: https://www.postgresql.org/docs/current/functions-matching.html#FUNCTIONS-SIMILARTO-REGEXP
+
+            '
+          type: string
+        match:
+          $ref: '#/components/schemas/ReleaseMatchStrategy'
+      required:
+      - account
+      - match
+      - repositories
+      type: object
+  securitySchemes:
+    apiKeyAuth:
+      description: 'Authorization by the value of `X-API-Key` header aka API token.
+
+        The tokens are user- and account-specific. Create them by calling `/token/create`.
+
+        The server automatically inserts `account` in the request''s body if it was not
+
+        supplied by the user.'
+      in: header
+      name: X-API-Key
+      type: apiKey
+      x-apikeyInfoFunc: athenian.api.controllers.security_controller.info_from_apiKeyAuth
+    bearerAuth:
+      bearerFormat: JWT
+      description: 'Regular JSON Web Token authorization powered by Auth0.
+
+        The server expects an `Authorization: Bearer <token>` header and checks `<token>` by
+
+        sending it to Auth0. Visit [{{ server_url | replace("api", "app") }}/bearer]({{ server_url | replace("api", "app") }}/bearer)
+
+        to copy your current JWT that will expire within 24 hours.'
+      scheme: bearer
+      type: http
+      x-bearerInfoFunc: athenian.api.controllers.security_controller.info_from_bearerAuth

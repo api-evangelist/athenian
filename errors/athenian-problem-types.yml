@@ -1,0 +1,73 @@
+generated: '2026-07-18'
+method: derived
+source: openapi/athenian-openapi-original.yml
+format: rfc7807
+note: Athenian returns a GenericError object (type/title/status/detail, plus pointer
+  on InvalidRequestError) modeled on RFC 7807 Problem Details. Error type is a path
+  like /errors/InvalidRequestError.
+error_schemas:
+- GenericError
+- InvalidRequestError
+- MissingSettingsError
+- NoSourceDataError
+problems:
+- status: 400
+  type: /errors/400
+  title: Bad request syntax or unsupported parameters
+  envelope: application/json GenericError {type,title,status,detail,pointer}
+  example_operations:
+  - diff_releases
+  - notify_deployments
+  - modify_deployment_labels
+  - notify_releases
+  - filter_code_checks
+- status: 403
+  type: /errors/403
+  title: Forbidden — the account or user lacks access
+  envelope: application/json GenericError {type,title,status,detail,pointer}
+  example_operations:
+  - change_user
+  - get_account_details
+  - get_account_features
+  - diff_releases
+  - clear_precomputed_events
+- status: 404
+  type: /errors/404
+  title: Resource not found
+  envelope: application/json GenericError {type,title,status,detail,pointer}
+  example_operations:
+  - change_user
+  - get_account_details
+  - get_account_features
+  - diff_releases
+  - clear_precomputed_events
+- status: 409
+  type: /errors/409
+  title: Conflict with the current state of the resource
+  envelope: application/json GenericError {type,title,status,detail,pointer}
+  example_operations:
+  - accept_invitation
+  - create_reposet
+  - update_reposet
+  - list_reposets
+  - create_team
+- status: 422
+  type: /errors/422
+  title: Request well-formed but semantically invalid
+  envelope: application/json GenericError {type,title,status,detail,pointer}
+  example_operations:
+  - diff_releases
+  - clear_precomputed_events
+  - notify_deployments
+  - notify_releases
+  - filter_code_checks
+- status: 424
+  type: /errors/424
+  title: Failed dependency — required upstream data or integration missing
+  envelope: application/json GenericError {type,title,status,detail,pointer}
+  example_operations:
+  - clear_precomputed_events
+  - filter_prs
+  - filter_releases
+  - filter_repositories
+  - get_contributors

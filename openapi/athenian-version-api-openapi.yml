@@ -1,0 +1,98 @@
+openapi: 3.0.3
+info:
+  contact:
+    email: admin@athenian.co
+    name: the administrator by email
+  description: 'Server version: {{ server_version }} built on {{ build_date }} @ [{{ commit }}](https://github.com/athenianco/athenian-api/commit/{{ commit }})
+
+
+    Origin GitHub repository: [athenianco/api-spec](https://github.com/athenianco/api-spec).
+
+
+    Authorization persists between sessions. Marks:
+
+    * 🛡️ endpoint requires account admin privileges.
+
+    * 👤 endpoint only works with JWT authentication.
+
+    <details>
+
+    <summary>List of common server errors.</summary>
+
+    * __500__ endpoint crashed. We reported the incident to Sentry and will fix it soon! Please include the value of `instance` in the response if you contact the support. Repeating the request will not help, most probably.
+
+    * __501__ some functions are missing, either because they are not implemented yet or a non-critical runtime dependency is not satisfied. Repeating the request will not help, guaranteed.
+
+    * __502__ server crashed badly, either due to a memory access violation in native code or running out of memory. We reported this incident to Sentry and will fix it soon! Try repeating the request.
+
+    * __503__ server has not fully launched yet, e.g. hasn''t connected to the database; server is shutting down; we are experiencing a partial outage. Try repeating the request.
+
+    * __504__ endpoint took too much time and was interrupted. We reported the incident to Sentry and will see how to improve the performance. Repeating the request will not help, most probably.
+
+    </details>'
+  license:
+    name: CC-BY-4.0
+  title: '{{ title }} align version API'
+  version: 2.1.86
+servers:
+- description: '{{ server_description }} - {{ server_url }}'
+  url: '{{ server_url }}/v1'
+tags:
+- name: version
+paths:
+  /versions:
+    get:
+      operationId: get_versions
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Versions'
+          description: Versions of the backend components.
+      security: []
+      summary: Query the versions of the backend components.
+      tags:
+      - version
+      x-openapi-router-controller: athenian.api.controllers.status_controller
+components:
+  schemas:
+    Versions:
+      additionalProperties: false
+      example:
+        api: 0.2.10
+        metadata: '14'
+      properties:
+        api:
+          type: string
+        metadata:
+          type: string
+      required:
+      - api
+      - metadata
+      type: object
+  securitySchemes:
+    apiKeyAuth:
+      description: 'Authorization by the value of `X-API-Key` header aka API token.
+
+        The tokens are user- and account-specific. Create them by calling `/token/create`.
+
+        The server automatically inserts `account` in the request''s body if it was not
+
+        supplied by the user.'
+      in: header
+      name: X-API-Key
+      type: apiKey
+      x-apikeyInfoFunc: athenian.api.controllers.security_controller.info_from_apiKeyAuth
+    bearerAuth:
+      bearerFormat: JWT
+      description: 'Regular JSON Web Token authorization powered by Auth0.
+
+        The server expects an `Authorization: Bearer <token>` header and checks `<token>` by
+
+        sending it to Auth0. Visit [{{ server_url | replace("api", "app") }}/bearer]({{ server_url | replace("api", "app") }}/bearer)
+
+        to copy your current JWT that will expire within 24 hours.'
+      scheme: bearer
+      type: http
+      x-bearerInfoFunc: athenian.api.controllers.security_controller.info_from_bearerAuth

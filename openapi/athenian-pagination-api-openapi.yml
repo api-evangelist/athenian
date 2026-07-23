@@ -1,0 +1,529 @@
+openapi: 3.0.3
+info:
+  contact:
+    email: admin@athenian.co
+    name: the administrator by email
+  description: 'Server version: {{ server_version }} built on {{ build_date }} @ [{{ commit }}](https://github.com/athenianco/athenian-api/commit/{{ commit }})
+
+
+    Origin GitHub repository: [athenianco/api-spec](https://github.com/athenianco/api-spec).
+
+
+    Authorization persists between sessions. Marks:
+
+    * 🛡️ endpoint requires account admin privileges.
+
+    * 👤 endpoint only works with JWT authentication.
+
+    <details>
+
+    <summary>List of common server errors.</summary>
+
+    * __500__ endpoint crashed. We reported the incident to Sentry and will fix it soon! Please include the value of `instance` in the response if you contact the support. Repeating the request will not help, most probably.
+
+    * __501__ some functions are missing, either because they are not implemented yet or a non-critical runtime dependency is not satisfied. Repeating the request will not help, guaranteed.
+
+    * __502__ server crashed badly, either due to a memory access violation in native code or running out of memory. We reported this incident to Sentry and will fix it soon! Try repeating the request.
+
+    * __503__ server has not fully launched yet, e.g. hasn''t connected to the database; server is shutting down; we are experiencing a partial outage. Try repeating the request.
+
+    * __504__ endpoint took too much time and was interrupted. We reported the incident to Sentry and will see how to improve the performance. Repeating the request will not help, most probably.
+
+    </details>'
+  license:
+    name: CC-BY-4.0
+  title: '{{ title }} align pagination API'
+  version: 2.1.86
+servers:
+- description: '{{ server_description }} - {{ server_url }}'
+  url: '{{ server_url }}/v1'
+tags:
+- name: pagination
+paths:
+  /paginate/pull_requests:
+    post:
+      operationId: paginate_prs
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaginatePullRequestsRequest'
+        x-body-name: body
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PullRequestPaginationPlan'
+          description: Identifier of the created repository set.
+        400:
+          $ref: '#/components/responses/InvalidRequestErrorResponse'
+        403:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: Calling user is not allowed to access the specified repositories.
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The specified account does not exist or the user is not a member.
+        422:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoSourceDataError'
+          description: The account's installation has not finished yet.
+        424:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MissingSettingsError'
+          description: One or more logical repositories miss the release settings.
+      security:
+      - bearerAuth: []
+      - apiKeyAuth: []
+      summary: Compute the balanced pagination plan for `/filter/pull_requests`.
+      tags:
+      - pagination
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: athenian.api.controllers.pagination_controller
+components:
+  schemas:
+    RepositoryID:
+      description: 'Repository name which uniquely identifies any repository in any service provider.
+
+        The format matches the repository URL without the protocol part. No ".git" should be appended.
+
+        We support a special syntax for repository sets: "{reposet id}" adds all the repositories
+
+        from the given set.
+
+        '
+      example: github.com/athenianco/athenian-webapp
+      type: string
+    PaginatePullRequestsRequest:
+      additionalProperties: false
+      description: 'Request of `/paginate/pull_requests`. According to the target batch size,
+
+        compute the optimal PR updated timestamp ranges. `request` should match
+
+        the body to be sent to `/filter/pull_requests`. `updated_from` and `updated_to`
+
+        inside `request` are ignored.'
+      example:
+        request:
+          account: 1
+          date_from: 2020-01-23
+          date_to: 2020-05-23
+          exclude_inactive: true
+          in:
+          - '{1}'
+          - github.com/athenianco/athenian-webapp
+          stages:
+          - wip
+          with:
+            author:
+            - github.com/vmarkovtsev
+        batch: 100
+      properties:
+        batch:
+          description: Target batch size. The returned ranges do not guarantee the exact match.
+          minimum: 1
+          type: integer
+        request:
+          $ref: '#/components/schemas/FilterPullRequestsRequest'
+      required:
+      - batch
+      - request
+      type: object
+    FilterPullRequestsRequest:
+      additionalProperties: false
+      description: Filters for `/filter/pull_requests`. Empty `properties` passes through all PRs matched by the other filters.
+      example:
+        account: 1
+        date_from: 2020-01-23
+        date_to: 2020-05-23
+        in:
+        - '{1}'
+        - github.com/athenianco/athenian-webapp
+        stages:
+        - wip
+        with:
+          author:
+          - github.com/vmarkovtsev
+        exclude_inactive: true
+      properties:
+        account:
+          description: Session account ID.
+          type: integer
+        date_from:
+          description: PRs must be updated later than or equal to this date.
+          format: date
+          type: string
+        date_to:
+          description: PRs must be updated earlier than or equal to this date.
+          format: date
+          type: string
+        timezone:
+          $ref: '#/components/schemas/TimeZone'
+        in:
+          $ref: '#/components/schemas/RepositorySet'
+        events:
+          description: Allowed PR events that happened between `date_from` and `date_to`.
+          items:
+            $ref: '#/components/schemas/PullRequestEvent'
+          type: array
+        stages:
+          description: Allowed PR stages that are defined at `date_to`.
+          items:
+            $ref: '#/components/schemas/PullRequestStage'
+          type: array
+        with:
+          $ref: '#/components/schemas/PullRequestWith'
+        labels_include:
+          description: At least one of these labels must be present in each returned PR.
+          items:
+            type: string
+          type: array
+        labels_exclude:
+          description: None of these labels must be present in each returned PR.
+          items:
+            type: string
+          type: array
+        exclude_inactive:
+          description: Value indicating whether PRs without events in the given time frame shall be ignored.
+          type: boolean
+        jira:
+          $ref: '#/components/schemas/JIRAFilter'
+        updated_from:
+          description: 'Paginate the response: the returned PRs are updated on GitHub no older than this timestamp, including the beginning. Note: "updated on GitHub" means that we don´t consider release or deployment timestamps. Use this field only to paginate after calling `/paginate/pull_requests`. Subject of future changes.'
+          format: date
+          type: string
+        updated_to:
+          description: 'Paginate the response: the returned PRs are updated on GitHub no later than this timestamp, not including the ending. Note: "updated on GitHub" means that we don´t consider release or deployment timestamps. Use this field only to paginate after calling `/paginate/pull_requests`. Subject of future changes.'
+          format: date
+          type: string
+        limit:
+          description: Maximum number of pull requests to return. The list is sorted by the last update timestamp. `null` means no limit.
+          minimum: 1
+          nullable: true
+          type: integer
+        environments:
+          description: Target environments for the deployment events, impacts `events` and `stages`. If omitted, we match any deployment in any environment.
+          items:
+            type: string
+          minItems: 1
+          type: array
+      required:
+      - account
+      - date_from
+      - date_to
+      - exclude_inactive
+      - in
+      type: object
+    DeveloperSet:
+      description: A set of developers. An empty list disables the filter and includes everybody. Duplicates are automatically ignored.
+      example:
+      - github.com/vmarkovtsev
+      - github.com/dpordomingo
+      items:
+        $ref: '#/components/schemas/DeveloperID'
+      type: array
+    DeveloperID:
+      description: 'User name which uniquely identifies any developer on any service provider.
+
+        The format matches the profile URL without the protocol part.
+
+        '
+      example: github.com/vmarkovtsev
+      type: string
+    PullRequestEvent:
+      description: 'PR''s modelled lifecycle events.
+
+        * `created`: The PR was opened.
+
+        * `committed`: Somebody pushed a commit to the PR.
+
+        * `review_requested`: Somebody requested a PR review.
+
+        * `reviewed`: Somebody reviewed the PR (either approved, requested changes, or commented).
+
+        * `approved`: Somebody approved the PR. Note that if there were negative reviews from other participants, an approval does *not* trigger this event.
+
+        * `changes_requested`: Somebody submitted a negative PR review.
+
+        * `merged`: Somebody merged the PR.
+
+        * `released`: The PR was released.
+
+        * `rejected`: Somebody closed the PR without merging.
+
+        * `deployed`: The PR was deployed. We respect this event only when `environment` was specified.'
+      enum:
+      - created
+      - committed
+      - review_requested
+      - reviewed
+      - approved
+      - changes_requested
+      - merged
+      - released
+      - rejected
+      - deployed
+      example: created
+      type: string
+    JIRAStatusCategory:
+      description: The category of a JIRA issue status.
+      enum:
+      - To Do
+      - In Progress
+      - Done
+      - No Category
+      type: string
+    RepositorySet:
+      description: Set of repositories. An empty list raises a bad response 400. Duplicates are automatically ignored.
+      example:
+      - github.com/athenianco/athenian-webapp
+      - github.com/athenianco/athenian-api
+      items:
+        $ref: '#/components/schemas/RepositoryID'
+      type: array
+    TimeZone:
+      description: Local time zone offset in minutes, used to adjust `date_from` and `date_to`.
+      maximum: 780
+      minimum: -720
+      type: integer
+    JIRAFilter:
+      additionalProperties: false
+      description: 'Filters related to JIRA traits. The aggregation between each filter type is *AND*.
+
+        '
+      example:
+        epics:
+        - DEV-167
+        - DEV-230
+        labels_include:
+        - api,performance
+        - metadata
+        labels_exclude:
+        - feature
+        issue_types:
+        - Bug
+        - Task
+        priorities:
+        - high
+        - low
+        projects:
+        - DEV
+        - ENG
+        status_categories:
+        - In Progress
+      properties:
+        epics:
+          description: JIRA issues must be included in the epics from the list.
+          items:
+            type: string
+          type: array
+        labels_include:
+          description: 'Only issues having at least one label from the list will be included
+
+            Several labels may be concatenated by a comma `,` so that all of them
+
+            are required.
+
+            '
+          items:
+            type: string
+          type: array
+        labels_exclude:
+          description: Issues having one label from the list will be excluded.
+          items:
+            type: string
+          type: array
+        issue_types:
+          description: 'Issues must have one of the given types, e.g. Bug, Task, Design Document, etc.
+
+            '
+          items:
+            type: string
+          type: array
+        priorities:
+          description: Issues must have a priority from the given list.
+          items:
+            type: string
+          type: array
+        projects:
+          description: Issues must be contained in a project in the given project keys list.
+          items:
+            type: string
+          type: array
+        status_categories:
+          description: The JIRA issues must have a status belonging to one of these categories.
+          items:
+            $ref: '#/components/schemas/JIRAStatusCategory'
+          type: array
+        unmapped:
+          description: Select PRs that are not mapped to any JIRA issue. May not be specified with anything else.
+          type: boolean
+      type: object
+    InvalidRequestError:
+      allOf:
+      - $ref: '#/components/schemas/GenericError'
+      - properties:
+          pointer:
+            description: Path to the offending request item.
+            example: .granularity
+            type: string
+        type: object
+    PullRequestStage:
+      description: 'PR''s modelled lifecycle stages.
+
+        * `wip`: The PR is a work-in-progress: no reviews, no review requests, not closed.
+
+        * `reviewing`: The PR is going through a review process.
+
+        * `merging`: The PR was approved and is waiting for merge.
+
+        * `releasing`: The PR was merged but is not released yet.
+
+        * `force_push_dropped`: The PR was closed but the Git commit history was rewritten and the PR''s commits no longer exist. Always appears together with `done`.
+
+        * `release_ignored`: The PR belongs to the very first release of the repository, and we suppressed that release according to our heuristics. Always appears together with `done`.
+
+        * `done`: The PR was either closed without merging or released or force push dropped. Deployed or not.
+
+        * `deployed`: The PR was deployed. So it''s merged. Released or not. We respect this stage only when `environment` was specified.'
+      enum:
+      - wip
+      - reviewing
+      - merging
+      - releasing
+      - force_push_dropped
+      - done
+      - release_ignored
+      - deployed
+      example: done
+      type: string
+    NoSourceDataError:
+      $ref: '#/components/schemas/GenericError'
+    PullRequestWith:
+      additionalProperties: false
+      description: 'Triage PRs by various developer participation. The aggregation is `OR` between
+
+        the participation groups and `OR` within each group. For example, if our request is
+
+        ```
+
+        {"author": ["github.com/vmarkovtsev"], "reviewer": ["github.com/gkwillie", "github.com/mcuadros"]}
+
+        ```
+
+        then the matched PRs will have **@vmarkovtsev** as the author or either
+
+        **@gkwillie** or **@mcuadros** as the reviewers.
+
+        It is possible to mention whole teams using the syntax `{id}` where `id` is a team identifier (see `/teams`).'
+      example:
+        author:
+        - github.com/vmarkovtsev
+      properties:
+        author:
+          $ref: '#/components/schemas/DeveloperSet'
+        reviewer:
+          $ref: '#/components/schemas/DeveloperSet'
+        commit_author:
+          $ref: '#/components/schemas/DeveloperSet'
+        commit_committer:
+          $ref: '#/components/schemas/DeveloperSet'
+        commenter:
+          $ref: '#/components/schemas/DeveloperSet'
+        merger:
+          $ref: '#/components/schemas/DeveloperSet'
+        releaser:
+          $ref: '#/components/schemas/DeveloperSet'
+      type: object
+    PullRequestPaginationPlan:
+      additionalProperties: false
+      description: Response of `/paginate/pull_requests`. Computed split of the PR updated timestamp range.
+      example:
+        updated:
+        - 2020-10-08
+        - 2020-10-07
+        - 2020-10-01
+      properties:
+        updated:
+          description: Split borders in *descending* order.
+          items:
+            format: date
+            type: string
+          type: array
+      type: object
+    MissingSettingsError:
+      $ref: '#/components/schemas/GenericError'
+    GenericError:
+      example:
+        detail: 'Unsupported metric: pr-xxx-time'
+        status: 400
+        title: Bad request syntax or unsupported method.
+        type: /errors/InvalidRequestError
+      properties:
+        detail:
+          description: Human-readable explanation specific to this occurrence of the problem.
+          example: 'Unsupported metric: pr-xxx-time'
+          type: string
+        instance:
+          description: URI reference that identifies the specific occurrence of the problem. It is `null` for 4xx, Sentry event ID for 5xx.
+          example: 2763c4eabd7240f59829ee1a02546293
+          type: string
+        status:
+          description: Duplicated HTTP status code.
+          example: 400
+          type: integer
+        title:
+          description: Short, human-readable summary of the problem type.
+          example: Bad request syntax or unsupported method.
+          type: string
+        type:
+          description: URI reference that identifies the problem type (RFC 7807).
+          example: /errors/InvalidRequestError
+          type: string
+      required:
+      - status
+      - title
+      - type
+      type: object
+  responses:
+    InvalidRequestErrorResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InvalidRequestError'
+      description: The request is invalid.
+  securitySchemes:
+    apiKeyAuth:
+      description: 'Authorization by the value of `X-API-Key` header aka API token.
+
+        The tokens are user- and account-specific. Create them by calling `/token/create`.
+
+        The server automatically inserts `account` in the request''s body if it was not
+
+        supplied by the user.'
+      in: header
+      name: X-API-Key
+      type: apiKey
+      x-apikeyInfoFunc: athenian.api.controllers.security_controller.info_from_apiKeyAuth
+    bearerAuth:
+      bearerFormat: JWT
+      description: 'Regular JSON Web Token authorization powered by Auth0.
+
+        The server expects an `Authorization: Bearer <token>` header and checks `<token>` by
+
+        sending it to Auth0. Visit [{{ server_url | replace("api", "app") }}/bearer]({{ server_url | replace("api", "app") }}/bearer)
+
+        to copy your current JWT that will expire within 24 hours.'
+      scheme: bearer
+      type: http
+      x-bearerInfoFunc: athenian.api.controllers.security_controller.info_from_bearerAuth

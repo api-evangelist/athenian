@@ -1,0 +1,12 @@
+generated: '2026-07-18'
+method: generated
+source: openapi/athenian-openapi-original.yml
+skills:
+- file: athenian-pull-request-metrics.md
+  name: Calculate pull request delivery metrics
+  api: openapi/athenian-openapi-original.yml
+  operations: [calc_metrics_prs, filter_prs, paginate_prs]
+- file: athenian-notify-deployments-releases.md
+  name: Notify Athenian of deployments and releases
+  api: openapi/athenian-openapi-original.yml
+  operations: [notify_deployments, notify_releases, filter_deployments, filter_releases]

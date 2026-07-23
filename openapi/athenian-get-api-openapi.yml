@@ -1,0 +1,1562 @@
+openapi: 3.0.3
+info:
+  contact:
+    email: admin@athenian.co
+    name: the administrator by email
+  description: 'Server version: {{ server_version }} built on {{ build_date }} @ [{{ commit }}](https://github.com/athenianco/athenian-api/commit/{{ commit }})
+
+
+    Origin GitHub repository: [athenianco/api-spec](https://github.com/athenianco/api-spec).
+
+
+    Authorization persists between sessions. Marks:
+
+    * 🛡️ endpoint requires account admin privileges.
+
+    * 👤 endpoint only works with JWT authentication.
+
+    <details>
+
+    <summary>List of common server errors.</summary>
+
+    * __500__ endpoint crashed. We reported the incident to Sentry and will fix it soon! Please include the value of `instance` in the response if you contact the support. Repeating the request will not help, most probably.
+
+    * __501__ some functions are missing, either because they are not implemented yet or a non-critical runtime dependency is not satisfied. Repeating the request will not help, guaranteed.
+
+    * __502__ server crashed badly, either due to a memory access violation in native code or running out of memory. We reported this incident to Sentry and will fix it soon! Try repeating the request.
+
+    * __503__ server has not fully launched yet, e.g. hasn''t connected to the database; server is shutting down; we are experiencing a partial outage. Try repeating the request.
+
+    * __504__ endpoint took too much time and was interrupted. We reported the incident to Sentry and will see how to improve the performance. Repeating the request will not help, most probably.
+
+    </details>'
+  license:
+    name: CC-BY-4.0
+  title: '{{ title }} align get API'
+  version: 2.1.86
+servers:
+- description: '{{ server_description }} - {{ server_url }}'
+  url: '{{ server_url }}/v1'
+tags:
+- name: get
+paths:
+  /get/contributors/{id}:
+    get:
+      operationId: get_contributors
+      parameters:
+      - $ref: '#/components/parameters/pathAccountID'
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contributors'
+          description: List of all contributors belonging to the specified account.
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The user does not belong to the specified account.
+        422:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoSourceDataError'
+          description: The installation has not finished yet.
+        424:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MissingSettingsError'
+          description: One or more logical repositories miss the release settings.
+      security:
+      - bearerAuth: []
+      - apiKeyAuth: []
+      summary: List all the contributors belonging to the specified account.
+      tags:
+      - get
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: athenian.api.controllers.contributors_controller
+  /get/jira_issues:
+    post:
+      operationId: get_jira_issues
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetJIRAIssuesRequest'
+        x-body-name: body
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetJIRAIssuesResponse'
+          description: List of Jira issues, in the requested order.
+        400:
+          $ref: '#/components/responses/InvalidRequestErrorResponse'
+      security:
+      - bearerAuth: []
+      - apiKeyAuth: []
+      summary: Retrieve Jira issues by key.
+      tags:
+      - get
+      x-openapi-router-controller: athenian.api.controllers.jira_controller
+  /get/pull_requests:
+    post:
+      operationId: get_prs
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetPullRequestsRequest'
+        x-body-name: body
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PullRequestSet'
+          description: List of pull requests, in the requested order.
+        400:
+          $ref: '#/components/responses/InvalidRequestErrorResponse'
+        403:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: Calling user is not allowed to access the specified pull requests.
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The specified account does not exist or the user is not a member.
+        422:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoSourceDataError'
+          description: The account's installation has not finished yet.
+        424:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MissingSettingsError'
+          description: One or more logical repositories miss the release settings.
+      security:
+      - bearerAuth: []
+      - apiKeyAuth: []
+      summary: List pull requests by repository and number.
+      tags:
+      - get
+      x-openapi-router-controller: athenian.api.controllers.filter_controller
+  /get/releases:
+    post:
+      operationId: get_releases
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetReleasesRequest'
+        x-body-name: body
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReleaseSet'
+          description: List of releases satisfying the specified filters.
+        400:
+          $ref: '#/components/responses/InvalidRequestErrorResponse'
+        403:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: Calling user is not allowed to access the specified pull requests.
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The specified account does not exist or the user is not a member.
+        422:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoSourceDataError'
+          description: The account's installation has not finished yet.
+        424:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MissingSettingsError'
+          description: One or more logical repositories miss the release settings.
+      security:
+      - bearerAuth: []
+      - apiKeyAuth: []
+      summary: List releases by repository and name.
+      tags:
+      - get
+      x-openapi-router-controller: athenian.api.controllers.filter_controller
+components:
+  schemas:
+    GetJIRAIssuesResponse:
+      additionalProperties: false
+      description: Response for the get_jira_issues operation.
+      example:
+        issues:
+        - comments: 0
+          created: '2023-02-21T09:25:30Z'
+          id: P1-2
+          acknowledge_time: 132200s
+          life_time: 259200s
+          priority: HIGH
+          project: '1'
+          prs:
+          - comments: 0
+            commits: 0
+            created: '2023-02-21T09:25:30Z'
+            events_now:
+            - created
+            files_changed: 1
+            number: 2
+            participants: []
+            repository: github.com/o/r
+            review_comments: 0
+            reviews: 0
+            size_added: 10
+            size_removed: 0
+            stage_timings:
+              wip: 259199s
+            stages_now:
+            - wip
+            title: PR 2 Title
+            updated: '2023-02-23T09:25:30Z'
+          reporter: Reporter N. 1
+          status: todo
+          title: Issue n. 2
+          type: Type 0
+          updated: '2023-02-23T09:25:30Z'
+          url: https://jira.com/issue-2
+      properties:
+        include:
+          additionalProperties: false
+          properties:
+            github_users:
+              additionalProperties:
+                $ref: '#/components/schemas/IncludedNativeUser'
+              description: 'Mapping with details of the GitHub users mentioned in the linked pull requests.
+
+                '
+              type: object
+            jira_users:
+              description: Mentioned users in the returned isssues.
+              items:
+                $ref: '#/components/schemas/JIRAUser'
+              type: array
+          type: object
+        issues:
+          items:
+            $ref: '#/components/schemas/JIRAIssue'
+          type: array
+      required:
+      - issues
+      type: object
+    DeveloperID:
+      description: 'User name which uniquely identifies any developer on any service provider.
+
+        The format matches the profile URL without the protocol part.
+
+        '
+      example: github.com/vmarkovtsev
+      type: string
+    TimeDuration:
+      description: Time duration value.
+      pattern: ^\d+s$
+      type: string
+    NoSourceDataError:
+      $ref: '#/components/schemas/GenericError'
+    RepositoryID:
+      description: 'Repository name which uniquely identifies any repository in any service provider.
+
+        The format matches the repository URL without the protocol part. No ".git" should be appended.
+
+        We support a special syntax for repository sets: "{reposet id}" adds all the repositories
+
+        from the given set.
+
+        '
+      example: github.com/athenianco/athenian-webapp
+      type: string
+    MissingSettingsError:
+      $ref: '#/components/schemas/GenericError'
+    GenericError:
+      example:
+        detail: 'Unsupported metric: pr-xxx-time'
+        status: 400
+        title: Bad request syntax or unsupported method.
+        type: /errors/InvalidRequestError
+      properties:
+        detail:
+          description: Human-readable explanation specific to this occurrence of the problem.
+          example: 'Unsupported metric: pr-xxx-time'
+          type: string
+        instance:
+          description: URI reference that identifies the specific occurrence of the problem. It is `null` for 4xx, Sentry event ID for 5xx.
+          example: 2763c4eabd7240f59829ee1a02546293
+          type: string
+        status:
+          description: Duplicated HTTP status code.
+          example: 400
+          type: integer
+        title:
+          description: Short, human-readable summary of the problem type.
+          example: Bad request syntax or unsupported method.
+          type: string
+        type:
+          description: URI reference that identifies the problem type (RFC 7807).
+          example: /errors/InvalidRequestError
+          type: string
+      required:
+      - status
+      - title
+      - type
+      type: object
+    PullRequestParticipant:
+      additionalProperties: false
+      description: Developer and their role in the PR.
+      properties:
+        id:
+          description: Person identifier.
+          example: github.com/vmarkovtsev
+          type: string
+        status:
+          items:
+            enum:
+            - author
+            - reviewer
+            - commit_author
+            - commit_committer
+            - commenter
+            - merger
+            - releaser
+            type: string
+          type: array
+      required:
+      - id
+      - status
+      type: object
+    IncludedDeployments:
+      description: Mentioned deployments.
+      example:
+        deployments:
+          production-2020-03-26-W9J3uzHl:
+            components:
+            - repository: github.com/athenianco/athenian-api
+              reference: v0.10.34
+            environment: production
+            date_finished: 2022-01-23 05:01:07+00:00
+            date_started: 2022-01-23 04:56:07+00:00
+            conclusion: SUCCESS
+            labels:
+              helm_chart: 0.0.67
+      properties:
+        deployments:
+          additionalProperties:
+            $ref: '#/components/schemas/DeploymentNotification'
+          description: Mapping deployment names to their details.
+          type: object
+      type: object
+    JIRAUser:
+      additionalProperties: false
+      description: Details about a JIRA user.
+      example:
+        name: Vadim Markovtsev
+        avatar: https://avatar-management-avatars.us-west-2.prod.public.atl-paas.net/5de504edde32fb0d03a3b4e3/8c3ffc1b-2ac0-488e-ac55-295ff06f9e28/48
+        type: atlassian
+      properties:
+        name:
+          description: Full name of the user.
+          type: string
+        avatar:
+          description: User's profile picture URL.
+          format: url
+          type: string
+        type:
+          description: '* `atlassian` indicates a regular account backed by a human.
+
+            * `app` indicates a service account.
+
+            * `customer` indicates an external service desk account.'
+          enum:
+          - atlassian
+          - app
+          - customer
+          type: string
+        developer:
+          allOf:
+          - $ref: '#/components/schemas/DeveloperID'
+          - description: Mapped developer identity.
+      required:
+      - avatar
+      - name
+      - type
+      type: object
+    ReleaseNames:
+      additionalProperties: false
+      description: Repository name and a list of release names in that repository.
+      example:
+        repository: github.com/athenianco/athenian-api
+        names:
+        - v0.7.53
+        - v0.6.10
+      properties:
+        repository:
+          $ref: '#/components/schemas/RepositoryID'
+        names:
+          description: List of release names. For tag releases, those are the tag names. For branch releases, those are commit hashes.
+          items:
+            type: string
+          type: array
+      required:
+      - names
+      - repository
+      type: object
+    PullRequestSet:
+      additionalProperties: false
+      description: List of pull requests together with the participant profile pictures.
+      example:
+        include:
+          users:
+            key:
+              avatar: https://avatars0.githubusercontent.com/u/60340680?v=4
+          deployments:
+            production-2020-03-26-W9J3uzHl:
+              components:
+              - repository: github.com/athenianco/athenian-api
+                reference: v0.10.34
+              environment: production
+              date_finished: 2022-01-23 05:01:07+00:00
+              date_started: 2022-01-23 04:56:07+00:00
+              conclusion: SUCCESS
+              labels:
+                helm_chart: 0.0.67
+        data:
+        - repository: github.com/athenianco/athenian-webapp
+          number: 1111
+          title: '[DEV-1802] epic search'
+          size_added: 128
+          size_removed: 30
+          files_changed: 5
+          created: 2021-03-02 11:47:42+00:00
+          updated: 2021-03-03 13:55:33+00:00
+          closed: 2021-03-03 13:55:32+00:00
+          comments: 5
+          commits: 17
+          review_requested: 2021-03-02 12:14:35+00:00
+          first_review: 2021-03-02 15:09:58+00:00
+          approved: 2021-03-03 13:15:58+00:00
+          review_comments: 2
+          reviews: 2
+          merged: 2021-03-03 13:55:32+00:00
+          merged_with_failed_check_runs:
+          - Unit tests
+          stage_timings:
+            wip: 12085s
+            review: 86690s
+            merge: 2374s
+            deploy:
+              production-2020-03-26-W9J3uzHl: 45321s
+          events_now:
+          - approved
+          - changes_requested
+          - committed
+          - created
+          - merged
+          - review_requested
+          - reviewed
+          - deployed
+          stages_now:
+          - done
+          - force_push_dropped
+          - deployed
+          participants:
+          - id: github.com/akbarik
+            status:
+            - author
+            - commit_author
+            - commit_committer
+            - merger
+          - id: github.com/se7entyse7en
+            status:
+            - reviewer
+            - commenter
+          - id: github.com/warenlg
+            status:
+            - commenter
+          - id: github.com/znegrin
+            status:
+            - commit_author
+            - commit_committer
+          jira:
+          - id: DEV-1802
+            title: FE - Add search capability to Epics table
+            epic: DEV-1474
+            labels:
+            - functionality
+            - webapp
+            type: Task
+      properties:
+        include:
+          allOf:
+          - $ref: '#/components/schemas/IncludedNativeUsers'
+          - $ref: '#/components/schemas/IncludedDeployments'
+        data:
+          description: List of matched pull requests.
+          items:
+            $ref: '#/components/schemas/PullRequest'
+          type: array
+      required:
+      - data
+      - include
+      type: object
+    Color:
+      description: RGB 24-bit color in hex.
+      pattern: ^[0-9a-fA-F]{6}$
+      type: string
+    ReleasedPullRequest:
+      description: Details about a pull request listed in `/filter/releases`.
+      properties:
+        additions:
+          type: integer
+        author:
+          anyOf:
+          - $ref: '#/components/schemas/DeveloperID'
+          - nullable: true
+            type: string
+        created:
+          description: When this PR was created.
+          format: date-time
+          type: string
+        deletions:
+          type: integer
+        jira:
+          description: Mapped JIRA issue IDs.
+          items:
+            type: string
+          type: array
+        number:
+          type: integer
+        title:
+          type: string
+      required:
+      - additions
+      - author
+      - created
+      - deletions
+      - number
+      - title
+      type: object
+    DeploymentLabels:
+      description: Arbitrary key-value metadata that associates with the deployment.
+      type: object
+    DeploymentConclusion:
+      description: State of the completed deployment. Case-insensitive.
+      enum:
+      - SUCCESS
+      - FAILURE
+      - CANCELLED
+      type: string
+    InvalidRequestError:
+      allOf:
+      - $ref: '#/components/schemas/GenericError'
+      - properties:
+          pointer:
+            description: Path to the offending request item.
+            example: .granularity
+            type: string
+        type: object
+    Contributor:
+      additionalProperties: false
+      description: Details about a developer who contributed to some repositories owned by the account.
+      example:
+        login: github.com/gkwillie
+        name: Groundskeeper Willie
+        email: bot@athenian.co
+        picture: https://avatars0.githubusercontent.com/u/60340680?v=4
+      properties:
+        login:
+          $ref: '#/components/schemas/DeveloperID'
+        name:
+          description: Full name of the contributor.
+          type: string
+        email:
+          description: Email of the conributor.
+          type: string
+        picture:
+          description: Avatar URL of the contributor.
+          type: string
+        jira_user:
+          description: Mapped JIRA user name.
+          type: string
+      required:
+      - login
+      type: object
+    IncludedNativeUser:
+      additionalProperties: false
+      description: User traits such as the avatar URL.
+      example:
+        avatar: https://avatars0.githubusercontent.com/u/60340680?v=4
+      properties:
+        avatar:
+          format: url
+          type: string
+      required:
+      - avatar
+      type: object
+    LinkedJIRAIssue:
+      additionalProperties: false
+      description: Brief details about a JIRA issue.
+      example:
+        id: DEV-344
+        title: Write the API specs to filter PRs by Jira epic, ticket type and label
+        epic: DEV-149
+        labels:
+        - API
+        type: task
+      properties:
+        id:
+          description: JIRA issue key `PROJECT-###`.
+          type: string
+        title:
+          description: Title of this issue.
+          type: string
+        epic:
+          description: Identifier of the epic that owns this issue.
+          type: string
+        labels:
+          description: List of JIRA labels in this issue.
+          items:
+            type: string
+          type: array
+        type:
+          description: Type of this issue.
+          type: string
+      required:
+      - id
+      - title
+      - type
+      type: object
+    JIRAComment:
+      additionalProperties: false
+      properties:
+        author:
+          description: The name of the user who created the comment.
+          type: string
+        created:
+          description: The date and time at which the comment was created.
+          format: date-time
+          type: string
+        rendered_body:
+          description: The comment text.
+          type: string
+      required:
+      - author
+      - created
+      - rendered_body
+      type: object
+    PullRequestLabel:
+      additionalProperties: false
+      description: Pull request label.
+      example:
+        name: bug
+        color: fc2929
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        color:
+          $ref: '#/components/schemas/Color'
+      required:
+      - color
+      - name
+      type: object
+    Contributors:
+      description: List of contributors.
+      example:
+      - email: bot@athenian.co
+        login: github.com/gkwillie
+        name: Groundskeeper Willie
+        picture: https://avatars0.githubusercontent.com/u/60340680?v=4
+      - email: loumarvincaraig@gmail.com
+        login: github.com/se7entyse7en
+        name: Lou Marvin Caraig
+        picture: https://avatars1.githubusercontent.com/u/5599208?v=4
+      items:
+        $ref: '#/components/schemas/Contributor'
+      type: array
+    PullRequestEvent:
+      description: 'PR''s modelled lifecycle events.
+
+        * `created`: The PR was opened.
+
+        * `committed`: Somebody pushed a commit to the PR.
+
+        * `review_requested`: Somebody requested a PR review.
+
+        * `reviewed`: Somebody reviewed the PR (either approved, requested changes, or commented).
+
+        * `approved`: Somebody approved the PR. Note that if there were negative reviews from other participants, an approval does *not* trigger this event.
+
+        * `changes_requested`: Somebody submitted a negative PR review.
+
+        * `merged`: Somebody merged the PR.
+
+        * `released`: The PR was released.
+
+        * `rejected`: Somebody closed the PR without merging.
+
+        * `deployed`: The PR was deployed. We respect this event only when `environment` was specified.'
+      enum:
+      - created
+      - committed
+      - review_requested
+      - reviewed
+      - approved
+      - changes_requested
+      - merged
+      - released
+      - rejected
+      - deployed
+      example: created
+      type: string
+    IncludedNativeUsers:
+      description: Mentioned GitHub users.
+      example:
+        users:
+          github.com/gkwillie:
+            avatar: https://avatars0.githubusercontent.com/u/60340680?v=4
+      properties:
+        users:
+          additionalProperties:
+            $ref: '#/components/schemas/IncludedNativeUser'
+          description: Mapping user native (e.g., GitHub) login ID -> user details. The users are mentioned in the PRs from "PullRequestSet.data" or in the commits from "FilterCommitsRequest.data".
+          type: object
+      required:
+      - users
+      type: object
+    GetJIRAIssuesRequest:
+      additionalProperties: false
+      description: 'Request body for the get_jira_issues operation.
+
+        Declaration of which issues the user wants to retrieve.
+
+        '
+      example:
+        account: 1
+        include:
+        - jira_users
+        issues:
+        - DEV-1345
+        - DEV-567
+        - ENG-123
+      properties:
+        account:
+          description: Account ID.
+          type: integer
+        include:
+          description: Additional informations to include in the response.
+          items:
+            $ref: '#/components/schemas/GetJIRAIssuesInclude'
+          type: array
+        issues:
+          description: 'List of issue identifiers (issue keys) to retrieve.
+
+            The order of the requested issues will be preserved in the response.
+
+            '
+          items:
+            type: string
+          minItems: 1
+          type: array
+      required:
+      - account
+      - issues
+      type: object
+    GetJIRAIssuesInclude:
+      description: "Additional information to include in the response for the get_jira_issues operation:\n* comments: include comments for every issue; returned issues will include a `comment_list`\n  if they have comments\n* description: include the description for every issue; returned issues will include a\n  `rendered_description` property\n* github_users: include details about the users mentioned in the linked pull requests\n* jira_users: include details about mentioned Jira users\n"
+      enum:
+      - comments
+      - description
+      - github_users
+      - jira_users
+      type: string
+    IncludedJIRAIssues:
+      description: Mentioned JIRA issues.
+      example:
+        jira:
+          DEV-344:
+            id: DEV-3440
+            title: Write the API specs to filter PRs by Jira epic, ticket type and label.
+            epic: DEV-149
+            labels:
+            - API
+            type: task
+      properties:
+        jira:
+          additionalProperties:
+            $ref: '#/components/schemas/LinkedJIRAIssue'
+          description: Mapping JIRA issue ID -> details.
+          type: object
+      type: object
+    PullRequestStage:
+      description: 'PR''s modelled lifecycle stages.
+
+        * `wip`: The PR is a work-in-progress: no reviews, no review requests, not closed.
+
+        * `reviewing`: The PR is going through a review process.
+
+        * `merging`: The PR was approved and is waiting for merge.
+
+        * `releasing`: The PR was merged but is not released yet.
+
+        * `force_push_dropped`: The PR was closed but the Git commit history was rewritten and the PR''s commits no longer exist. Always appears together with `done`.
+
+        * `release_ignored`: The PR belongs to the very first release of the repository, and we suppressed that release according to our heuristics. Always appears together with `done`.
+
+        * `done`: The PR was either closed without merging or released or force push dropped. Deployed or not.
+
+        * `deployed`: The PR was deployed. So it''s merged. Released or not. We respect this stage only when `environment` was specified.'
+      enum:
+      - wip
+      - reviewing
+      - merging
+      - releasing
+      - force_push_dropped
+      - done
+      - release_ignored
+      - deployed
+      example: done
+      type: string
+    JIRAIssue:
+      allOf:
+      - $ref: '#/components/schemas/JIRAEpicIssueCommon'
+      - properties:
+          project:
+            description: Identifier of the project where this issue exists.
+            type: string
+          prs:
+            description: Details about the mapped PRs. `jira` field is unfilled.
+            items:
+              $ref: '#/components/schemas/PullRequest'
+            type: array
+        required:
+        - project
+    ReleaseSet:
+      additionalProperties: false
+      description: Release metadata and contributor user details.
+      example:
+        include:
+          users:
+            github.com/gkwillie:
+              avatar: https://avatars0.githubusercontent.com/u/60340680?v=4
+          deployments:
+            production-2020-03-26-W9J3uzHl:
+              components:
+              - repository: github.com/athenianco/athenian-api
+                reference: v0.10.34
+              environment: production
+              date_finished: 2022-01-23 05:01:07+00:00
+              date_started: 2022-01-23 04:56:07+00:00
+              conclusion: SUCCESS
+              labels:
+                helm_chart: 0.0.67
+        data:
+        - added_lines: 1000
+          commits: 20
+          deleted_lines: 200
+          name: v0.0.93
+          sha: e337123fc32c38cf6a8149b518f2e58ae836c8e6
+          published: 2020-03-25 10:57:00+00:00
+          publisher: github.com/vmarkovtsev
+          repository: github.com/athenianco/athenian-api
+          url: https://github.com/athenianco/athenian-api/releases/tag/v0.0.93
+          age: 1000s
+          commit_authors:
+          - github.com/vmarkovtsev
+          prs: []
+        - added_lines: 1000
+          commits: 20
+          deleted_lines: 200
+          name: v0.0.93
+          sha: e337123fc32c38cf6a8149b518f2e58ae836c8e6
+          published: 2020-03-25 10:57:00+00:00
+          publisher: github.com/vmarkovtsev
+          repository: github.com/athenianco/athenian-api
+          url: https://github.com/athenianco/athenian-api/releases/tag/v0.0.93
+          age: 2000s
+          commit_authors:
+          - github.com/vmarkovtsev
+          prs: []
+      properties:
+        include:
+          allOf:
+          - $ref: '#/components/schemas/IncludedNativeUsers'
+          - $ref: '#/components/schemas/IncludedJIRAIssues'
+          - $ref: '#/components/schemas/IncludedDeployments'
+        data:
+          description: List of matching release metadata.
+          items:
+            $ref: '#/components/schemas/FilteredRelease'
+          type: array
+      type: object
+    DeploymentNotification:
+      description: 'Push message about a deployment. We remove unresolved components after 24h.
+
+        '
+      example:
+        components:
+        - repository: github.com/athenianco/athenian-api
+          reference: v0.10.34
+        environment: production
+        date_finished: 2022-01-23 05:01:07+00:00
+        date_started: 2022-01-23 04:56:07+00:00
+        conclusion: SUCCESS
+        labels:
+          helm_chart: 0.0.67
+      properties:
+        components:
+          description: 'List of deployed software version. Each item identifies a Git reference
+
+            in a repository, either a tag or a commit hash.
+
+            '
+          items:
+            $ref: '#/components/schemas/DeployedComponent'
+          minItems: 1
+          type: array
+        environment:
+          description: Name of the environment where the deployment happened.
+          minLength: 1
+          type: string
+        name:
+          description: Name of the deployment. If is not specified, we generate our own by the template `<environment shortcut>-<date>-<hash of the components>`. The value may not contain \n - new line character, and ' - single quote.
+          nullable: true
+          pattern: ^([^'\s]| ){1,100}$
+          type: string
+        url:
+          description: URL pointing at the internal details of the deployment.
+          format: url
+          type: string
+        date_started:
+          description: Timestamp of when the deployment procedure launched.
+          format: date-time
+          type: string
+        date_finished:
+          description: Timestamp of when the deployment procedure completed.
+          format: date-time
+          type: string
+        conclusion:
+          $ref: '#/components/schemas/DeploymentConclusion'
+        labels:
+          $ref: '#/components/schemas/DeploymentLabels'
+      required:
+      - components
+      - conclusion
+      - date_finished
+      - date_started
+      - environment
+      type: object
+    PullRequest:
+      additionalProperties: false
+      description: Details of a pull request. All the attributes, stats and events correspond to "today", not `date_to`, *except for the PR stages `wip`, `reviewing`, `merging`, `releasing`*, which correspond to `date_to`.
+      example:
+        repository: github.com/athenianco/athenian-webapp
+        number: 1111
+        title: '[DEV-1802] epic search'
+        size_added: 128
+        size_removed: 30
+        files_changed: 5
+        created: 2021-03-02 11:47:42+00:00
+        updated: 2021-03-03 13:55:33+00:00
+        closed: 2021-03-03 13:55:32+00:00
+        comments: 5
+        commits: 17
+        review_requested: 2021-03-02 12:14:35+00:00
+        first_review: 2021-03-02 15:09:58+00:00
+        approved: 2021-03-03 13:15:58+00:00
+        review_comments: 2
+        reviews: 2
+        merged: 2021-03-03 13:55:32+00:00
+        merged_with_failed_check_runs:
+        - Unit tests
+        stage_timings:
+          wip: 12085s
+          review: 86690s
+          merge: 2374s
+          deploy:
+            production-2020-03-26-W9J3uzHl: 45321s
+        events_now:
+        - approved
+        - changes_requested
+        - committed
+        - created
+        - merged
+        - review_requested
+        - reviewed
+        - deployed
+        stages_now:
+        - done
+        - force_push_dropped
+        - deployed
+        participants:
+        - id: github.com/akbarik
+          status:
+          - author
+          - commit_author
+          - commit_committer
+          - merger
+        - id: github.com/se7entyse7en
+          status:
+          - reviewer
+          - commenter
+        - id: github.com/warenlg
+          status:
+          - commenter
+        - id: github.com/znegrin
+          status:
+          - commit_author
+          - commit_committer
+        jira:
+        - id: DEV-1802
+          title: FE - Add search capability to Epics table
+          epic: DEV-1474
+          labels:
+          - functionality
+          - webapp
+          type: Task
+      properties:
+        repository:
+          description: PR is/was open in this repository.
+          type: string
+        number:
+          description: PR number.
+          minimum: 1
+          type: integer
+        title:
+          description: Title of the PR.
+          type: string
+        size_added:
+          description: Overall number of lines added.
+          minimum: 0
+          type: integer
+        size_removed:
+          description: Overall number of lines removed.
+          minimum: 0
+          type: integer
+        files_changed:
+          description: Number of files changed in this PR.
+          minimum: 0
+          type: integer
+        created:
+          description: When this PR was created.
+          format: date-time
+          type: string
+        updated:
+          description: When this PR was last updated.
+          format: date-time
+          type: string
+        closed:
+          description: When this PR was last closed.
+          format: date-time
+          type: string
+        comments:
+          description: Number of *regular* (not review) comments in this PR.
+          minimum: 0
+          type: integer
+        commits:
+          description: Number of commits in this PR.
+          minimum: 0
+          type: integer
+        review_requested:
+          description: When was the first time the author of this PR requested a review.
+          format: date-time
+          type: string
+        first_review:
+          description: When the first review of this PR happened.
+          format: date-time
+          type: string
+        approved:
+          description: When this PR was approved.
+          format: date-time
+          type: string
+        review_comments:
+          description: 'Number of review comments this PR received. A review comment is left at
+
+            a specific line in a specific file. In other words: review summaries are
+
+            *not* considered review comments; refer to `reviews`. Comments by the PR
+
+            author are considered as `comments`, not as `review_comments`.'
+          minimum: 0
+          type: integer
+        reviews:
+          description: Number of times this PR was reviewed. Reviews by the PR author are not taken into account.
+          minimum: 0
+          type: integer
+        merged:
+          description: When this PR was merged.
+          format: date-time
+          type: string
+        merged_with_failed_check_runs:
+          description: PR was merged with these failed check runs.
+          items:
+            type: string
+          type: array
+        released:
+          description: When this PR was released.
+          format: date-time
+          type: string
+        release_url:
+          description: URL of the earliest release that includes this merged PR.
+          format: url
+          type: string
+        deployments:
+          description: List of deployments that contain this PR.
+          items:
+            type: string
+          type: array
+        stage_timings:
+          $ref: '#/components/schemas/StageTimings'
+        events_time_machine:
+          description: List of PR events which happened until `date_to`. `date_from` does not matter.
+          items:
+            $ref: '#/components/schemas/PullRequestEvent'
+          type: array
+        stages_time_machine:
+          description: List of PR stages as of `date_to` (normally, of length 1).
+          items:
+            $ref: '#/components/schemas/PullRequestStage'
+          type: array
+        events_now:
+          description: List of PR events that ever happened.
+          items:
+            $ref: '#/components/schemas/PullRequestEvent'
+          type: array
+        stages_now:
+          description: List of current PR stages (normally, of length 1).
+          items:
+            $ref: '#/components/schemas/PullRequestStage'
+          type: array
+        participants:
+          description: List of developers related to this PR.
+          items:
+            $ref: '#/components/schemas/PullRequestParticipant'
+          type: array
+        labels:
+          description: List of PR labels.
+          items:
+            $ref: '#/components/schemas/PullRequestLabel'
+          type: array
+        jira:
+          description: List of linked JIRA issues.
+          items:
+            $ref: '#/components/schemas/LinkedJIRAIssue'
+          type: array
+      required:
+      - comments
+      - commits
+      - created
+      - events_now
+      - files_changed
+      - number
+      - participants
+      - repository
+      - size_added
+      - size_removed
+      - stage_timings
+      - stages_now
+      - title
+      - updated
+      type: object
+    FilteredRelease:
+      additionalProperties: false
+      description: Various information about a repository release.
+      example:
+        added_lines: 1000
+        commits: 20
+        deleted_lines: 200
+        name: v0.0.93
+        sha: e337123fc32c38cf6a8149b518f2e58ae836c8e6
+        published: 2020-03-25 10:57:00+00:00
+        publisher: github.com/vmarkovtsev
+        repository: github.com/athenianco/athenian-api
+        url: https://github.com/athenianco/athenian-api/releases/tag/v0.0.93
+        age: 10000s
+        commit_authors:
+        - github.com/vmarkovtsev
+        prs:
+        - additions: 34
+          author: github.com/se7entyse7en
+          created: 2020-05-21 18:29:00+00:00
+          deletions: 3
+          number: 176
+          title: Fix first account creation
+        deployments:
+        - production-2020-03-26-W9J3uzHl
+      properties:
+        added_lines:
+          description: Cumulative number of lines inserted since the previous release.
+          minimum: 0
+          type: integer
+        age:
+          description: Time since the previous release /\d+s/.
+          type: string
+        commits:
+          description: Number of commits since the previous release.
+          minimum: 0
+          type: integer
+        commit_authors:
+          description: List of released commit authors' logins.
+          items:
+            $ref: '#/components/schemas/DeveloperID'
+          type: array
+        deleted_lines:
+          description: Cumulative number of lines removed since the previous release.
+          minimum: 0
+          type: integer
+        deployments:
+          description: Deployments with this release.
+          items:
+            type: string
+          type: array
+        name:
+          description: Title of the release.
+          type: string
+        prs:
+          description: List of released pull requests.
+          items:
+            $ref: '#/components/schemas/ReleasedPullRequest'
+          type: array
+        published:
+          description: When the release was created.
+          format: date-time
+          type: string
+        publisher:
+          description: Login of the person who created the release.
+          nullable: true
+          type: string
+        repository:
+          description: Name of the repository where the release exists.
+          type: string
+        sha:
+          description: Release commit hash.
+          minLength: 40
+          maxLength: 40
+          type: string
+        url:
+          description: Link to the release.
+          format: url
+          type: string
+      required:
+      - added_lines
+      - age
+      - commit_authors
+      - commits
+      - deleted_lines
+      - name
+      - prs
+      - published
+      - publisher
+      - repository
+      - sha
+      - url
+      type: object
+    JIRAEpicIssueCommon:
+      description: Common properies if a JIRA issue or epic.
+      properties:
+        id:
+          description: JIRA issue key `PROJECT-###`.
+          type: string
+        title:
+          description: Title of this issue.
+          type: string
+        created:
+          description: When this issue was created.
+          format: date-time
+          type: string
+        updated:
+          description: When this issue was last updated.
+          format: date-time
+          type: string
+        work_began:
+          description: 'When the issue entered the "In Progress" stage or received a PR.
+
+            This timestamp can be missing and is always less than or equal to `resolved`.'
+          format: date-time
+          type: string
+        resolved:
+          description: 'When the issue finished: the stage is "Done" and all PRs are either released or rejected.
+
+            This timestamp can be missing and is always greater than or equal to `work_began`.'
+          format: date-time
+          type: string
+        acknowledge_time:
+          allOf:
+          - description: 'Issue''s time spent between `work_began` and `created`. If work on issue has not
+
+              begun, time between `now()` and `created.  See also `jira-acknowledge-time` metric.'
+          - $ref: '#/components/schemas/TimeDuration'
+        lead_time:
+          allOf:
+          - description: 'Issue''s time spent between `work_began` and `resolved`. If not resolved,
+
+              between `work_began` and `now()`.'
+          - $ref: '#/components/schemas/TimeDuration'
+        life_time:
+          allOf:
+          - description: 'Issue''s time spent between `created` and `resolved`. If not resolved,
+
+              between `created` and `now()`.'
+          - $ref: '#/components/schemas/TimeDuration'
+        reporter:
+          description: Name of the person who reported the issue.
+          type: string
+        assignee:
+          description: Name of the assigned person.
+          type: string
+        comments:
+          description: Number of comments in the issue excluding sub-tasks and children.
+          type: integer
+        comment_list:
+          description: The list of comments for the issue.
+          items:
+            $ref: '#/components/schemas/JIRAComment'
+          type: array
+        priority:
+          description: Name of the priority. The details are returned in `FilteredJIRAStuff.priorities`.
+          nullable: true
+          type: string
+        rendered_description:
+          description: The description of the issue rendered as HTML.
+          type: string
+        status:
+          description: Name of the status. The details are returned in `FilteredJIRAStuff.statuses`.
+          type: string
+        story_points:
+          description: Value of the "story points" field.
+          type: number
+        type:
+          description: Name of the issue type. The details are returned in `FilteredJIRAStuff.issue_types`.
+          type: string
+        url:
+          description: Link to the issue in JIRA web application.
+          format: url
+          type: string
+      required:
+      - comments
+      - created
+      - id
+      - acknowledge_time
+      - life_time
+      - priority
+      - reporter
+      - status
+      - title
+      - type
+      - updated
+      - url
+      type: object
+    StageTimings:
+      additionalProperties: false
+      description: 'Time spent by the PR in each pipeline stage.
+
+        The deployments are independent of the releases. If the release happens before
+
+        the deployment, the deployment time measures from the release event. If the release
+
+        happens after the deployment, the two values are independent and both measure from
+
+        the PR merge event.
+
+        '
+      example:
+        wip: 120s
+        review: 600s
+      properties:
+        wip:
+          $ref: '#/components/schemas/TimeDuration'
+        review:
+          $ref: '#/components/schemas/TimeDuration'
+        merge:
+          $ref: '#/components/schemas/TimeDuration'
+        release:
+          $ref: '#/components/schemas/TimeDuration'
+        deploy:
+          additionalProperties:
+            $ref: '#/components/schemas/TimeDuration'
+          description: Map from target environments to the values.
+          type: object
+      required:
+      - wip
+      type: object
+    GetReleasesRequest:
+      additionalProperties: false
+      description: Request body of `/get/releases`. Declaration of which releases the user wants to list.
+      example:
+        account: 1
+        releases:
+        - repository: github.com/athenianco/athenian-api
+          names:
+          - v0.7.53
+          - v0.6.10
+      properties:
+        account:
+          description: Account ID.
+          type: integer
+        releases:
+          description: List of repositories and release names to list.
+          items:
+            $ref: '#/components/schemas/ReleaseNames'
+          type: array
+      required:
+      - account
+      - releases
+      type: object
+    GetPullRequestsRequest:
+      additionalProperties: false
+      description: 'Request body of `/get/pull_requests`. Declaration of which PRs the user wants to list.
+
+        The order of the requested PRs will be preserved in the response.
+
+        '
+      example:
+        account: 1
+        prs:
+        - repository: github.com/athenianco/athenian-api
+          numbers:
+          - 483
+          - 484
+          - 485
+        environments:
+        - production
+      properties:
+        account:
+          description: Account ID.
+          type: integer
+        prs:
+          description: List of repositories and PR numbers to list.
+          items:
+            $ref: '#/components/schemas/PullRequestNumbers'
+          minItems: 1
+          type: array
+        environments:
+          description: Deployment environments to apply. If omitted, any deployment counts.
+          items:
+            type: string
+          minItems: 1
+          type: array
+      required:
+      - account
+      - prs
+      type: object
+    DeployedComponent:
+      additionalProperties: false
+      description: Definition of the deployed software unit.
+      example:
+        repository: github.com/athenianco/athenian-api
+        reference: v0.10.34
+      properties:
+        repository:
+          $ref: '#/components/schemas/RepositoryID'
+        reference:
+          description: 'We accept three ways to define a Git reference:
+
+            1. Tag name.
+
+            2. Full commit hash (40 characters).
+
+            3. Short commit hash (7 characters).
+
+
+            We ignore the reference while we cannot find it in our database. There can be
+
+            two reasons:
+
+            - There is a mistake or a typo in the provided data.
+
+            - We are temporarily unable to synchronize with GitHub.
+
+            '
+          minLength: 1
+          type: string
+      required:
+      - reference
+      - repository
+      type: object
+    PullRequestNumbers:
+      additionalProperties: false
+      description: Repository name and a list of PR numbers in that repository.
+      example:
+        repository: github.com/athenianco/athenian-api
+        numbers:
+        - 483
+        - 484
+        - 485
+      properties:
+        repository:
+          $ref: '#/components/schemas/RepositoryID'
+        numbers:
+          items:
+            type: integer
+          type: array
+      required:
+      - numbers
+      - repository
+      type: object
+  parameters:
+    pathAccountID:
+      description: Numeric identifier of the account.
+      explode: false
+      in: path
+      name: id
+      required: true
+      schema:
+        type: integer
+      style: simple
+  responses:
+    InvalidRequestErrorResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InvalidRequestError'
+      description: The request is invalid.
+  securitySchemes:
+    apiKeyAuth:
+      description: 'Authorization by the value of `X-API-Key` header aka API token.
+
+        The tokens are user- and account-specific. Create them by calling `/token/create`.
+
+        The server automatically inserts `account` in the request''s body if it was not
+
+        supplied by the user.'
+      in: header
+      name: X-API-Key
+      type: apiKey
+      x-apikeyInfoFunc: athenian.api.controllers.security_controller.info_from_apiKeyAuth
+    bearerAuth:
+      bearerFormat: JWT
+      description: 'Regular JSON Web Token authorization powered by Auth0.
+
+        The server expects an `Authorization: Bearer <token>` header and checks `<token>` by
+
+        sending it to Auth0. Visit [{{ server_url | replace("api", "app") }}/bearer]({{ server_url | replace("api", "app") }}/bearer)
+
+        to copy your current JWT that will expire within 24 hours.'
+      scheme: bearer
+      type: http
+      x-bearerInfoFunc: athenian.api.controllers.security_controller.info_from_bearerAuth

@@ -1,0 +1,20 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Athenian API
+  version: 1.0.0
+extends: openapi/athenian-openapi-original.yml
+actions:
+- target: $.info
+  update:
+    x-apievangelist-note: Published spec uses Jinja placeholders ({{ title }}, {{
+      server_url }}). Real production values recorded here.
+    title: Athenian API
+    x-real-title: Athenian API — full-cycle software development analytics
+    x-lifecycle-status: discontinued
+- target: $.servers
+  update:
+  - url: https://api.athenian.co/v1
+    description: Production (offline — Athenian wound down)
+- target: $.info
+  update:
+    x-apievangelist-rating: 3

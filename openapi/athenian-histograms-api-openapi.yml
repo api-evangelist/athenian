@@ -1,0 +1,1717 @@
+openapi: 3.0.3
+info:
+  contact:
+    email: admin@athenian.co
+    name: the administrator by email
+  description: 'Server version: {{ server_version }} built on {{ build_date }} @ [{{ commit }}](https://github.com/athenianco/athenian-api/commit/{{ commit }})
+
+
+    Origin GitHub repository: [athenianco/api-spec](https://github.com/athenianco/api-spec).
+
+
+    Authorization persists between sessions. Marks:
+
+    * 🛡️ endpoint requires account admin privileges.
+
+    * 👤 endpoint only works with JWT authentication.
+
+    <details>
+
+    <summary>List of common server errors.</summary>
+
+    * __500__ endpoint crashed. We reported the incident to Sentry and will fix it soon! Please include the value of `instance` in the response if you contact the support. Repeating the request will not help, most probably.
+
+    * __501__ some functions are missing, either because they are not implemented yet or a non-critical runtime dependency is not satisfied. Repeating the request will not help, guaranteed.
+
+    * __502__ server crashed badly, either due to a memory access violation in native code or running out of memory. We reported this incident to Sentry and will fix it soon! Try repeating the request.
+
+    * __503__ server has not fully launched yet, e.g. hasn''t connected to the database; server is shutting down; we are experiencing a partial outage. Try repeating the request.
+
+    * __504__ endpoint took too much time and was interrupted. We reported the incident to Sentry and will see how to improve the performance. Repeating the request will not help, most probably.
+
+    </details>'
+  license:
+    name: CC-BY-4.0
+  title: '{{ title }} align histograms API'
+  version: 2.1.86
+servers:
+- description: '{{ server_description }} - {{ server_url }}'
+  url: '{{ server_url }}/v1'
+tags:
+- name: histograms
+paths:
+  /histograms/code_checks:
+    post:
+      operationId: calc_histogram_code_checks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CodeCheckHistogramsRequest'
+        description: Select the check runs of interest and the metrics to calculate.
+        required: true
+        x-body-name: body
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CalculatedCodeCheckHistograms'
+          description: Calculated histograms.
+        400:
+          $ref: '#/components/responses/InvalidRequestErrorResponse'
+        403:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The user is forbidden to access the specified repositories on behalf of the specified account.
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The specified account does not exist or the user is not a member.
+        422:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoSourceDataError'
+          description: The account's installation has not finished yet.
+      security:
+      - bearerAuth: []
+      - apiKeyAuth: []
+      summary: Calculate histograms on continuous integration runs, such as GitHub Actions, Jenkins, Circle, etc.
+      tags:
+      - histograms
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: athenian.api.controllers.histograms_controller
+  /histograms/jira:
+    post:
+      operationId: calc_histogram_jira
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JIRAHistogramsRequest'
+        description: Query for selecting JIRA issues and binned activities.
+        required: true
+        x-body-name: body
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CalculatedJIRAHistograms'
+          description: Calculated histograms.
+        400:
+          $ref: '#/components/responses/InvalidRequestErrorResponse'
+        403:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The user is forbidden to access the specified repositories on behalf of the specified account.
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The specified account does not exist or the user is not a member.
+        422:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoSourceDataError'
+          description: The account's installation has not finished yet.
+      security:
+      - bearerAuth: []
+      - apiKeyAuth: []
+      summary: Calculate histograms over JIRA issue activities.
+      tags:
+      - histograms
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: athenian.api.controllers.jira_controller
+  /histograms/pull_requests:
+    post:
+      operationId: calc_histogram_prs
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PullRequestHistogramsRequest'
+        description: Desired histogram definitions.
+        required: true
+        x-body-name: body
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CalculatedPullRequestHistograms'
+          description: Calculated histograms.
+        400:
+          $ref: '#/components/responses/InvalidRequestErrorResponse'
+        403:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The user is forbidden to calculate metrics on behalf of the specified account.
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The specified account does not exist or the user is not a member.
+        422:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoSourceDataError'
+          description: No data is available to calculate histograms for the given repositories.
+        424:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MissingSettingsError'
+          description: One or more logical repositories miss the release settings.
+      security:
+      - bearerAuth: []
+      - apiKeyAuth: []
+      summary: Calculate histograms over PR distributions.
+      tags:
+      - histograms
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: athenian.api.controllers.histograms_controller
+components:
+  schemas:
+    JIRAHistogramDefinition:
+      additionalProperties: false
+      description: 'Histogram parameters: topic, bins.'
+      example:
+        metric: jira-raised
+        ticks:
+        - 1
+        - 10
+        - 50
+        - 100
+        - 500
+      properties:
+        metric:
+          $ref: '#/components/schemas/JIRAMetricID'
+        scale:
+          allOf:
+          - $ref: '#/components/schemas/HistogramScale'
+          - description: Histogram's X axis scale.
+        bins:
+          description: Number of bars in the histogram. 0 or null means automatic.
+          minimum: 0
+          type: integer
+        ticks:
+          description: 'Alternatively to `bins` and `scale`, set the X axis bar borders manually.
+
+            Only one of two may be specified. The ticks are automatically prepended
+
+            the distribution minimum and appended the distribution maximum.'
+          items:
+            oneOf:
+            - type: number
+            - $ref: '#/components/schemas/TimeDuration'
+          minItems: 1
+          type: array
+      required:
+      - metric
+      type: object
+    Interquartile:
+      additionalProperties: false
+      description: Middle 50% range.
+      example:
+        left: 3
+        right: 76
+      properties:
+        left:
+          oneOf:
+          - type: number
+          - $ref: '#/components/schemas/TimeDuration'
+        right:
+          oneOf:
+          - type: number
+          - $ref: '#/components/schemas/TimeDuration'
+      required:
+      - left
+      - right
+      type: object
+    DeveloperID:
+      description: 'User name which uniquely identifies any developer on any service provider.
+
+        The format matches the profile URL without the protocol part.
+
+        '
+      example: github.com/vmarkovtsev
+      type: string
+    WithBothJiraAndJiragroups:
+      description: An object having both jira and jiragroups fields.
+      properties:
+        jira: {}
+        jiragroups: {}
+      required:
+      - jira
+      - jiragroups
+      type: object
+    TimeDuration:
+      description: Time duration value.
+      pattern: ^\d+s$
+      type: string
+    NoSourceDataError:
+      $ref: '#/components/schemas/GenericError'
+    RepositoryID:
+      description: 'Repository name which uniquely identifies any repository in any service provider.
+
+        The format matches the repository URL without the protocol part. No ".git" should be appended.
+
+        We support a special syntax for repository sets: "{reposet id}" adds all the repositories
+
+        from the given set.
+
+        '
+      example: github.com/athenianco/athenian-webapp
+      type: string
+    PullRequestWith:
+      additionalProperties: false
+      description: 'Triage PRs by various developer participation. The aggregation is `OR` between
+
+        the participation groups and `OR` within each group. For example, if our request is
+
+        ```
+
+        {"author": ["github.com/vmarkovtsev"], "reviewer": ["github.com/gkwillie", "github.com/mcuadros"]}
+
+        ```
+
+        then the matched PRs will have **@vmarkovtsev** as the author or either
+
+        **@gkwillie** or **@mcuadros** as the reviewers.
+
+        It is possible to mention whole teams using the syntax `{id}` where `id` is a team identifier (see `/teams`).'
+      example:
+        author:
+        - github.com/vmarkovtsev
+      properties:
+        author:
+          $ref: '#/components/schemas/DeveloperSet'
+        reviewer:
+          $ref: '#/components/schemas/DeveloperSet'
+        commit_author:
+          $ref: '#/components/schemas/DeveloperSet'
+        commit_committer:
+          $ref: '#/components/schemas/DeveloperSet'
+        commenter:
+          $ref: '#/components/schemas/DeveloperSet'
+        merger:
+          $ref: '#/components/schemas/DeveloperSet'
+        releaser:
+          $ref: '#/components/schemas/DeveloperSet'
+      type: object
+    CalculatedJIRAHistogram:
+      additionalProperties: false
+      description: Calculated histogram over JIRA issue activities.
+      example:
+        metric: jira-raised
+        scale: linear
+        ticks:
+        - 0
+        - 1
+        - 10
+        - 50
+        - 100
+        - 500
+        - 10000
+        frequencies:
+        - 0
+        - 38
+        - 28
+        - 13
+        - 12
+        - 8
+        interquartile:
+          left: 3
+          right: 76
+      properties:
+        with:
+          $ref: '#/components/schemas/JIRAFilterWith'
+        metric:
+          $ref: '#/components/schemas/JIRAMetricID'
+        scale:
+          $ref: '#/components/schemas/HistogramScale'
+        ticks:
+          description: Series of horizontal bar borders aka X axis. Their count is `len(y) + 1` because there are `N` intervals between `(N + 1)` ticks.
+          items:
+            oneOf:
+            - type: number
+            - $ref: '#/components/schemas/TimeDuration'
+          type: array
+        frequencies:
+          description: Series of histogram bar heights aka Y axis.
+          items:
+            minimum: 0
+            type: integer
+          type: array
+        interquartile:
+          $ref: '#/components/schemas/Interquartile'
+      required:
+      - frequencies
+      - interquartile
+      - metric
+      - scale
+      - ticks
+      type: object
+    MissingSettingsError:
+      $ref: '#/components/schemas/GenericError'
+    GenericError:
+      example:
+        detail: 'Unsupported metric: pr-xxx-time'
+        status: 400
+        title: Bad request syntax or unsupported method.
+        type: /errors/InvalidRequestError
+      properties:
+        detail:
+          description: Human-readable explanation specific to this occurrence of the problem.
+          example: 'Unsupported metric: pr-xxx-time'
+          type: string
+        instance:
+          description: URI reference that identifies the specific occurrence of the problem. It is `null` for 4xx, Sentry event ID for 5xx.
+          example: 2763c4eabd7240f59829ee1a02546293
+          type: string
+        status:
+          description: Duplicated HTTP status code.
+          example: 400
+          type: integer
+        title:
+          description: Short, human-readable summary of the problem type.
+          example: Bad request syntax or unsupported method.
+          type: string
+        type:
+          description: URI reference that identifies the problem type (RFC 7807).
+          example: /errors/InvalidRequestError
+          type: string
+      required:
+      - status
+      - title
+      - type
+      type: object
+    ForSetPullRequests:
+      additionalProperties: false
+      description: 'Filter for `/metrics/pull_requests` and `/histograms/pull_requests`.
+
+        Achieve the best performance by packing all your filters in a single `ForSetPullRequests`
+
+        instead of sending multiple `ForSetPullRequests`-s. For example, use `repogroups` and `withgroups`
+
+        to request separate metrics for several repository sets and teams.
+
+        '
+      example:
+        repositories:
+        - github.com/athenianco/athenian-webapp
+        - github.com/athenianco/athenian-api
+        with:
+          author:
+          - github.com/vmarkovtsev
+          - github.com/dpordomingo
+        labels_include:
+        - bug
+      not:
+        $ref: '#/components/schemas/WithBothJiraAndJiragroups'
+      properties:
+        repositories:
+          allOf:
+          - $ref: '#/components/schemas/RepositorySet'
+          - description: 'Repositories for which to calculate the metrics.
+
+              When property is missing metrics will be calculated across all repositories.
+
+              '
+        repogroups:
+          $ref: '#/components/schemas/IndexedGroups'
+        with:
+          $ref: '#/components/schemas/PullRequestWith'
+        withgroups:
+          description: 'Aggregate by groups of PR contributors.
+
+            Currently, only the groupings by `author`, `merger`, and `releaser` are supported.
+
+            People do not have to be mentioned in `with` in contrast to `repogroups`.
+
+            We treat `with` as another group, if specified.'
+          items:
+            $ref: '#/components/schemas/PullRequestWith'
+          type: array
+        labels_include:
+          description: At least one of these labels must be present in each analyzed PR.
+          items:
+            type: string
+          type: array
+        labels_exclude:
+          description: None of these labels must be present in each analyzed PR.
+          items:
+            type: string
+          type: array
+        lines:
+          description: Split by changed number of lines (inserted + removed).
+          items:
+            minimum: 0
+            type: integer
+          minItems: 2
+          type: array
+        jira:
+          $ref: '#/components/schemas/JIRAFilter'
+        jiragroups:
+          $ref: '#/components/schemas/JIRAGroups'
+        environments:
+          description: Calculate deployment metrics separately for each environment in the list. Required if any deployment metrics were requested. Histograms are only implemented for single environments.
+          items:
+            type: string
+          maxItems: 64
+          minItems: 1
+          type: array
+      type: object
+    CommitPushers:
+      description: 'Check runs must be triggered by commits pushed by these people.
+
+        When it is impossible to determine who pushed, e.g. in legacy API based checks,
+
+        they are committers.
+
+        It is possible to mention whole teams using the syntax `{id}` where `id` is a team identifier (see `/teams`).
+
+        '
+      example:
+      - github.com/vmarkovtsev
+      - github.com/se7entyse7en
+      items:
+        $ref: '#/components/schemas/DeveloperID'
+      type: array
+    HistogramScale:
+      description: 'X axis scale: linear or logarithmic.'
+      enum:
+      - linear
+      - log
+      example: log
+      type: string
+    CalculatedCodeCheckHistogram:
+      additionalProperties: false
+      description: Calculated histogram over code checks (CI).
+      example:
+        for:
+          repositories:
+          - github.com/athenianco/athenian-webapp
+          - github.com/athenianco/athenian-api
+        metric: chk-suites-per-pr
+        scale: linear
+        ticks:
+        - 0
+        - 1
+        - 2
+        - 3
+        - 5
+        - 8
+        - 12
+        frequencies:
+        - 0
+        - 38
+        - 28
+        - 13
+        - 120
+        - 100
+        interquartile:
+          left: 2
+          right: 8
+      properties:
+        for:
+          $ref: '#/components/schemas/ForSetCodeChecks'
+        metric:
+          $ref: '#/components/schemas/CodeCheckMetricID'
+        scale:
+          $ref: '#/components/schemas/HistogramScale'
+        ticks:
+          description: Series of horizontal bar borders aka X axis. Their count is `len(y) + 1` because there are `N` intervals between `(N + 1)` ticks.
+          items:
+            oneOf:
+            - type: number
+            - $ref: '#/components/schemas/TimeDuration'
+          type: array
+        frequencies:
+          description: Series of histogram bar heights aka Y axis.
+          items:
+            minimum: 0
+            type: integer
+          type: array
+        interquartile:
+          $ref: '#/components/schemas/Interquartile'
+      required:
+      - for
+      - frequencies
+      - interquartile
+      - metric
+      - scale
+      - ticks
+      type: object
+    Quantiles:
+      description: 'Cut the distributions at certain quantiles.
+
+        The default values are [0, 1] which means no cutting.'
+      example:
+      - 0
+      - 0.95
+      items:
+        maximum: 1
+        minimum: 0
+        type: number
+      maxItems: 2
+      minItems: 2
+      type: array
+    JIRAStatusCategory:
+      description: The category of a JIRA issue status.
+      enum:
+      - To Do
+      - In Progress
+      - Done
+      - No Category
+      type: string
+    PullRequestMetricID:
+      description: 'Currently supported PR metric types.
+
+        * `pr-wip-time`: average time spent in Work In Progress stage.
+
+        * `pr-wip-time-below-threshold-ratio`: ratio of PRs with a `pr-wip-time` below the threshold, disregarding the quantiles. The default threshold is 1 day.
+
+        * `pr-wip-count`: number of PRs used to calculate `pr-wip-time` disregarding the quantiles.
+
+        * `pr-wip-count-q`: number of PRs used to calculate `pr-wip-time` after applying the quantiles.
+
+        * `pr-review-time`: average time spent in Review stage.
+
+        * `pr-review-count`: number of PRs used to calculate `pr-review-time` disregarding the quantiles.
+
+        * `pr-review-count-q`: number of PRs used to calculate `pr-review-time` after applying the quantiles.
+
+        * `pr-review-time-below-threshold-ratio`: ratio of PRs with a `pr-review-time` below the threshold, disregarding the quantiles. The default threshold is 2 days.
+
+        * `pr-merging-time`: average time spent in Merge stage.
+
+        * `pr-merging-time-below-threshold-ratio`: ratio of PRs with a `pr-merging-time` below the threshold, disregarding the quantiles. The default threshold is 4 hours.
+
+        * `pr-merging-count`: number of PRs used to calculate `pr-merging-time` disregarding the quantiles.
+
+        * `pr-merging-count-q`: number of PRs used to calculate `pr-merging-time` after applying the quantiles.
+
+        * `pr-release-time`: average time spent in Release stage.
+
+        * `pr-release-count`: number of PRs used to calculate `pr-release-time` disregarding the quantiles.
+
+        * `pr-release-count-q`: number of PRs used to calculate `pr-release-time` after applying the quantiles.
+
+        * `pr-open-time`: average time the PR stayed open.
+
+        * `pr-open-count`: number of PRs used to calculate `pr-open-time` disregarding the quantiles.
+
+        * `pr-open-count-q`: number of PRs used to calculate `pr-open-time` after applying the quantiles.
+
+        * `pr-open-time-below-threshold-ratio`: ratio of PRs with a `pr-open-time` below the threshold, disregarding the quantiles. The default threshold is 3 days.
+
+        * `pr-cycle-time`: average PR Cycle - time between the work started and the release.
+
+        * `pr-cycle-time-below-threshold-ratio`: ratio of PRs with a `pr-cycle-time` below the threshold, disregarding the quantiles. The default threshold is 5 days.
+
+        * `pr-cycle-count`: number of PRs used to calculate `pr-cycle-time` disregarding the quantiles. It should be the same as `pr-release-count`.
+
+        * `pr-cycle-count-q`: number of PRs used to calculate `pr-cycle-time` after applying the quantiles.
+
+        * `pr-lead-time`: deprecated alias for `pr-cycle-time`
+
+        * `pr-lead-time-below-threshold-ratio`: deprecated alias for `pr-cycle-time-below-threshold-ratio`
+
+        * `pr-lead-count`: deprecated alias for `pr-cycle-count`
+
+        * `pr-lead-count-q`: deprecated alias for `pr-cycle-count-q`
+
+        * `pr-live-cycle-time`: Live Cycle Time - sum of corresponding `pr-wip-time`, `pr-review-time`, `pr-merging-time`, and `pr-release-time`.
+
+        * `pr-live-cycle-count`: number of PRs used to calculate `pr-cycle-time` disregarding the quantiles. It equals to the overall number of PRs observed in the given time window.
+
+        * `pr-live-cycle-count-q`: number of PRs used to calculate `pr-cycle-time` after applying the quantiles.
+
+        * `pr-all-count`: equals to the sum of `pr-live-cycle-count` with the number of PRs which are still not done on the specified time interval but don''t have any stage-changing events. This metric should be exactly the same as the number of PRs returned by `/filter/pull_requests`. The quantiles are ignored.
+
+        * `pr-wait-first-review-time`: average time of waiting for the first review.
+
+        * `pr-wait-first-review-count`: number of PRs used to calculate `pr-wait-first-review`. Note: this is *not* the same as the number of PRs waiting for the first review.
+
+        * `pr-wait-first-review-count-q`: number of PRs used to calculate `pr-wait-first-review` after applying the quantiles.
+
+        * `pr-wait-first-review-time-below-threshold-ratio`: ratio of PRs with a `pr-wait-first-review` below the threshold, disregarding the quantiles. The default threshold is 6 hours.
+
+        * `pr-deployment-time`: average time between when the PR was released and was deployed. We track deployments through `/events/deployments`. Requires setting `ForSetPullRequests.environments`.
+
+        * `pr-deployment-count`: number of PRs used to calculate `pr-deployment-time` disregarding the quantiles. It equals to the overall number of deployed PRs in the given time window. Requires setting `ForSetPullRequests.environments`.
+
+        * `pr-deployment-count-q`: number of PRs used to calculate `pr-deployment-time` after applying the quantiles. Requires setting `ForSetPullRequests.environments`.
+
+        * `pr-lead-deployment-time`: extended Lead Time that includes the time passed since the PR was released until it was deployed. We discard PRs in repositories without deployments. Requires setting `ForSetPullRequests.environments`.
+
+        * `pr-lead-deployment-count`: number of PRs used to calculate `pr-lead-deployment-time` disregarding the quantiles. It equals to the overall number of deployed PRs in the given window and duplicates `pr-deployment-count`. Requires setting `ForSetPullRequests.environments`.
+
+        * `pr-lead-deployment-count-q`: number of PRs used to calculate `pr-lead-deployment-time` after applying the quantiles. Requires setting `ForSetPullRequests.environments`.
+
+        * `pr-cycle-deployment-time`: extended Cycle Time that includes `pr-deployment-time`. We discard PRs in repositories without deployments. Requires setting `ForSetPullRequests.environments`.
+
+        * `pr-cycle-deployment-count`: number of PRs used to calculate `pr-cycle-deployment-time` disregarding the quantiles. It equals to the overall number of deployed PRs in the given window and duplicates `pr-deployment-count` and `pr-lead-deployment-count`. Requires setting `ForSetPullRequests.environments`.
+
+        * `pr-cycle-deployment-count-q`: number of PRs used to calculate `pr-cycle-deployment-time` after applying the quantiles. Requires setting `ForSetPullRequests.environments`.
+
+        * `pr-cycle-deployment-time-below-threshold-ratio`: ratio of PRs with a `pr-cycle-deployment-count` below the threshold, disregarding the quantiles. The default threshold is 5 days.
+
+        * `pr-flow-ratio`: ratio of opened to closed PRs.
+
+        * `pr-opened`: number of opened PRs.
+
+        * `pr-reviewed`: number of PRs which received a review.
+
+        * `pr-reviewed-closed`: number of closed (merged or rejected) PRs which received a review.
+
+        * `pr-not-reviewed`: number of closed (merged or rejected) PRs without any review.
+
+        * `pr-reviewed-ratio`: ratio of `pr-reviewed` to `pr-reviewed` + `pr-not-reviewed`.
+
+        * `pr-merged`: number of merged PRs.
+
+        * `pr-rejected`: number of rejected (closed unmerged) PRs.
+
+        * `pr-closed`: number of closed PRs = `pr-merged` + `pr-rejected`.
+
+        * `pr-done`: number of released, rejected, and force push dropped PRs.
+
+        * `pr-size`: average size of PRs (added + deleted lines) which are active on the time interval after applying the quantiles.
+
+        * `pr-size-below-threshold-ratio`: ratio of PRs with a `pr-size` below or equal to the threshold, disregarding the quantiles. The default threshold is 100 lines.
+
+        * `pr-median-size`: median size of PRs (added + deleted lines) which are active on the time interval ignoring the quantiles.
+
+        * `pr-wip-pending-count`: number of PRs currently in Work In Progress stage.
+
+        * `pr-review-pending-count`: number of PRs currently in Review stage.
+
+        * `pr-merging-pending-count`: number of PRs currently in Merge stage.
+
+        * `pr-release-pending-count`: number of PRs currently in Release stage.
+
+        * `pr-opened-mapped-to-jira`: ratio of created PRs that are mapped to JIRA issues.
+
+        * `pr-done-mapped-to-jira`: ratio of rejected or released PRs that are mapped to JIRA issues.
+
+        * `pr-all-mapped-to-jira`: ratio of all observed PRs that are mapped to JIRA issues.
+
+        * `pr-participants-per`: average number of PR particpants excluding the releasers and the bots.
+
+        * `pr-review-comments-per`: average number of PR review comments for reviewed PRs, bots excluded.
+
+        * `pr-review-comments-per-above-threshold-ratio`: ratio of PRs with a `pr-review-comments-per` above or equal to the threshold, disregarding the quantiles. The threshold is 3 comments.
+
+        * `pr-reviews-per`: average number of PR reviews for reviewed PRs, bots excluded.
+
+        * `pr-comments-per`: average number of PR comments, both regular and review, for reviewed PRs, bots excluded.'
+      enum:
+      - pr-wip-time
+      - pr-wip-time-below-threshold-ratio
+      - pr-wip-count
+      - pr-wip-count-q
+      - pr-review-time
+      - pr-review-count
+      - pr-review-count-q
+      - pr-review-time-below-threshold-ratio
+      - pr-merging-time
+      - pr-merging-time-below-threshold-ratio
+      - pr-merging-count
+      - pr-merging-count-q
+      - pr-release-time
+      - pr-release-count
+      - pr-release-count-q
+      - pr-open-time
+      - pr-open-count
+      - pr-open-count-q
+      - pr-open-time-below-threshold-ratio
+      - pr-lead-time
+      - pr-lead-time-below-threshold-ratio
+      - pr-lead-count
+      - pr-lead-count-q
+      - pr-cycle-time
+      - pr-cycle-time-below-threshold-ratio
+      - pr-cycle-count
+      - pr-cycle-count-q
+      - pr-live-cycle-time
+      - pr-live-cycle-count
+      - pr-live-cycle-count-q
+      - pr-all-count
+      - pr-wait-first-review-time
+      - pr-wait-first-review-count
+      - pr-wait-first-review-count-q
+      - pr-wait-first-review-time-below-threshold-ratio
+      - pr-deployment-time
+      - pr-deployment-count
+      - pr-deployment-count-q
+      - pr-lead-deployment-time
+      - pr-lead-deployment-count
+      - pr-lead-deployment-count-q
+      - pr-cycle-deployment-time
+      - pr-cycle-deployment-count
+      - pr-cycle-deployment-count-q
+      - pr-cycle-deployment-time-below-threshold-ratio
+      - pr-flow-ratio
+      - pr-opened
+      - pr-reviewed
+      - pr-reviewed-closed
+      - pr-not-reviewed
+      - pr-reviewed-ratio
+      - pr-merged
+      - pr-rejected
+      - pr-closed
+      - pr-done
+      - pr-size
+      - pr-size-below-threshold-ratio
+      - pr-median-size
+      - pr-wip-pending-count
+      - pr-review-pending-count
+      - pr-merging-pending-count
+      - pr-release-pending-count
+      - pr-opened-mapped-to-jira
+      - pr-done-mapped-to-jira
+      - pr-all-mapped-to-jira
+      - pr-participants-per
+      - pr-review-comments-per
+      - pr-review-comments-per-above-threshold-ratio
+      - pr-reviews-per
+      - pr-comments-per
+      example: pr-lead-time
+      type: string
+    TimeZone:
+      description: Local time zone offset in minutes, used to adjust `date_from` and `date_to`.
+      maximum: 780
+      minimum: -720
+      type: integer
+    ForSetCodeChecks:
+      additionalProperties: false
+      description: 'Filters for `/metrics/code_checks` and `/histograms/code_checks`.
+
+        Achieve the best performance by packing all your filters in a single `ForSetCodeChecks`
+
+        instead of sending multiple `ForSetCodeChecks`-s. For example, use `repogroups` and `pushers`
+
+        to request separate metrics for several repository sets and teams.
+
+        '
+      example:
+        repositories:
+        - github.com/athenianco/athenian-webapp
+        - github.com/athenianco/athenian-api
+        pushers:
+        - github.com/vmarkovtsev
+        - github.com/dpordomingo
+        jira:
+          labels_include:
+          - bug
+      properties:
+        repositories:
+          $ref: '#/components/schemas/RepositorySet'
+        repogroups:
+          $ref: '#/components/schemas/IndexedGroups'
+        pushers:
+          $ref: '#/components/schemas/CommitPushers'
+        pusher_groups:
+          description: 'Check runs must be triggered by commits authored by these people.
+
+            We aggregate by each group so that you can request metrics of several teams at once.
+
+            We treat `pushers` as another group, if specified.'
+          items:
+            $ref: '#/components/schemas/CommitPushers'
+          type: array
+        labels_include:
+          description: At least one of these labels must be present in the checked PRs.
+          items:
+            type: string
+          type: array
+        labels_exclude:
+          description: None of these labels must be present in each checked PR.
+          items:
+            type: string
+          type: array
+        jira:
+          allOf:
+          - description: Analyze only those check runs that belong to PRs mapped to JIRA issues that satisfy this filter.
+          - $ref: '#/components/schemas/JIRAFilter'
+        lines:
+          description: Split by changed number of lines (inserted + removed) in pull requests.
+          items:
+            minimum: 0
+            type: integer
+          minItems: 2
+          type: array
+      required:
+      - repositories
+      type: object
+    CodeCheckHistogramDefinition:
+      additionalProperties: false
+      description: 'Histogram parameters: topic, bins.'
+      example:
+        metric: chk-suite-time
+        ticks:
+        - 60s
+        - 120s
+        - 180s
+        - 360s
+        - 720s
+        - 1440s
+      properties:
+        metric:
+          $ref: '#/components/schemas/CodeCheckMetricID'
+        scale:
+          allOf:
+          - $ref: '#/components/schemas/HistogramScale'
+          - description: Histogram's X axis scale.
+        bins:
+          description: Number of bars in the histogram. 0 or null means automatic.
+          minimum: 0
+          type: integer
+        ticks:
+          description: 'Alternatively to `bins` and `scale`, set the X axis bar borders manually.
+
+            Only one of two may be specified. The ticks are automatically prepended
+
+            the distribution minimum and appended the distribution maximum.'
+          items:
+            oneOf:
+            - type: number
+            - $ref: '#/components/schemas/TimeDuration'
+          minItems: 1
+          type: array
+      required:
+      - metric
+      type: object
+    InvalidRequestError:
+      allOf:
+      - $ref: '#/components/schemas/GenericError'
+      - properties:
+          pointer:
+            description: Path to the offending request item.
+            example: .granularity
+            type: string
+        type: object
+    CalculatedCodeCheckHistograms:
+      description: Response from `/histograms/code_checks`.
+      items:
+        $ref: '#/components/schemas/CalculatedCodeCheckHistogram'
+      type: array
+    CodeCheckHistogramsRequest:
+      additionalProperties: false
+      description: Request of `/histograms/code_checks`.
+      example:
+        for:
+        - repositories:
+          - github.com/athenianco/athenian-webapp
+          - github.com/athenianco/athenian-api
+          pushers:
+          - github.com/vmarkovtsev
+          - github.com/dpordomingo
+        histograms:
+        - scale: log
+          metric: chk-suite-time
+        account: 1
+        date_to: 2020-11-23
+        date_from: 2020-01-23
+        timezone: 120
+      properties:
+        for:
+          description: 'Sets of developers and repositories for which to calculate the histograms.
+
+            The aggregation is `AND` between repositories and developers.
+
+            The aggregation is `OR` inside both repositories and developers.'
+          items:
+            $ref: '#/components/schemas/ForSetCodeChecks'
+          type: array
+        histograms:
+          description: Histogram parameters for each wanted topic.
+          items:
+            $ref: '#/components/schemas/CodeCheckHistogramDefinition'
+          type: array
+        date_from:
+          description: Date from when to start measuring the distribution.
+          format: date
+          type: string
+        date_to:
+          description: Date until which to measure the distribution.
+          format: date
+          type: string
+        timezone:
+          $ref: '#/components/schemas/TimeZone'
+        quantiles:
+          $ref: '#/components/schemas/Quantiles'
+        split_by_check_runs:
+          description: Calculate histograms separately for each number of check runs in suite.
+          type: boolean
+        account:
+          description: Session account ID.
+          type: integer
+      required:
+      - account
+      - date_from
+      - date_to
+      - for
+      - histograms
+      type: object
+    PullRequestHistogramDefinition:
+      additionalProperties: false
+      description: 'Histogram parameters: topic, bins.'
+      example:
+        metric: pr-size
+        ticks:
+        - 1
+        - 10
+        - 50
+        - 100
+        - 500
+      properties:
+        metric:
+          $ref: '#/components/schemas/PullRequestMetricID'
+        scale:
+          allOf:
+          - $ref: '#/components/schemas/HistogramScale'
+          - description: Histogram's X axis scale.
+        bins:
+          description: Number of bars in the histogram. 0 or null means automatic.
+          minimum: 0
+          type: integer
+        ticks:
+          description: 'Alternatively to `bins` and `scale`, set the X axis bar borders manually.
+
+            Only one of two may be specified. The ticks are automatically prepended
+
+            the distribution minimum and appended the distribution maximum.'
+          items:
+            oneOf:
+            - type: number
+            - $ref: '#/components/schemas/TimeDuration'
+          minItems: 1
+          type: array
+      required:
+      - metric
+      type: object
+    JIRAFilterWith:
+      additionalProperties: false
+      description: Group of JIRA issue participant names split by role.
+      example:
+        assignees:
+        - Vadim Markovtsev
+      properties:
+        assignees:
+          description: Selected issue assignee users. `null` means unassigned.
+          items:
+            nullable: true
+            type: string
+          type: array
+        reporters:
+          description: Selected issue reporter users.
+          items:
+            type: string
+          type: array
+        commenters:
+          description: Selected issue commenter users.
+          items:
+            type: string
+          type: array
+      type: object
+    JIRAComment:
+      additionalProperties: false
+      properties:
+        author:
+          description: The name of the user who created the comment.
+          type: string
+        created:
+          description: The date and time at which the comment was created.
+          format: date-time
+          type: string
+        rendered_body:
+          description: The comment text.
+          type: string
+      required:
+      - author
+      - created
+      - rendered_body
+      type: object
+    CodeCheckMetricID:
+      description: 'The mentioned terms such as "check suite" and "check run" belong to [the official documentation on GitHub](https://docs.github.com/en/rest/guides/getting-started-with-the-checks-api#about-check-runs).
+
+        * `chk-suites-count` - number of executed check suites.
+
+        * `chk-suites-in-prs-count` - number of executed check suites in pull requests.
+
+        * `chk-successful-suites-count` - number of successfully executed check suites.
+
+        * `chk-failed-suites-count` - number of failed check suites.
+
+        * `chk-cancelled-suites-count` - number of cancelled check suites.
+
+        * `chk-success-ratio` - `chk-successful-suites-count` divided by `chk-suites-count`.
+
+        * `chk-suite-time` - average check suite execution time.
+
+        * `chk-robust-suite-time` - average check suite execution time, alternative algorithm. We consider each suite size group separately, fill missing daily values by averaging the neighbors, and then take the average of group averages.
+
+        * `chk-suites-per-pr` - average number of times check suites executed in a pull request.
+
+        * `chk-suite-time-per-pr` - average check suite execution time by pull request. The difference with `chk-suite-time` is that we don''t consider checks triggered by direct pushes, e.g. by merge commits.
+
+        * `chk-prs-with-checks-count` - number of PRs that triggered at least one check suite.
+
+        * `chk-flaky-commit-checks-count` - number of check suites triggered by the same commit but having different outcomes - both successful and failed.
+
+        * `chk-prs-merged-with-failed-checks-count` - how many PRs were merged despite failing checks.
+
+        * `chk-prs-merged-with-failed-checks-ratio` - ratio of PRs merged with failing checks to all merged PRs with checks.
+
+        * `chk-concurrency-max` - maximum number of check runs of the same type executing in parallel. We consider check runs executing in parallel if their time intervals overlap ≥ 50%.
+
+        * `chk-concurrency` - average number of check runs of the same type executing in parallel; we choose the check run type that corresponds to the maximum concurrency for each day. We consider check runs executing in parallel if their time intervals overlap ≥ 50%.
+
+        * `chk-elapsed-time-per-concurrency` - cumulative time spent on each concurrency level across check runs. Only allowed for histograms.
+
+        * `chk-suite-occupancy` - average ratio between summed time of check runs in a check suite and the product of the number of check runs with the maximum check run time in that check suite. 1 means ideal resource utilization, down to 0 for absolute inefficiency. For example, there are one slow check run that executes in 10x seconds, and N fast check runs that execute in x seconds, in the same check suite. The metric value will be (10x + Nx) / (10*(N+1)*x) → 0.1 if N → +∞.
+
+        * `chk-suite-critical-occupancy` - `chk-suite-occupancy` calculated for critical check runs only. A critical check run is a check run of type that at least once dominated the check suite execution time on the time interval. This is the measure of check suite "trebble" when there are several slowest check runs that elapse time with some standard deviation.
+
+        * `chk-suite-imbalance` - average difference between the time of the slowest and the second slowest check runs in a check suite. High values signal unbalanced jobs and CI/CD inefficiency.'
+      enum:
+      - chk-suites-count
+      - chk-suites-in-prs-count
+      - chk-successful-suites-count
+      - chk-failed-suites-count
+      - chk-cancelled-suites-count
+      - chk-success-ratio
+      - chk-suite-time
+      - chk-robust-suite-time
+      - chk-suites-per-pr
+      - chk-suite-time-per-pr
+      - chk-prs-with-checks-count
+      - chk-flaky-commit-checks-count
+      - chk-prs-merged-with-failed-checks-count
+      - chk-prs-merged-with-failed-checks-ratio
+      - chk-concurrency-max
+      - chk-concurrency
+      - chk-elapsed-time-per-concurrency
+      - chk-suite-occupancy
+      - chk-suite-critical-occupancy
+      - chk-suite-imbalance
+      example: chk-suites-count
+      type: string
+    JIRAMetricID:
+      description: 'Currently supported JIRA activity metrics.
+
+        * `jira-open` - number of issues active by the end of the time interval.
+
+        * `jira-resolved` - number of issues closed in the given time range.
+
+        * `jira-raised` - number of issues reported in the given time range.
+
+        * `jira-acknowledged` - number of issues that are "In Progress" or "Resolved". This number matches the issues considered to calculate `jira-acknowledge-time` before applying the quantiles.
+
+        * `jira-acknowledged-q` - number of issues that are "In Progress" or "Resolved". This number matches the issues considered to calculate `jira-acknowledge-time` after applying the quantiles.
+
+        * `jira-life-time` - Mean Life Time - the time between min(issue creation, work began) and max(issue resolution, fixes released).
+
+        * `jira-life-time-below-threshold-ratio` - ratio of issues with a `jira-life-time` below the threshold, disregarding the quantiles. The default threshold is 5 days.
+
+        * `jira-lead-time` - Mean Lead Time - the time between when the work began and max(issue resolution, fixes released).
+
+        * `jira-lead-time-below-threshold-ratio` - ratio of issues with a `jira-lead-time` below the threshold, disregarding the quantiles. The default threshold is 5 days.
+
+        * `jira-acknowledge-time` - Mean Acknowledge Time - the time between when the issue was created and the work began = `min(transitioned to "In Progress", PR created)`. It equals to 0 for retrofitted issues with PRs before their creation times.
+
+        * `jira-acknowledge-time-below-threshold-ratio` - ratio of issues with a `jira-acknowledge-time` below the threshold, disregarding the quantiles. The default threshold is 3 days.
+
+        * `jira-pr-lag-time` - the time between when the issue transitioned to "In Progress" and the first PR was created. It equals to 0 if the difference is negative or no PRs are mapped to the issue.
+
+        * `jira-backlog-time` - the time between when the issue was created and transitioned to "In Progress".
+
+        * `jira-resolution-rate` - ratio between the number of resolved issues to the number of raised issues.'
+      enum:
+      - jira-open
+      - jira-resolved
+      - jira-raised
+      - jira-acknowledged
+      - jira-acknowledged-q
+      - jira-life-time
+      - jira-life-time-below-threshold-ratio
+      - jira-lead-time
+      - jira-lead-time-below-threshold-ratio
+      - jira-acknowledge-time
+      - jira-acknowledge-time-below-threshold-ratio
+      - jira-pr-lag-time
+      - jira-backlog-time
+      - jira-resolution-rate
+      example: jira-resolved
+      type: string
+    RepositorySet:
+      description: Set of repositories. An empty list raises a bad response 400. Duplicates are automatically ignored.
+      example:
+      - github.com/athenianco/athenian-webapp
+      - github.com/athenianco/athenian-api
+      items:
+        $ref: '#/components/schemas/RepositoryID'
+      type: array
+    JIRAFilter:
+      additionalProperties: false
+      description: 'Filters related to JIRA traits. The aggregation between each filter type is *AND*.
+
+        '
+      example:
+        epics:
+        - DEV-167
+        - DEV-230
+        labels_include:
+        - api,performance
+        - metadata
+        labels_exclude:
+        - feature
+        issue_types:
+        - Bug
+        - Task
+        priorities:
+        - high
+        - low
+        projects:
+        - DEV
+        - ENG
+        status_categories:
+        - In Progress
+      properties:
+        epics:
+          description: JIRA issues must be included in the epics from the list.
+          items:
+            type: string
+          type: array
+        labels_include:
+          description: 'Only issues having at least one label from the list will be included
+
+            Several labels may be concatenated by a comma `,` so that all of them
+
+            are required.
+
+            '
+          items:
+            type: string
+          type: array
+        labels_exclude:
+          description: Issues having one label from the list will be excluded.
+          items:
+            type: string
+          type: array
+        issue_types:
+          description: 'Issues must have one of the given types, e.g. Bug, Task, Design Document, etc.
+
+            '
+          items:
+            type: string
+          type: array
+        priorities:
+          description: Issues must have a priority from the given list.
+          items:
+            type: string
+          type: array
+        projects:
+          description: Issues must be contained in a project in the given project keys list.
+          items:
+            type: string
+          type: array
+        status_categories:
+          description: The JIRA issues must have a status belonging to one of these categories.
+          items:
+            $ref: '#/components/schemas/JIRAStatusCategory'
+          type: array
+        unmapped:
+          description: Select PRs that are not mapped to any JIRA issue. May not be specified with anything else.
+          type: boolean
+      type: object
+    CalculatedPullRequestHistogram:
+      additionalProperties: false
+      description: Calculated histogram over PR activities.
+      example:
+        for:
+          repositories:
+          - github.com/athenianco/athenian-webapp
+          - github.com/athenianco/athenian-api
+        metric: pr-size
+        scale: linear
+        ticks:
+        - 0
+        - 1
+        - 10
+        - 50
+        - 100
+        - 500
+        - 10000
+        frequencies:
+        - 0
+        - 38
+        - 28
+        - 13
+        - 12
+        - 8
+        interquartile:
+          left: 3
+          right: 76
+      properties:
+        for:
+          $ref: '#/components/schemas/ForSetPullRequests'
+        metric:
+          $ref: '#/components/schemas/PullRequestMetricID'
+        scale:
+          $ref: '#/components/schemas/HistogramScale'
+        ticks:
+          description: Series of horizontal bar borders aka X axis. Their count is `len(y) + 1` because there are `N` intervals between `(N + 1)` ticks.
+          items:
+            oneOf:
+            - type: number
+            - $ref: '#/components/schemas/TimeDuration'
+          type: array
+        frequencies:
+          description: Series of histogram bar heights aka Y axis.
+          items:
+            oneOf:
+            - type: number
+              minimum: 0
+            - $ref: '#/components/schemas/TimeDuration'
+          type: array
+        interquartile:
+          $ref: '#/components/schemas/Interquartile'
+      required:
+      - for
+      - frequencies
+      - interquartile
+      - metric
+      - scale
+      - ticks
+      type: object
+    JIRAGroups:
+      description: 'Calculate metrics separately for each JIRA Filter in the list.
+
+        Not compatible with `jira` field.
+
+        '
+      items:
+        $ref: '#/components/schemas/JIRAFilter'
+      type: array
+    PullRequestHistogramsRequest:
+      additionalProperties: false
+      description: Request of `/histograms/pull_requests`.
+      example:
+        for:
+        - repositories:
+          - github.com/athenianco/athenian-webapp
+          - github.com/athenianco/athenian-api
+          with:
+            author:
+            - github.com/vmarkovtsev
+            - github.com/dpordomingo
+          labels_include:
+          - bug
+        histograms:
+        - scale: log
+          metric: pr-lead-time
+        account: 1
+        date_to: 2020-11-23
+        date_from: 2020-01-23
+        timezone: 120
+        exclude_inactive: true
+      properties:
+        for:
+          description: 'Sets of developers and repositories for which to calculate the histograms.
+
+            The aggregation is `AND` between repositories and developers.
+
+            The aggregation is `OR` inside both repositories and developers.'
+          items:
+            $ref: '#/components/schemas/ForSetPullRequests'
+          type: array
+        histograms:
+          description: Histogram parameters for each wanted topic.
+          items:
+            $ref: '#/components/schemas/PullRequestHistogramDefinition'
+          type: array
+        date_from:
+          description: Date from when to start measuring the distribution.
+          format: date
+          type: string
+        date_to:
+          description: Date until which to measure the distribution.
+          format: date
+          type: string
+        timezone:
+          $ref: '#/components/schemas/TimeZone'
+        exclude_inactive:
+          description: Value indicating whether PRs without events in the given time frame shall be ignored.
+          type: boolean
+        quantiles:
+          $ref: '#/components/schemas/Quantiles'
+        account:
+          description: Session account ID.
+          type: integer
+        fresh:
+          description: Force histograms calculation on the most up to date data.
+          type: boolean
+      required:
+      - account
+      - date_from
+      - date_to
+      - exclude_inactive
+      - for
+      - histograms
+      type: object
+    JIRAHistogramsRequest:
+      additionalProperties: false
+      description: Request of `/histograms/jira`.
+      example:
+        types:
+        - Bug
+        histograms:
+        - metric: jira-raised
+        account: 1
+        date_to: 2020-11-23
+        date_from: 2020-01-23
+        timezone: 120
+        exclude_inactive: true
+      properties:
+        priorities:
+          description: Selected issue priorities.
+          items:
+            type: string
+          type: array
+        types:
+          description: Selected issue types.
+          items:
+            type: string
+          type: array
+        epics:
+          items:
+            $ref: '#/components/schemas/JIRAEpic'
+          type: array
+        labels_include:
+          description: PRs must relate to at least one JIRA issue label from the list. Several labels may be concatenated by a comma `,` so that all of them are required.
+          items:
+            type: string
+          type: array
+        labels_exclude:
+          description: PRs cannot relate to JIRA issue labels from the list.
+          items:
+            type: string
+          type: array
+        with:
+          description: Groups of issue participants. The histograms will be calculated for each group.
+          items:
+            $ref: '#/components/schemas/JIRAFilterWith'
+          type: array
+        projects:
+          description: Issues must belong to these JIRA projects.
+          items:
+            example: DEV
+            type: string
+          type: array
+        histograms:
+          description: Histogram parameters for each wanted topic.
+          items:
+            $ref: '#/components/schemas/JIRAHistogramDefinition'
+          type: array
+        date_from:
+          description: Date from when to start measuring the distribution.
+          format: date
+          type: string
+        date_to:
+          description: Date until which to measure the distribution.
+          format: date
+          type: string
+        timezone:
+          $ref: '#/components/schemas/TimeZone'
+        exclude_inactive:
+          description: Value indicating whether issues with the last update older than `date_from` should be ignored.
+          type: boolean
+        quantiles:
+          $ref: '#/components/schemas/Quantiles'
+        account:
+          description: Session account ID.
+          type: integer
+      required:
+      - account
+      - date_from
+      - date_to
+      - exclude_inactive
+      - histograms
+      type: object
+    CalculatedPullRequestHistograms:
+      description: Response from `/histograms/pull_requests`.
+      items:
+        $ref: '#/components/schemas/CalculatedPullRequestHistogram'
+      type: array
+    JIRAEpicChild:
+      allOf:
+      - $ref: '#/components/schemas/JIRAEpicIssueCommon'
+      - properties:
+          subtasks:
+            description: Number of sub-tasks.
+            type: integer
+          prs:
+            description: Number of mapped pull requests.
+            type: integer
+        required:
+        - prs
+        - subtasks
+      description: Details about a JIRA issue contained in an epic.
+      example:
+        id: DEV-157
+        title: New repository for the precomputing service
+        created: 2020-05-21 18:29:00+00:00
+        updated: 2020-11-25 13:49:00+00:00
+        reporter: Vadim Markovtsev
+        assignee: Oleksandr Chabaiev
+        comments: 10
+        priority: Low
+        status: Released
+        prs: 0
+        type: Task
+        acknowledge_time: 132200s
+        life_time: 10000s
+        url: https://example.com/?my-jira#DEV-157
+        subtasks: 2
+      type: object
+    JIRAEpic:
+      allOf:
+      - $ref: '#/components/schemas/JIRAEpicIssueCommon'
+      - properties:
+          project:
+            description: Identifier of the project where this epic exists.
+            type: string
+          children:
+            description: Details about the child issues.
+            items:
+              $ref: '#/components/schemas/JIRAEpicChild'
+            type: array
+          prs:
+            description: Overall number of mapped pull requests (including the children).
+            type: integer
+        required:
+        - project
+        - prs
+      description: Details about a JIRA epic together with its child issues.
+      example:
+        id: DEV-158
+        title: Precomputed DB - stage 2
+        created: 2020-05-21 18:27:00+00:00
+        updated: 2020-08-03 23:47:00+00:00
+        reporter: Vadim Markovtsev
+        assignee: Vadim Markovtsev
+        comments: 1
+        prs: 0
+        priority: Low
+        status: Backlog
+        type: Epic
+        acknowledge_time: 132200s
+        life_time: 10000s
+        url: https://example.com/?my-jira#DEV-158
+        project: '1002'
+        children:
+        - id: DEV-157
+          title: New repository for the precomputing service
+          created: 2020-05-21 18:29:00+00:00
+          updated: 2020-11-25 13:49:00+00:00
+          reporter: Vadim Markovtsev
+          assignee: Oleksandr Chabaiev
+          comments: 10
+          priority: Low
+          status: Released
+          prs: 0
+          type: Task
+          url: https://example.com/?my-jira#DEV-157
+          acknowledge_time: 132200s
+          life_time: 10000s
+          subtasks: 0
+        - id: DEV-156
+          title: Design the architecture of the precomputing service
+          created: 2020-05-21 18:27:00+00:00
+          updated: 2020-09-09 00:05:00+00:00
+          reporter: Vadim Markovtsev
+          assignee: Vadim Markovtsev
+          comments: 0
+          priority: Low
+          status: Released
+          prs: 0
+          type: Task
+          url: https://example.com/?my-jira#DEV-156
+          acknowledge_time: 132200s
+          life_time: 20000s
+          subtasks: 2
+      type: object
+    IndexedGroups:
+      description: 'Lists of indexes in `repositories` or `developers` that define independent groups
+
+        that must be processed individually. The groups may have intersections.'
+      example:
+      - - 0
+        - 1
+      - - 1
+      items:
+        items:
+          minimum: 0
+          type: integer
+        minItems: 1
+        type: array
+      minItems: 1
+      type: array
+    DeveloperSet:
+      description: A set of developers. An empty list disables the filter and includes everybody. Duplicates are automatically ignored.
+      example:
+      - github.com/vmarkovtsev
+      - github.com/dpordomingo
+      items:
+        $ref: '#/components/schemas/DeveloperID'
+      type: array
+    JIRAEpicIssueCommon:
+      description: Common properies if a JIRA issue or epic.
+      properties:
+        id:
+          description: JIRA issue key `PROJECT-###`.
+          type: string
+        title:
+          description: Title of this issue.
+          type: string
+        created:
+          description: When this issue was created.
+          format: date-time
+          type: string
+        updated:
+          description: When this issue was last updated.
+          format: date-time
+          type: string
+        work_began:
+          description: 'When the issue entered the "In Progress" stage or received a PR.
+
+            This timestamp can be missing and is always less than or equal to `resolved`.'
+          format: date-time
+          type: string
+        resolved:
+          description: 'When the issue finished: the stage is "Done" and all PRs are either released or rejected.
+
+            This timestamp can be missing and is always greater than or equal to `work_began`.'
+          format: date-time
+          type: string
+        acknowledge_time:
+          allOf:
+          - description: 'Issue''s time spent between `work_began` and `created`. If work on issue has not
+
+              begun, time between `now()` and `created.  See also `jira-acknowledge-time` metric.'
+          - $ref: '#/components/schemas/TimeDuration'
+        lead_time:
+          allOf:
+          - description: 'Issue''s time spent between `work_began` and `resolved`. If not resolved,
+
+              between `work_began` and `now()`.'
+          - $ref: '#/components/schemas/TimeDuration'
+        life_time:
+          allOf:
+          - description: 'Issue''s time spent between `created` and `resolved`. If not resolved,
+
+              between `created` and `now()`.'
+          - $ref: '#/components/schemas/TimeDuration'
+        reporter:
+          description: Name of the person who reported the issue.
+          type: string
+        assignee:
+          description: Name of the assigned person.
+          type: string
+        comments:
+          description: Number of comments in the issue excluding sub-tasks and children.
+          type: integer
+        comment_list:
+          description: The list of comments for the issue.
+          items:
+            $ref: '#/components/schemas/JIRAComment'
+          type: array
+        priority:
+          description: Name of the priority. The details are returned in `FilteredJIRAStuff.priorities`.
+          nullable: true
+          type: string
+        rendered_description:
+          description: The description of the issue rendered as HTML.
+          type: string
+        status:
+          description: Name of the status. The details are returned in `FilteredJIRAStuff.statuses`.
+          type: string
+        story_points:
+          description: Value of the "story points" field.
+          type: number
+        type:
+          description: Name of the issue type. The details are returned in `FilteredJIRAStuff.issue_types`.
+          type: string
+        url:
+          description: Link to the issue in JIRA web application.
+          format: url
+          type: string
+      required:
+      - comments
+      - created
+      - id
+      - acknowledge_time
+      - life_time
+      - priority
+      - reporter
+      - status
+      - title
+      - type
+      - updated
+      - url
+      type: object
+    CalculatedJIRAHistograms:
+      description: Response from `/histograms/jira`.
+      items:
+        $ref: '#/components/schemas/CalculatedJIRAHistogram'
+      type: array
+  responses:
+    InvalidRequestErrorResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InvalidRequestError'
+      description: The request is invalid.
+  securitySchemes:
+    apiKeyAuth:
+      description: 'Authorization by the value of `X-API-Key` header aka API token.
+
+        The tokens are user- and account-specific. Create them by calling `/token/create`.
+
+        The server automatically inserts `account` in the request''s body if it was not
+
+        supplied by the user.'
+      in: header
+      name: X-API-Key
+      type: apiKey
+      x-apikeyInfoFunc: athenian.api.controllers.security_controller.info_from_apiKeyAuth
+    bearerAuth:
+      bearerFormat: JWT
+      description: 'Regular JSON Web Token authorization powered by Auth0.
+
+        The server expects an `Authorization: Bearer <token>` header and checks `<token>` by
+
+        sending it to Auth0. Visit [{{ server_url | replace("api", "app") }}/bearer]({{ server_url | replace("api", "app") }}/bearer)
+
+        to copy your current JWT that will expire within 24 hours.'
+      scheme: bearer
+      type: http
+      x-bearerInfoFunc: athenian.api.controllers.security_controller.info_from_bearerAuth

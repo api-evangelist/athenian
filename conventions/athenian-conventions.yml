@@ -1,0 +1,35 @@
+generated: '2026-07-18'
+method: derived
+source: openapi/athenian-openapi-original.yml
+note: Cross-cutting semantics derived from the published Athenian OpenAPI + api-spec
+  README. Athenian is a single-tenant analytics API scoped to an account.
+authentication:
+  styles:
+  - apiKey (X-API-Key header)
+  - http bearer JWT (Auth0)
+  notes: Read-only endpoints accept API Key or JWT; read-write endpoints require JWT.
+    Server auto-injects the account id into the request body when omitted.
+  ref: authentication/athenian-authentication.yml
+account_scoping:
+  field: account
+  notes: Most endpoints require the Athenian account id; the server inserts it into
+    the request body if not supplied.
+idempotency:
+  supported: false
+  notes: No Idempotency-Key header or idempotent-write contract is documented in the
+    spec.
+pagination:
+  style: explicit paginate endpoint
+  example_operation: paginate_prs (POST /paginate/pull_requests)
+  notes: PR listing supports a dedicated /paginate/pull_requests plan endpoint that
+    returns pagination boundaries used by /filter/pull_requests.
+error_envelope:
+  shape: GenericError {type,title,status,detail[,pointer]}
+  format: rfc7807-style
+  ref: errors/athenian-problem-types.yml
+versioning:
+  scheme: uri-path
+  current: v1
+  spec_version: 2.1.86
+rate_limit_signaling:
+  documented: false

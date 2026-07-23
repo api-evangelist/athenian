@@ -1,0 +1,30 @@
+generated: '2026-07-18'
+method: derived
+source: openapi/athenian-openapi-original.yml
+note: Standards conformance derived from the OpenAPI spec + README. No published compliance/certification
+  program (SOC 2/ISO/etc.) was found, so no Compliance pointer is emitted.
+standards:
+- id: openapi-3.0
+  conforms: true
+  evidence: 'openapi: 3.0.3 document published at athenianco/api-spec'
+- id: rfc7807-problem-details
+  conforms: true
+  evidence: GenericError schema uses type/title/status/detail (problem-details shape)
+- id: oauth2
+  conforms: false
+  evidence: no oauth2 securityScheme; bearer JWT is via Auth0
+- id: oidc
+  conforms: false
+  evidence: bearer JWT powered by Auth0 but no openIdConnect scheme declared
+- id: json-api
+  conforms: false
+- id: fhir-r4
+  conforms: false
+- id: scim
+  conforms: false
+- id: pagination
+  conforms: true
+  evidence: dedicated /paginate/pull_requests plan endpoint
+- id: idempotency
+  conforms: false
+  evidence: no idempotency-key contract documented

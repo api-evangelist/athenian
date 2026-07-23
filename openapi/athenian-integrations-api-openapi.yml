@@ -1,0 +1,318 @@
+openapi: 3.0.3
+info:
+  contact:
+    email: admin@athenian.co
+    name: the administrator by email
+  description: 'Server version: {{ server_version }} built on {{ build_date }} @ [{{ commit }}](https://github.com/athenianco/athenian-api/commit/{{ commit }})
+
+
+    Origin GitHub repository: [athenianco/api-spec](https://github.com/athenianco/api-spec).
+
+
+    Authorization persists between sessions. Marks:
+
+    * 🛡️ endpoint requires account admin privileges.
+
+    * 👤 endpoint only works with JWT authentication.
+
+    <details>
+
+    <summary>List of common server errors.</summary>
+
+    * __500__ endpoint crashed. We reported the incident to Sentry and will fix it soon! Please include the value of `instance` in the response if you contact the support. Repeating the request will not help, most probably.
+
+    * __501__ some functions are missing, either because they are not implemented yet or a non-critical runtime dependency is not satisfied. Repeating the request will not help, guaranteed.
+
+    * __502__ server crashed badly, either due to a memory access violation in native code or running out of memory. We reported this incident to Sentry and will fix it soon! Try repeating the request.
+
+    * __503__ server has not fully launched yet, e.g. hasn''t connected to the database; server is shutting down; we are experiencing a partial outage. Try repeating the request.
+
+    * __504__ endpoint took too much time and was interrupted. We reported the incident to Sentry and will see how to improve the performance. Repeating the request will not help, most probably.
+
+    </details>'
+  license:
+    name: CC-BY-4.0
+  title: '{{ title }} align integrations API'
+  version: 2.1.86
+servers:
+- description: '{{ server_description }} - {{ server_url }}'
+  url: '{{ server_url }}/v1'
+tags:
+- name: integrations
+paths:
+  /get/export:
+    get:
+      operationId: get_everything
+      parameters:
+      - description: Numeric identifier of the account. Raises HTTP 400 if the user belongs to more than one account.
+        explode: false
+        in: query
+        name: account
+        required: false
+        schema:
+          type: integer
+        style: form
+      - description: Output file format. The default is `parquet`.
+        explode: false
+        in: query
+        name: format
+        required: false
+        schema:
+          enum:
+          - parquet
+          type: string
+        style: form
+      responses:
+        200:
+          content:
+            application/zip:
+              schema:
+                format: binary
+                type: string
+          description: Uncompressed ZIP archive with binary files in the configured format.
+        400:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidRequestError'
+          description: Invalid query parameter values.
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The user does not belong to the specified account.
+        422:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoSourceDataError'
+          description: The installation has not finished yet.
+        424:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MissingSettingsError'
+          description: One or more logical repositories miss the release settings.
+      security:
+      - bearerAuth: []
+      - apiKeyAuth: []
+      summary: Download all the data collected by Athenian for custom analysis.
+      tags:
+      - integrations
+      x-openapi-router-controller: athenian.api.controllers.integrations_controller
+  /match/identities:
+    post:
+      operationId: match_identities
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MatchIdentitiesRequest'
+        required: true
+        x-body-name: body
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MatchedIdentities'
+          description: Computed identities mapping.
+        400:
+          $ref: '#/components/responses/InvalidRequestErrorResponse'
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The specified account does not exist or the user is not a member.
+        422:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoSourceDataError'
+          description: The account's installation has not finished yet.
+      security:
+      - bearerAuth: []
+      - apiKeyAuth: []
+      summary: Match provided people names/logins/emails to the account's GitHub organization members.
+      tags:
+      - integrations
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: athenian.api.controllers.integrations_controller
+components:
+  schemas:
+    MatchedIdentities:
+      description: Response from `/match/identities` - mapping from supplied identities to GitHub organization members. The order matches the order of `MatchIdentitiesRequest.identities`.
+      example:
+      - from:
+          emails:
+          - gkwillie@athenian.co
+        to: null
+        confidence: 0.5
+      - from:
+          names:
+          - Vadim Markovtsev
+        to: github.com/vmarkovtsev
+        confidence: 1
+      items:
+        $ref: '#/components/schemas/MatchedIdentity'
+      type: array
+    DeveloperID:
+      description: 'User name which uniquely identifies any developer on any service provider.
+
+        The format matches the profile URL without the protocol part.
+
+        '
+      example: github.com/vmarkovtsev
+      type: string
+    MatchedIdentity:
+      description: Identity mapping of a specific contributor.
+      example:
+        confidence: 1
+        from:
+          names:
+          - Vadim Markovtsev
+        to: github.com/vmarkovtsev
+      properties:
+        from:
+          $ref: '#/components/schemas/ContributorIdentity'
+        to:
+          anyOf:
+          - nullable: true
+            type: string
+          - $ref: '#/components/schemas/DeveloperID'
+        confidence:
+          description: Value from 0 to 1 indicating how similar are the users.
+          format: float
+          maximum: 1
+          minimum: 0
+          type: number
+      required:
+      - confidence
+      - from
+      - to
+      type: object
+    InvalidRequestError:
+      allOf:
+      - $ref: '#/components/schemas/GenericError'
+      - properties:
+          pointer:
+            description: Path to the offending request item.
+            example: .granularity
+            type: string
+        type: object
+    ContributorIdentity:
+      additionalProperties: false
+      description: Information about a contributor that may be utilized to match identities.
+      example:
+        emails:
+        - vadim@athenian.co
+        names:
+        - Vadim Markovtsev
+        - vmarkovtsev
+        - Vadim
+      properties:
+        emails:
+          description: Email addresses belonging to the person.
+          items:
+            format: email
+            type: string
+          type: array
+        names:
+          description: The person is known as each of these full names. The format is arbitrary.
+          items:
+            type: string
+          type: array
+      type: object
+    NoSourceDataError:
+      $ref: '#/components/schemas/GenericError'
+    MissingSettingsError:
+      $ref: '#/components/schemas/GenericError'
+    GenericError:
+      example:
+        detail: 'Unsupported metric: pr-xxx-time'
+        status: 400
+        title: Bad request syntax or unsupported method.
+        type: /errors/InvalidRequestError
+      properties:
+        detail:
+          description: Human-readable explanation specific to this occurrence of the problem.
+          example: 'Unsupported metric: pr-xxx-time'
+          type: string
+        instance:
+          description: URI reference that identifies the specific occurrence of the problem. It is `null` for 4xx, Sentry event ID for 5xx.
+          example: 2763c4eabd7240f59829ee1a02546293
+          type: string
+        status:
+          description: Duplicated HTTP status code.
+          example: 400
+          type: integer
+        title:
+          description: Short, human-readable summary of the problem type.
+          example: Bad request syntax or unsupported method.
+          type: string
+        type:
+          description: URI reference that identifies the problem type (RFC 7807).
+          example: /errors/InvalidRequestError
+          type: string
+      required:
+      - status
+      - title
+      - type
+      type: object
+    MatchIdentitiesRequest:
+      additionalProperties: false
+      description: Request body of `/match/identities`.
+      example:
+        account: 1
+        identities:
+        - emails:
+          - eiso@athenian.co
+        - names:
+          - Vadim Markovtsev
+          - vmarkovtsev
+      properties:
+        account:
+          description: User's account ID.
+          type: integer
+        identities:
+          items:
+            $ref: '#/components/schemas/ContributorIdentity'
+          type: array
+      required:
+      - account
+      - identities
+      type: object
+  responses:
+    InvalidRequestErrorResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InvalidRequestError'
+      description: The request is invalid.
+  securitySchemes:
+    apiKeyAuth:
+      description: 'Authorization by the value of `X-API-Key` header aka API token.
+
+        The tokens are user- and account-specific. Create them by calling `/token/create`.
+
+        The server automatically inserts `account` in the request''s body if it was not
+
+        supplied by the user.'
+      in: header
+      name: X-API-Key
+      type: apiKey
+      x-apikeyInfoFunc: athenian.api.controllers.security_controller.info_from_apiKeyAuth
+    bearerAuth:
+      bearerFormat: JWT
+      description: 'Regular JSON Web Token authorization powered by Auth0.
+
+        The server expects an `Authorization: Bearer <token>` header and checks `<token>` by
+
+        sending it to Auth0. Visit [{{ server_url | replace("api", "app") }}/bearer]({{ server_url | replace("api", "app") }}/bearer)
+
+        to copy your current JWT that will expire within 24 hours.'
+      scheme: bearer
+      type: http
+      x-bearerInfoFunc: athenian.api.controllers.security_controller.info_from_bearerAuth

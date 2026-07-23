@@ -1,25 +1,368 @@
 aid: athenian
 name: Athenian
-description: Athenian is a company surfaced as a portfolio company of point-nine and added to the API
-  Evangelist network as a stub for enrichment. This profile is a lead awaiting the enrichment pipeline.
+description: >-
+  Athenian was a full-cycle software-development analytics platform founded in 2019 by
+  Eiso Kant, with a seed round led by Point Nine. It integrated GitHub, JIRA, and CI/CD
+  tooling to give engineering leaders end-to-end visibility into their delivery pipeline —
+  lead time, cycle time, deployment frequency, PR review dynamics, and goal alignment —
+  deliberately measuring teams and events rather than ranking individuals. The company has
+  since wound down: athenian.com and athenian.co now redirect to github.com/athenianco and
+  the production API host api.athenian.co no longer resolves. However, the OpenAPI
+  specification (athenianco/api-spec, 79 operations, 218 schemas) and the open-source API
+  implementation (athenian-api-open, MIT) remain publicly published on GitHub, which is why
+  this profile is enriched from the real, still-available API contract.
 url: https://raw.githubusercontent.com/api-evangelist/athenian/refs/heads/main/apis.yml
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://avatars.githubusercontent.com/u/58329504?v=4
 x-type: company
 x-source: vc-portfolio
 x-backed-by:
 - point-nine
 x-tier: stub
 x-tier-reason: portfolio-lead
+x-status: discontinued
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-18'
 tags:
 - Company
-apis: []
+- Engineering Intelligence
+- Software Development Analytics
+- Developer Productivity
+- DevOps
+- Metrics
+- Git
+- JIRA
+- CI/CD
+- Analytics
+apis:
+- aid: athenian:athenian-align-api
+  name: Athenian align API
+  description: The align API from Athenian — 3 operation(s) for align.
+  humanURL: https://github.com/athenianco/api-spec
+  baseURL: https://api.athenian.co/v1
+  tags:
+  - align
+  properties:
+  - type: OpenAPI
+    url: openapi/athenian-align-api-openapi.yml
+  - type: ErrorCatalog
+    url: errors/athenian-problem-types.yml
+  - type: Conventions
+    url: conventions/athenian-conventions.yml
+  - type: DataModel
+    url: data-model/athenian-data-model.yml
+  - type: Conformance
+    url: conformance/athenian-conformance.yml
+- aid: athenian:athenian-default-api
+  name: Athenian default API
+  description: The default API from Athenian — 70 operation(s) for default.
+  humanURL: https://github.com/athenianco/api-spec
+  baseURL: https://api.athenian.co/v1
+  tags:
+  - default
+  properties:
+  - type: OpenAPI
+    url: openapi/athenian-default-api-openapi.yml
+  - type: ErrorCatalog
+    url: errors/athenian-problem-types.yml
+  - type: Conventions
+    url: conventions/athenian-conventions.yml
+  - type: DataModel
+    url: data-model/athenian-data-model.yml
+  - type: Conformance
+    url: conformance/athenian-conformance.yml
+- aid: athenian:athenian-events-api
+  name: Athenian events API
+  description: The events API from Athenian — 4 operation(s) for events.
+  humanURL: https://github.com/athenianco/api-spec
+  baseURL: https://api.athenian.co/v1
+  tags:
+  - events
+  properties:
+  - type: OpenAPI
+    url: openapi/athenian-events-api-openapi.yml
+  - type: ErrorCatalog
+    url: errors/athenian-problem-types.yml
+  - type: Conventions
+    url: conventions/athenian-conventions.yml
+  - type: DataModel
+    url: data-model/athenian-data-model.yml
+  - type: Conformance
+    url: conformance/athenian-conformance.yml
+- aid: athenian:athenian-filter-api
+  name: Athenian filter API
+  description: The filter API from Athenian — 11 operation(s) for filter.
+  humanURL: https://github.com/athenianco/api-spec
+  baseURL: https://api.athenian.co/v1
+  tags:
+  - filter
+  properties:
+  - type: OpenAPI
+    url: openapi/athenian-filter-api-openapi.yml
+  - type: ErrorCatalog
+    url: errors/athenian-problem-types.yml
+  - type: Conventions
+    url: conventions/athenian-conventions.yml
+  - type: DataModel
+    url: data-model/athenian-data-model.yml
+  - type: Conformance
+    url: conformance/athenian-conformance.yml
+- aid: athenian:athenian-get-api
+  name: Athenian get API
+  description: The get API from Athenian — 4 operation(s) for get.
+  humanURL: https://github.com/athenianco/api-spec
+  baseURL: https://api.athenian.co/v1
+  tags:
+  - get
+  properties:
+  - type: OpenAPI
+    url: openapi/athenian-get-api-openapi.yml
+  - type: ErrorCatalog
+    url: errors/athenian-problem-types.yml
+  - type: Conventions
+    url: conventions/athenian-conventions.yml
+  - type: DataModel
+    url: data-model/athenian-data-model.yml
+  - type: Conformance
+    url: conformance/athenian-conformance.yml
+- aid: athenian:athenian-histograms-api
+  name: Athenian histograms API
+  description: The histograms API from Athenian — 3 operation(s) for histograms.
+  humanURL: https://github.com/athenianco/api-spec
+  baseURL: https://api.athenian.co/v1
+  tags:
+  - histograms
+  properties:
+  - type: OpenAPI
+    url: openapi/athenian-histograms-api-openapi.yml
+  - type: ErrorCatalog
+    url: errors/athenian-problem-types.yml
+  - type: Conventions
+    url: conventions/athenian-conventions.yml
+  - type: DataModel
+    url: data-model/athenian-data-model.yml
+  - type: Conformance
+    url: conformance/athenian-conformance.yml
+- aid: athenian:athenian-integrations-api
+  name: Athenian integrations API
+  description: The integrations API from Athenian — 2 operation(s) for integrations.
+  humanURL: https://github.com/athenianco/api-spec
+  baseURL: https://api.athenian.co/v1
+  tags:
+  - integrations
+  properties:
+  - type: OpenAPI
+    url: openapi/athenian-integrations-api-openapi.yml
+  - type: ErrorCatalog
+    url: errors/athenian-problem-types.yml
+  - type: Conventions
+    url: conventions/athenian-conventions.yml
+  - type: DataModel
+    url: data-model/athenian-data-model.yml
+  - type: Conformance
+    url: conformance/athenian-conformance.yml
+- aid: athenian:athenian-metrics-api
+  name: Athenian metrics API
+  description: The metrics API from Athenian — 7 operation(s) for metrics.
+  humanURL: https://github.com/athenianco/api-spec
+  baseURL: https://api.athenian.co/v1
+  tags:
+  - metrics
+  properties:
+  - type: OpenAPI
+    url: openapi/athenian-metrics-api-openapi.yml
+  - type: ErrorCatalog
+    url: errors/athenian-problem-types.yml
+  - type: Conventions
+    url: conventions/athenian-conventions.yml
+  - type: DataModel
+    url: data-model/athenian-data-model.yml
+  - type: Conformance
+    url: conformance/athenian-conformance.yml
+- aid: athenian:athenian-pagination-api
+  name: Athenian pagination API
+  description: The pagination API from Athenian — 1 operation(s) for pagination.
+  humanURL: https://github.com/athenianco/api-spec
+  baseURL: https://api.athenian.co/v1
+  tags:
+  - pagination
+  properties:
+  - type: OpenAPI
+    url: openapi/athenian-pagination-api-openapi.yml
+  - type: ErrorCatalog
+    url: errors/athenian-problem-types.yml
+  - type: Conventions
+    url: conventions/athenian-conventions.yml
+  - type: DataModel
+    url: data-model/athenian-data-model.yml
+  - type: Conformance
+    url: conformance/athenian-conformance.yml
+- aid: athenian:athenian-registration-api
+  name: Athenian registration API
+  description: The registration API from Athenian — 6 operation(s) for registration.
+  humanURL: https://github.com/athenianco/api-spec
+  baseURL: https://api.athenian.co/v1
+  tags:
+  - registration
+  properties:
+  - type: OpenAPI
+    url: openapi/athenian-registration-api-openapi.yml
+  - type: ErrorCatalog
+    url: errors/athenian-problem-types.yml
+  - type: Conventions
+    url: conventions/athenian-conventions.yml
+  - type: DataModel
+    url: data-model/athenian-data-model.yml
+  - type: Conformance
+    url: conformance/athenian-conformance.yml
+- aid: athenian:athenian-reposet-api
+  name: Athenian reposet API
+  description: The reposet API from Athenian — 3 operation(s) for reposet.
+  humanURL: https://github.com/athenianco/api-spec
+  baseURL: https://api.athenian.co/v1
+  tags:
+  - reposet
+  properties:
+  - type: OpenAPI
+    url: openapi/athenian-reposet-api-openapi.yml
+  - type: ErrorCatalog
+    url: errors/athenian-problem-types.yml
+  - type: Conventions
+    url: conventions/athenian-conventions.yml
+  - type: DataModel
+    url: data-model/athenian-data-model.yml
+  - type: Conformance
+    url: conformance/athenian-conformance.yml
+- aid: athenian:athenian-security-api
+  name: Athenian security API
+  description: The security API from Athenian — 3 operation(s) for security.
+  humanURL: https://github.com/athenianco/api-spec
+  baseURL: https://api.athenian.co/v1
+  tags:
+  - security
+  properties:
+  - type: OpenAPI
+    url: openapi/athenian-security-api-openapi.yml
+  - type: ErrorCatalog
+    url: errors/athenian-problem-types.yml
+  - type: Conventions
+    url: conventions/athenian-conventions.yml
+  - type: DataModel
+    url: data-model/athenian-data-model.yml
+  - type: Conformance
+    url: conformance/athenian-conformance.yml
+- aid: athenian:athenian-settings-api
+  name: Athenian settings API
+  description: The settings API from Athenian — 13 operation(s) for settings.
+  humanURL: https://github.com/athenianco/api-spec
+  baseURL: https://api.athenian.co/v1
+  tags:
+  - settings
+  properties:
+  - type: OpenAPI
+    url: openapi/athenian-settings-api-openapi.yml
+  - type: ErrorCatalog
+    url: errors/athenian-problem-types.yml
+  - type: Conventions
+    url: conventions/athenian-conventions.yml
+  - type: DataModel
+    url: data-model/athenian-data-model.yml
+  - type: Conformance
+    url: conformance/athenian-conformance.yml
+- aid: athenian:athenian-team-api
+  name: Athenian team API
+  description: The team API from Athenian — 3 operation(s) for team.
+  humanURL: https://github.com/athenianco/api-spec
+  baseURL: https://api.athenian.co/v1
+  tags:
+  - team
+  properties:
+  - type: OpenAPI
+    url: openapi/athenian-team-api-openapi.yml
+  - type: ErrorCatalog
+    url: errors/athenian-problem-types.yml
+  - type: Conventions
+    url: conventions/athenian-conventions.yml
+  - type: DataModel
+    url: data-model/athenian-data-model.yml
+  - type: Conformance
+    url: conformance/athenian-conformance.yml
+- aid: athenian:athenian-user-api
+  name: Athenian user API
+  description: The user API from Athenian — 6 operation(s) for user.
+  humanURL: https://github.com/athenianco/api-spec
+  baseURL: https://api.athenian.co/v1
+  tags:
+  - user
+  properties:
+  - type: OpenAPI
+    url: openapi/athenian-user-api-openapi.yml
+  - type: ErrorCatalog
+    url: errors/athenian-problem-types.yml
+  - type: Conventions
+    url: conventions/athenian-conventions.yml
+  - type: DataModel
+    url: data-model/athenian-data-model.yml
+  - type: Conformance
+    url: conformance/athenian-conformance.yml
+- aid: athenian:athenian-version-api
+  name: Athenian version API
+  description: The version API from Athenian — 1 operation(s) for version.
+  humanURL: https://github.com/athenianco/api-spec
+  baseURL: https://api.athenian.co/v1
+  tags:
+  - version
+  properties:
+  - type: OpenAPI
+    url: openapi/athenian-version-api-openapi.yml
+  - type: ErrorCatalog
+    url: errors/athenian-problem-types.yml
+  - type: Conventions
+    url: conventions/athenian-conventions.yml
+  - type: DataModel
+    url: data-model/athenian-data-model.yml
+  - type: Conformance
+    url: conformance/athenian-conformance.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: AgenticAccess
+  url: agentic-access/athenian-agentic-access.yml
+- type: DomainSecurity
+  url: security/athenian-domain-security.yml
+- type: Authentication
+  url: authentication/athenian-authentication.yml
+- type: MCPServer
+  url: mcp/athenian-mcp.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: Lifecycle
+  url: lifecycle/athenian-lifecycle.yml
+- type: LLMsTxt
+  url: llms/athenian-llms.txt
+- type: GitHubOrganization
+  url: https://github.com/athenianco
+- type: SourceCode
+  url: https://github.com/athenianco/athenian-api-open
 - type: Website
   url: https://athenian.com
+x-enrichment:
+  date: '2026-07-19'
+  status: backfilled
+  pass: local-v1
+  note: backfilled from .gitignore signal + verified work evidence

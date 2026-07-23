@@ -1,0 +1,405 @@
+openapi: 3.0.3
+info:
+  contact:
+    email: admin@athenian.co
+    name: the administrator by email
+  description: 'Server version: {{ server_version }} built on {{ build_date }} @ [{{ commit }}](https://github.com/athenianco/athenian-api/commit/{{ commit }})
+
+
+    Origin GitHub repository: [athenianco/api-spec](https://github.com/athenianco/api-spec).
+
+
+    Authorization persists between sessions. Marks:
+
+    * 🛡️ endpoint requires account admin privileges.
+
+    * 👤 endpoint only works with JWT authentication.
+
+    <details>
+
+    <summary>List of common server errors.</summary>
+
+    * __500__ endpoint crashed. We reported the incident to Sentry and will fix it soon! Please include the value of `instance` in the response if you contact the support. Repeating the request will not help, most probably.
+
+    * __501__ some functions are missing, either because they are not implemented yet or a non-critical runtime dependency is not satisfied. Repeating the request will not help, guaranteed.
+
+    * __502__ server crashed badly, either due to a memory access violation in native code or running out of memory. We reported this incident to Sentry and will fix it soon! Try repeating the request.
+
+    * __503__ server has not fully launched yet, e.g. hasn''t connected to the database; server is shutting down; we are experiencing a partial outage. Try repeating the request.
+
+    * __504__ endpoint took too much time and was interrupted. We reported the incident to Sentry and will see how to improve the performance. Repeating the request will not help, most probably.
+
+    </details>'
+  license:
+    name: CC-BY-4.0
+  title: '{{ title }} align reposet API'
+  version: 2.1.86
+servers:
+- description: '{{ server_description }} - {{ server_url }}'
+  url: '{{ server_url }}/v1'
+tags:
+- name: reposet
+paths:
+  /reposet/create:
+    post:
+      operationId: create_reposet
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RepositorySetCreateRequest'
+        x-body-name: body
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatedIdentifier'
+          description: Identifier of the created repository set.
+        403:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The user is forbidden to create a repository set from the specified items.
+        409:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: There is an existing reposet with the same contents.
+      security:
+      - bearerAuth: []
+      summary: 🛡️👤 Create a repository set.
+      tags:
+      - reposet
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: athenian.api.controllers.reposet_controller
+  /reposet/{id}:
+    delete:
+      operationId: delete_reposet
+      parameters:
+      - description: Numeric identifier of the repository set to delete.
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: object
+          description: Empty object indicates a successful removal.
+        403:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The user is forbidden to delete the specified repository set.
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The specified repository set was not found.
+      security:
+      - bearerAuth: []
+      summary: 🛡️👤 Delete a repository set. The user must be an admin of the account that owns the reposet.
+      tags:
+      - reposet
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: athenian.api.controllers.reposet_controller
+    get:
+      operationId: get_reposet
+      parameters:
+      - description: Numeric identifier of the repository set to list.
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RepositorySetWithName'
+          description: List of repositories in the specified set.
+        403:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The user is forbidden to list the specified repository set.
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The specified repository set was not found.
+      security:
+      - bearerAuth: []
+      - apiKeyAuth: []
+      summary: List a repository set. The user must be in the account that owns the reposet.
+      tags:
+      - reposet
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: athenian.api.controllers.reposet_controller
+    put:
+      operationId: update_reposet
+      parameters:
+      - description: Numeric identifier of the repository set to update.
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RepositorySetWithName'
+        x-body-name: body
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: object
+          description: Empty object indicates a successful update.
+        403:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The user is forbidden to update the specified repository set.
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The specified repository set was not found.
+        409:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: There is an existing reposet with the same contents.
+      security:
+      - bearerAuth: []
+      summary: 🛡️👤 Update a repository set. The user must be an admin of the account that owns the reposet.
+      tags:
+      - reposet
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: athenian.api.controllers.reposet_controller
+  /reposets/{id}:
+    get:
+      operationId: list_reposets
+      parameters:
+      - $ref: '#/components/parameters/pathAccountID'
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RepositorySetList'
+          description: List the repository sets belonging to the specified account.
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The user does not belong to the specified account.
+        409:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: Concurrent requests that are finishing the account registration.
+      security:
+      - bearerAuth: []
+      - apiKeyAuth: []
+      summary: List the repository sets belonging to the calling user.
+      tags:
+      - reposet
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: athenian.api.controllers.reposet_controller
+components:
+  parameters:
+    pathAccountID:
+      description: Numeric identifier of the account.
+      explode: false
+      in: path
+      name: id
+      required: true
+      schema:
+        type: integer
+      style: simple
+  schemas:
+    CreatedIdentifier:
+      additionalProperties: false
+      example:
+        id: 777
+      properties:
+        id:
+          description: Identifier of the created entity.
+          example: 777
+          type: integer
+      required:
+      - id
+      type: object
+    RepositorySetListItem:
+      additionalProperties: false
+      description: Element of RepositorySetList.
+      example:
+        items_count: 6
+        created: 2020-01-23 04:56:07+00:00
+        id: 1
+        name: all
+        updated: 2020-01-23 04:56:07+00:00
+      properties:
+        id:
+          description: Repository set identifier.
+          type: integer
+        name:
+          description: Repository set name.
+          type: string
+        created:
+          description: Date and time of creation of the repository set.
+          format: date-time
+          type: string
+        updated:
+          description: Date and time of the last change of the repository set.
+          format: date-time
+          type: string
+        items_count:
+          description: Number of repositories in the set.
+          minimum: 1
+          type: integer
+      type: object
+    RepositorySetWithName:
+      additionalProperties: false
+      description: A set of repositories. An empty list results an empty response in contrary to DeveloperSet. Duplicates are automatically ignored.
+      example:
+        name: all
+        items:
+        - github.com/athenianco/athenian-webapp
+        - github.com/athenianco/athenian-api
+        precomputed: true
+      properties:
+        name:
+          type: string
+        items:
+          items:
+            $ref: '#/components/schemas/RepositoryID'
+          type: array
+        precomputed:
+          type: boolean
+      type: object
+    RepositoryID:
+      description: 'Repository name which uniquely identifies any repository in any service provider.
+
+        The format matches the repository URL without the protocol part. No ".git" should be appended.
+
+        We support a special syntax for repository sets: "{reposet id}" adds all the repositories
+
+        from the given set.
+
+        '
+      example: github.com/athenianco/athenian-webapp
+      type: string
+    RepositorySetCreateRequest:
+      additionalProperties: false
+      description: Repository set creation request.
+      example:
+        account: 1
+        items:
+        - github.com/athenianco/athenian-webapp
+        - github.com/athenianco/athenian-api
+        name: users
+      properties:
+        account:
+          description: Account identifier. That account will own the created repository set. The user must be an admin of the account.
+          type: integer
+        items:
+          items:
+            $ref: '#/components/schemas/RepositoryID'
+          type: array
+        name:
+          description: Unique editable identifier of the repository set.
+          type: string
+      required:
+      - account
+      - items
+      - name
+      type: object
+    GenericError:
+      example:
+        detail: 'Unsupported metric: pr-xxx-time'
+        status: 400
+        title: Bad request syntax or unsupported method.
+        type: /errors/InvalidRequestError
+      properties:
+        detail:
+          description: Human-readable explanation specific to this occurrence of the problem.
+          example: 'Unsupported metric: pr-xxx-time'
+          type: string
+        instance:
+          description: URI reference that identifies the specific occurrence of the problem. It is `null` for 4xx, Sentry event ID for 5xx.
+          example: 2763c4eabd7240f59829ee1a02546293
+          type: string
+        status:
+          description: Duplicated HTTP status code.
+          example: 400
+          type: integer
+        title:
+          description: Short, human-readable summary of the problem type.
+          example: Bad request syntax or unsupported method.
+          type: string
+        type:
+          description: URI reference that identifies the problem type (RFC 7807).
+          example: /errors/InvalidRequestError
+          type: string
+      required:
+      - status
+      - title
+      - type
+      type: object
+    RepositorySetList:
+      description: List of repository sets owned by a user.
+      items:
+        $ref: '#/components/schemas/RepositorySetListItem'
+      type: array
+  securitySchemes:
+    apiKeyAuth:
+      description: 'Authorization by the value of `X-API-Key` header aka API token.
+
+        The tokens are user- and account-specific. Create them by calling `/token/create`.
+
+        The server automatically inserts `account` in the request''s body if it was not
+
+        supplied by the user.'
+      in: header
+      name: X-API-Key
+      type: apiKey
+      x-apikeyInfoFunc: athenian.api.controllers.security_controller.info_from_apiKeyAuth
+    bearerAuth:
+      bearerFormat: JWT
+      description: 'Regular JSON Web Token authorization powered by Auth0.
+
+        The server expects an `Authorization: Bearer <token>` header and checks `<token>` by
+
+        sending it to Auth0. Visit [{{ server_url | replace("api", "app") }}/bearer]({{ server_url | replace("api", "app") }}/bearer)
+
+        to copy your current JWT that will expire within 24 hours.'
+      scheme: bearer
+      type: http
+      x-bearerInfoFunc: athenian.api.controllers.security_controller.info_from_bearerAuth

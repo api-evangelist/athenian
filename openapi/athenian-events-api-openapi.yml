@@ -1,0 +1,596 @@
+openapi: 3.0.3
+info:
+  contact:
+    email: admin@athenian.co
+    name: the administrator by email
+  description: 'Server version: {{ server_version }} built on {{ build_date }} @ [{{ commit }}](https://github.com/athenianco/athenian-api/commit/{{ commit }})
+
+
+    Origin GitHub repository: [athenianco/api-spec](https://github.com/athenianco/api-spec).
+
+
+    Authorization persists between sessions. Marks:
+
+    * 🛡️ endpoint requires account admin privileges.
+
+    * 👤 endpoint only works with JWT authentication.
+
+    <details>
+
+    <summary>List of common server errors.</summary>
+
+    * __500__ endpoint crashed. We reported the incident to Sentry and will fix it soon! Please include the value of `instance` in the response if you contact the support. Repeating the request will not help, most probably.
+
+    * __501__ some functions are missing, either because they are not implemented yet or a non-critical runtime dependency is not satisfied. Repeating the request will not help, guaranteed.
+
+    * __502__ server crashed badly, either due to a memory access violation in native code or running out of memory. We reported this incident to Sentry and will fix it soon! Try repeating the request.
+
+    * __503__ server has not fully launched yet, e.g. hasn''t connected to the database; server is shutting down; we are experiencing a partial outage. Try repeating the request.
+
+    * __504__ endpoint took too much time and was interrupted. We reported the incident to Sentry and will see how to improve the performance. Repeating the request will not help, most probably.
+
+    </details>'
+  license:
+    name: CC-BY-4.0
+  title: '{{ title }} align events API'
+  version: 2.1.86
+servers:
+- description: '{{ server_description }} - {{ server_url }}'
+  url: '{{ server_url }}/v1'
+tags:
+- name: events
+paths:
+  /events/clear_cache:
+    post:
+      operationId: clear_precomputed_events
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteEventsCacheRequest'
+        x-body-name: body
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                enum:
+                - {}
+                type: object
+          description: Empty response indicates a successful operation.
+        403:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: Calling user is not allowed to access the specified repositories.
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The user does not belong to the specified account.
+        422:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoSourceDataError'
+          description: The account's installation has not finished yet.
+        424:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MissingSettingsError'
+          description: One or more logical repositories miss the release settings.
+      security:
+      - bearerAuth: []
+      - apiKeyAuth: []
+      summary: Reset the precomputed data related to the pushed events.
+      tags:
+      - events
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: athenian.api.controllers.events_controller
+  /events/deployments:
+    post:
+      operationId: notify_deployments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotifyDeploymentsRequest'
+        x-body-name: body
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                properties:
+                  deployments:
+                    $ref: '#/components/schemas/NotifiedDeployments'
+                required:
+                - deployments
+                type: object
+          description: Details about the accepted deployment notifications.
+        400:
+          $ref: '#/components/responses/InvalidRequestErrorResponse'
+        403:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: Calling user is not allowed to access the specified repositories.
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The specified account does not exist or the user is not a member.
+        422:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoSourceDataError'
+          description: The account's installation has not finished yet.
+      security:
+      - apiKeyAuth: []
+      summary: Notify about new deployments.
+      tags:
+      - events
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: athenian.api.controllers.events_controller
+  /events/deployment/{name}/labels:
+    parameters:
+    - description: Name of the deployment.
+      in: path
+      name: name
+      required: true
+      schema:
+        type: string
+      style: simple
+    get:
+      operationId: get_deployment_labels
+      responses:
+        200:
+          $ref: '#/components/responses/DeploymentLabelsResponse'
+        404:
+          $ref: '#/components/responses/DeploymentNotFoundResponse'
+      security:
+      - apiKeyAuth: []
+      tags:
+      - events
+      summary: Retrieve the labels associated with the deployment.
+      x-openapi-router-controller: athenian.api.controllers.events_controller
+    patch:
+      operationId: modify_deployment_labels
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeploymentModifyLabelsRequest'
+        x-body-name: body
+      responses:
+        200:
+          $ref: '#/components/responses/DeploymentLabelsResponse'
+        400:
+          $ref: '#/components/responses/InvalidRequestErrorResponse'
+        404:
+          $ref: '#/components/responses/DeploymentNotFoundResponse'
+      security:
+      - apiKeyAuth: []
+      summary: 'Modify the labels for the deployment applying the given instructions.
+
+        '
+      tags:
+      - events
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: athenian.api.controllers.events_controller
+  /events/releases:
+    post:
+      operationId: notify_releases
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotifyReleasesRequest'
+        x-body-name: body
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotifyReleasesResponse'
+          description: Summary of the accepted and the rejected releases.
+        400:
+          $ref: '#/components/responses/InvalidRequestErrorResponse'
+        403:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: Calling user is not allowed to access the specified repositories.
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The specified account does not exist or the user is not a member.
+        422:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoSourceDataError'
+          description: The account's installation has not finished yet.
+      security:
+      - apiKeyAuth: []
+      summary: Notify about new releases. The release settings must be set to "event".
+      tags:
+      - events
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: athenian.api.controllers.events_controller
+components:
+  schemas:
+    ReleaseNotificationStatus:
+      description: 'What happened to the notification:
+
+        - `accepted_resolved`: all is OK, we found the repository reference.
+
+        - `accepted_pending`: we haven''t found the repository reference, it will take up to 1 hour for the release to become visible.
+
+        - `ignored_duplicate`: we found another release with the same name in the same repository in the request and hence skipped.
+
+        '
+      enum:
+      - accepted-resolved
+      - accepted-pending
+      - ignored-duplicate
+      type: string
+    DeleteEventsCacheRequest:
+      additionalProperties: false
+      description: Definition of the cache reset operation.
+      example:
+        account: 1
+        repositories:
+        - github.com/athenianco/athenian-api
+        targets:
+        - release
+      properties:
+        account:
+          description: Account ID.
+          type: integer
+        repositories:
+          $ref: '#/components/schemas/RepositorySet'
+        targets:
+          description: Parts of the precomputed cache to reset.
+          items:
+            enum:
+            - release
+            - deployment
+            type: string
+          type: array
+      required:
+      - account
+      - repositories
+      - targets
+      type: object
+    NoSourceDataError:
+      $ref: '#/components/schemas/GenericError'
+    RepositoryID:
+      description: 'Repository name which uniquely identifies any repository in any service provider.
+
+        The format matches the repository URL without the protocol part. No ".git" should be appended.
+
+        We support a special syntax for repository sets: "{reposet id}" adds all the repositories
+
+        from the given set.
+
+        '
+      example: github.com/athenianco/athenian-webapp
+      type: string
+    MissingSettingsError:
+      $ref: '#/components/schemas/GenericError'
+    GenericError:
+      example:
+        detail: 'Unsupported metric: pr-xxx-time'
+        status: 400
+        title: Bad request syntax or unsupported method.
+        type: /errors/InvalidRequestError
+      properties:
+        detail:
+          description: Human-readable explanation specific to this occurrence of the problem.
+          example: 'Unsupported metric: pr-xxx-time'
+          type: string
+        instance:
+          description: URI reference that identifies the specific occurrence of the problem. It is `null` for 4xx, Sentry event ID for 5xx.
+          example: 2763c4eabd7240f59829ee1a02546293
+          type: string
+        status:
+          description: Duplicated HTTP status code.
+          example: 400
+          type: integer
+        title:
+          description: Short, human-readable summary of the problem type.
+          example: Bad request syntax or unsupported method.
+          type: string
+        type:
+          description: URI reference that identifies the problem type (RFC 7807).
+          example: /errors/InvalidRequestError
+          type: string
+      required:
+      - status
+      - title
+      - type
+      type: object
+    NotifiedDeployments:
+      description: The list of notified deployments.
+      example:
+      - name: prod-1984-05-01-ABCDEFGH
+        resolved: true
+      items:
+        additionalProperties: false
+        properties:
+          name:
+            description: Name of the deployment.
+            type: string
+          resolved:
+            description: 'Value indicating whether we resolved the received Git reference on the spot.
+
+              `false` is probably still OK for new references that we haven''t synchronized yet.
+
+              '
+            type: boolean
+        required:
+        - name
+        - resolved
+        type: object
+      type: array
+    NotifyReleasesResponse:
+      description: 'Response from `/events/releases`. The status of each release notification
+
+        in the order of `NotifyReleasesRequest`.
+
+        '
+      items:
+        $ref: '#/components/schemas/ReleaseNotificationStatus'
+      type: array
+    DeploymentLabels:
+      description: Arbitrary key-value metadata that associates with the deployment.
+      type: object
+    DeploymentModifyLabelsRequest:
+      additionalProperties: false
+      description: 'Request to modify the labels associated with the deployment.
+
+        Each property in this object represents a command to execute.
+
+        '
+      example: {}
+      properties:
+        delete:
+          description: Delete the labels with the given keys.  Unexisting labels are ignored.
+          items:
+            type: string
+          type: array
+        upsert:
+          allOf:
+          - description: Set the given labels, overwriting values for already associated labels.
+          - $ref: '#/components/schemas/DeploymentLabels'
+      type: object
+    DeploymentConclusion:
+      description: State of the completed deployment. Case-insensitive.
+      enum:
+      - SUCCESS
+      - FAILURE
+      - CANCELLED
+      type: string
+    InvalidRequestError:
+      allOf:
+      - $ref: '#/components/schemas/GenericError'
+      - properties:
+          pointer:
+            description: Path to the offending request item.
+            example: .granularity
+            type: string
+        type: object
+    NotifyReleasesRequest:
+      description: 'Request body of `/events/releases`: list of release notifications.
+
+        '
+      items:
+        $ref: '#/components/schemas/ReleaseNotification'
+      type: array
+    RepositorySet:
+      description: Set of repositories. An empty list raises a bad response 400. Duplicates are automatically ignored.
+      example:
+      - github.com/athenianco/athenian-webapp
+      - github.com/athenianco/athenian-api
+      items:
+        $ref: '#/components/schemas/RepositoryID'
+      type: array
+    NotifyDeploymentsRequest:
+      items:
+        $ref: '#/components/schemas/DeploymentNotification'
+      type: array
+    ReleaseNotification:
+      additionalProperties: false
+      description: Push message about a custom release event.
+      example:
+        author: Vadim Markovtsev
+        commit: c3f4d3a
+        name: 0.8.66
+        repository: github.com/athenianco/athenian-api
+        published_at: 2021-02-23 15:16:07+00:00
+        url: https://github.com/athenianco/athenian-api/releases/tag/v0.8.66
+      properties:
+        repository:
+          $ref: '#/components/schemas/RepositoryID'
+        commit:
+          $ref: '#/components/schemas/CommitHash'
+        name:
+          description: 'Release name.
+
+            The value may not contain \n - new line character, and '' - single quote.
+
+            '
+          nullable: true
+          pattern: ^([^'\s]| ){1,100}$
+          type: string
+        author:
+          description: Release author.
+          type: string
+        url:
+          description: Release URL.
+          format: url
+          type: string
+        published_at:
+          description: When the release was created. If missing, set to `now()`.
+          format: date-time
+          type: string
+      required:
+      - commit
+      - repository
+      type: object
+    CommitHash:
+      description: Commit hash, either short (7 chars) or long (40 chars) form.
+      maxLength: 40
+      minLength: 7
+      type: string
+    DeploymentNotification:
+      description: 'Push message about a deployment. We remove unresolved components after 24h.
+
+        '
+      example:
+        components:
+        - repository: github.com/athenianco/athenian-api
+          reference: v0.10.34
+        environment: production
+        date_finished: 2022-01-23 05:01:07+00:00
+        date_started: 2022-01-23 04:56:07+00:00
+        conclusion: SUCCESS
+        labels:
+          helm_chart: 0.0.67
+      properties:
+        components:
+          description: 'List of deployed software version. Each item identifies a Git reference
+
+            in a repository, either a tag or a commit hash.
+
+            '
+          items:
+            $ref: '#/components/schemas/DeployedComponent'
+          minItems: 1
+          type: array
+        environment:
+          description: Name of the environment where the deployment happened.
+          minLength: 1
+          type: string
+        name:
+          description: Name of the deployment. If is not specified, we generate our own by the template `<environment shortcut>-<date>-<hash of the components>`. The value may not contain \n - new line character, and ' - single quote.
+          nullable: true
+          pattern: ^([^'\s]| ){1,100}$
+          type: string
+        url:
+          description: URL pointing at the internal details of the deployment.
+          format: url
+          type: string
+        date_started:
+          description: Timestamp of when the deployment procedure launched.
+          format: date-time
+          type: string
+        date_finished:
+          description: Timestamp of when the deployment procedure completed.
+          format: date-time
+          type: string
+        conclusion:
+          $ref: '#/components/schemas/DeploymentConclusion'
+        labels:
+          $ref: '#/components/schemas/DeploymentLabels'
+      required:
+      - components
+      - conclusion
+      - date_finished
+      - date_started
+      - environment
+      type: object
+    DeployedComponent:
+      additionalProperties: false
+      description: Definition of the deployed software unit.
+      example:
+        repository: github.com/athenianco/athenian-api
+        reference: v0.10.34
+      properties:
+        repository:
+          $ref: '#/components/schemas/RepositoryID'
+        reference:
+          description: 'We accept three ways to define a Git reference:
+
+            1. Tag name.
+
+            2. Full commit hash (40 characters).
+
+            3. Short commit hash (7 characters).
+
+
+            We ignore the reference while we cannot find it in our database. There can be
+
+            two reasons:
+
+            - There is a mistake or a typo in the provided data.
+
+            - We are temporarily unable to synchronize with GitHub.
+
+            '
+          minLength: 1
+          type: string
+      required:
+      - reference
+      - repository
+      type: object
+  responses:
+    DeploymentNotFoundResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GenericError'
+      description: A deployment with the given name was not found.
+    DeploymentLabelsResponse:
+      content:
+        application/json:
+          schema:
+            additionalProperties: false
+            properties:
+              labels:
+                $ref: '#/components/schemas/DeploymentLabels'
+            required:
+            - labels
+            type: object
+      description: The labels now associated with the deployment.
+    InvalidRequestErrorResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InvalidRequestError'
+      description: The request is invalid.
+  securitySchemes:
+    apiKeyAuth:
+      description: 'Authorization by the value of `X-API-Key` header aka API token.
+
+        The tokens are user- and account-specific. Create them by calling `/token/create`.
+
+        The server automatically inserts `account` in the request''s body if it was not
+
+        supplied by the user.'
+      in: header
+      name: X-API-Key
+      type: apiKey
+      x-apikeyInfoFunc: athenian.api.controllers.security_controller.info_from_apiKeyAuth
+    bearerAuth:
+      bearerFormat: JWT
+      description: 'Regular JSON Web Token authorization powered by Auth0.
+
+        The server expects an `Authorization: Bearer <token>` header and checks `<token>` by
+
+        sending it to Auth0. Visit [{{ server_url | replace("api", "app") }}/bearer]({{ server_url | replace("api", "app") }}/bearer)
+
+        to copy your current JWT that will expire within 24 hours.'
+      scheme: bearer
+      type: http
+      x-bearerInfoFunc: athenian.api.controllers.security_controller.info_from_bearerAuth

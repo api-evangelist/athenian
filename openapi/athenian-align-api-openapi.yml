@@ -1,0 +1,760 @@
+openapi: 3.0.3
+info:
+  contact:
+    email: admin@athenian.co
+    name: the administrator by email
+  description: 'Server version: {{ server_version }} built on {{ build_date }} @ [{{ commit }}](https://github.com/athenianco/athenian-api/commit/{{ commit }})
+
+
+    Origin GitHub repository: [athenianco/api-spec](https://github.com/athenianco/api-spec).
+
+
+    Authorization persists between sessions. Marks:
+
+    * 🛡️ endpoint requires account admin privileges.
+
+    * 👤 endpoint only works with JWT authentication.
+
+    <details>
+
+    <summary>List of common server errors.</summary>
+
+    * __500__ endpoint crashed. We reported the incident to Sentry and will fix it soon! Please include the value of `instance` in the response if you contact the support. Repeating the request will not help, most probably.
+
+    * __501__ some functions are missing, either because they are not implemented yet or a non-critical runtime dependency is not satisfied. Repeating the request will not help, guaranteed.
+
+    * __502__ server crashed badly, either due to a memory access violation in native code or running out of memory. We reported this incident to Sentry and will fix it soon! Try repeating the request.
+
+    * __503__ server has not fully launched yet, e.g. hasn''t connected to the database; server is shutting down; we are experiencing a partial outage. Try repeating the request.
+
+    * __504__ endpoint took too much time and was interrupted. We reported the incident to Sentry and will see how to improve the performance. Repeating the request will not help, most probably.
+
+    </details>'
+  license:
+    name: CC-BY-4.0
+  title: '{{ title }} align API'
+  version: 2.1.86
+servers:
+- description: '{{ server_description }} - {{ server_url }}'
+  url: '{{ server_url }}/v1'
+tags:
+- name: align
+paths:
+  /goal_template/create:
+    post:
+      operationId: create_goal_template
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GoalTemplateCreateRequest'
+        x-body-name: body
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatedIdentifier'
+          description: Identifier of the created goal template.
+        400:
+          $ref: '#/components/responses/InvalidRequestErrorResponse'
+      security:
+      - bearerAuth: []
+      summary: 👤 Create a goal template.
+      tags:
+      - align
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: athenian.api.controllers.goal_controller
+  /goal_template/{id}:
+    parameters:
+    - description: Numeric identifier of the goal template.
+      explode: false
+      in: path
+      name: id
+      required: true
+      schema:
+        type: integer
+      style: simple
+    delete:
+      operationId: delete_goal_template
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                enum:
+                - {}
+                type: object
+          description: Empty object indicates a successful removal.
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The goal template was not found.
+      security:
+      - bearerAuth: []
+      summary: 👤 Delete a goal template.
+      tags:
+      - align
+      x-openapi-router-controller: athenian.api.controllers.goal_controller
+    get:
+      operationId: get_goal_template
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GoalTemplate'
+          description: The retrieved goal template.
+        404:
+          $ref: '#/components/responses/GoalTemplateNotFoundResponse'
+      security:
+      - bearerAuth: []
+      - apiKeyAuth: []
+      summary: Retrieve a goal template.
+      tags:
+      - align
+      x-openapi-router-controller: athenian.api.controllers.goal_controller
+    put:
+      operationId: update_goal_template
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GoalTemplateUpdateRequest'
+        x-body-name: body
+      responses:
+        200:
+          $ref: '#/components/responses/EmptySuccessfulResponse'
+        400:
+          $ref: '#/components/responses/InvalidRequestErrorResponse'
+        404:
+          $ref: '#/components/responses/GoalTemplateNotFoundResponse'
+      security:
+      - bearerAuth: []
+      summary: 👤 Update a goal template.
+      tags:
+      - align
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: athenian.api.controllers.goal_controller
+  /goal_templates/{id}:
+    parameters:
+    - $ref: '#/components/parameters/pathAccountID'
+    - description: Include templates for TLOs goals, i.e. goals based on parameterized metrics.
+      in: query
+      name: include_tlo
+      required: false
+      schema:
+        default: false
+        type: boolean
+    get:
+      operationId: list_goal_templates
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GoalTemplateList'
+          description: List of the goal templates for the account.
+        404:
+          $ref: '#/components/responses/GoalTemplateNotFoundResponse'
+      security:
+      - bearerAuth: []
+      - apiKeyAuth: []
+      summary: List the goal templates for the account.
+      tags:
+      - align
+      x-openapi-router-controller: athenian.api.controllers.goal_controller
+components:
+  parameters:
+    pathAccountID:
+      description: Numeric identifier of the account.
+      explode: false
+      in: path
+      name: id
+      required: true
+      schema:
+        type: integer
+      style: simple
+  schemas:
+    TimeDuration:
+      description: Time duration value.
+      pattern: ^\d+s$
+      type: string
+    RepositoryID:
+      description: 'Repository name which uniquely identifies any repository in any service provider.
+
+        The format matches the repository URL without the protocol part. No ".git" should be appended.
+
+        We support a special syntax for repository sets: "{reposet id}" adds all the repositories
+
+        from the given set.
+
+        '
+      example: github.com/athenianco/athenian-webapp
+      type: string
+    GenericError:
+      example:
+        detail: 'Unsupported metric: pr-xxx-time'
+        status: 400
+        title: Bad request syntax or unsupported method.
+        type: /errors/InvalidRequestError
+      properties:
+        detail:
+          description: Human-readable explanation specific to this occurrence of the problem.
+          example: 'Unsupported metric: pr-xxx-time'
+          type: string
+        instance:
+          description: URI reference that identifies the specific occurrence of the problem. It is `null` for 4xx, Sentry event ID for 5xx.
+          example: 2763c4eabd7240f59829ee1a02546293
+          type: string
+        status:
+          description: Duplicated HTTP status code.
+          example: 400
+          type: integer
+        title:
+          description: Short, human-readable summary of the problem type.
+          example: Bad request syntax or unsupported method.
+          type: string
+        type:
+          description: URI reference that identifies the problem type (RFC 7807).
+          example: /errors/InvalidRequestError
+          type: string
+      required:
+      - status
+      - title
+      - type
+      type: object
+    PullRequestMetricID:
+      description: 'Currently supported PR metric types.
+
+        * `pr-wip-time`: average time spent in Work In Progress stage.
+
+        * `pr-wip-time-below-threshold-ratio`: ratio of PRs with a `pr-wip-time` below the threshold, disregarding the quantiles. The default threshold is 1 day.
+
+        * `pr-wip-count`: number of PRs used to calculate `pr-wip-time` disregarding the quantiles.
+
+        * `pr-wip-count-q`: number of PRs used to calculate `pr-wip-time` after applying the quantiles.
+
+        * `pr-review-time`: average time spent in Review stage.
+
+        * `pr-review-count`: number of PRs used to calculate `pr-review-time` disregarding the quantiles.
+
+        * `pr-review-count-q`: number of PRs used to calculate `pr-review-time` after applying the quantiles.
+
+        * `pr-review-time-below-threshold-ratio`: ratio of PRs with a `pr-review-time` below the threshold, disregarding the quantiles. The default threshold is 2 days.
+
+        * `pr-merging-time`: average time spent in Merge stage.
+
+        * `pr-merging-time-below-threshold-ratio`: ratio of PRs with a `pr-merging-time` below the threshold, disregarding the quantiles. The default threshold is 4 hours.
+
+        * `pr-merging-count`: number of PRs used to calculate `pr-merging-time` disregarding the quantiles.
+
+        * `pr-merging-count-q`: number of PRs used to calculate `pr-merging-time` after applying the quantiles.
+
+        * `pr-release-time`: average time spent in Release stage.
+
+        * `pr-release-count`: number of PRs used to calculate `pr-release-time` disregarding the quantiles.
+
+        * `pr-release-count-q`: number of PRs used to calculate `pr-release-time` after applying the quantiles.
+
+        * `pr-open-time`: average time the PR stayed open.
+
+        * `pr-open-count`: number of PRs used to calculate `pr-open-time` disregarding the quantiles.
+
+        * `pr-open-count-q`: number of PRs used to calculate `pr-open-time` after applying the quantiles.
+
+        * `pr-open-time-below-threshold-ratio`: ratio of PRs with a `pr-open-time` below the threshold, disregarding the quantiles. The default threshold is 3 days.
+
+        * `pr-cycle-time`: average PR Cycle - time between the work started and the release.
+
+        * `pr-cycle-time-below-threshold-ratio`: ratio of PRs with a `pr-cycle-time` below the threshold, disregarding the quantiles. The default threshold is 5 days.
+
+        * `pr-cycle-count`: number of PRs used to calculate `pr-cycle-time` disregarding the quantiles. It should be the same as `pr-release-count`.
+
+        * `pr-cycle-count-q`: number of PRs used to calculate `pr-cycle-time` after applying the quantiles.
+
+        * `pr-lead-time`: deprecated alias for `pr-cycle-time`
+
+        * `pr-lead-time-below-threshold-ratio`: deprecated alias for `pr-cycle-time-below-threshold-ratio`
+
+        * `pr-lead-count`: deprecated alias for `pr-cycle-count`
+
+        * `pr-lead-count-q`: deprecated alias for `pr-cycle-count-q`
+
+        * `pr-live-cycle-time`: Live Cycle Time - sum of corresponding `pr-wip-time`, `pr-review-time`, `pr-merging-time`, and `pr-release-time`.
+
+        * `pr-live-cycle-count`: number of PRs used to calculate `pr-cycle-time` disregarding the quantiles. It equals to the overall number of PRs observed in the given time window.
+
+        * `pr-live-cycle-count-q`: number of PRs used to calculate `pr-cycle-time` after applying the quantiles.
+
+        * `pr-all-count`: equals to the sum of `pr-live-cycle-count` with the number of PRs which are still not done on the specified time interval but don''t have any stage-changing events. This metric should be exactly the same as the number of PRs returned by `/filter/pull_requests`. The quantiles are ignored.
+
+        * `pr-wait-first-review-time`: average time of waiting for the first review.
+
+        * `pr-wait-first-review-count`: number of PRs used to calculate `pr-wait-first-review`. Note: this is *not* the same as the number of PRs waiting for the first review.
+
+        * `pr-wait-first-review-count-q`: number of PRs used to calculate `pr-wait-first-review` after applying the quantiles.
+
+        * `pr-wait-first-review-time-below-threshold-ratio`: ratio of PRs with a `pr-wait-first-review` below the threshold, disregarding the quantiles. The default threshold is 6 hours.
+
+        * `pr-deployment-time`: average time between when the PR was released and was deployed. We track deployments through `/events/deployments`. Requires setting `ForSetPullRequests.environments`.
+
+        * `pr-deployment-count`: number of PRs used to calculate `pr-deployment-time` disregarding the quantiles. It equals to the overall number of deployed PRs in the given time window. Requires setting `ForSetPullRequests.environments`.
+
+        * `pr-deployment-count-q`: number of PRs used to calculate `pr-deployment-time` after applying the quantiles. Requires setting `ForSetPullRequests.environments`.
+
+        * `pr-lead-deployment-time`: extended Lead Time that includes the time passed since the PR was released until it was deployed. We discard PRs in repositories without deployments. Requires setting `ForSetPullRequests.environments`.
+
+        * `pr-lead-deployment-count`: number of PRs used to calculate `pr-lead-deployment-time` disregarding the quantiles. It equals to the overall number of deployed PRs in the given window and duplicates `pr-deployment-count`. Requires setting `ForSetPullRequests.environments`.
+
+        * `pr-lead-deployment-count-q`: number of PRs used to calculate `pr-lead-deployment-time` after applying the quantiles. Requires setting `ForSetPullRequests.environments`.
+
+        * `pr-cycle-deployment-time`: extended Cycle Time that includes `pr-deployment-time`. We discard PRs in repositories without deployments. Requires setting `ForSetPullRequests.environments`.
+
+        * `pr-cycle-deployment-count`: number of PRs used to calculate `pr-cycle-deployment-time` disregarding the quantiles. It equals to the overall number of deployed PRs in the given window and duplicates `pr-deployment-count` and `pr-lead-deployment-count`. Requires setting `ForSetPullRequests.environments`.
+
+        * `pr-cycle-deployment-count-q`: number of PRs used to calculate `pr-cycle-deployment-time` after applying the quantiles. Requires setting `ForSetPullRequests.environments`.
+
+        * `pr-cycle-deployment-time-below-threshold-ratio`: ratio of PRs with a `pr-cycle-deployment-count` below the threshold, disregarding the quantiles. The default threshold is 5 days.
+
+        * `pr-flow-ratio`: ratio of opened to closed PRs.
+
+        * `pr-opened`: number of opened PRs.
+
+        * `pr-reviewed`: number of PRs which received a review.
+
+        * `pr-reviewed-closed`: number of closed (merged or rejected) PRs which received a review.
+
+        * `pr-not-reviewed`: number of closed (merged or rejected) PRs without any review.
+
+        * `pr-reviewed-ratio`: ratio of `pr-reviewed` to `pr-reviewed` + `pr-not-reviewed`.
+
+        * `pr-merged`: number of merged PRs.
+
+        * `pr-rejected`: number of rejected (closed unmerged) PRs.
+
+        * `pr-closed`: number of closed PRs = `pr-merged` + `pr-rejected`.
+
+        * `pr-done`: number of released, rejected, and force push dropped PRs.
+
+        * `pr-size`: average size of PRs (added + deleted lines) which are active on the time interval after applying the quantiles.
+
+        * `pr-size-below-threshold-ratio`: ratio of PRs with a `pr-size` below or equal to the threshold, disregarding the quantiles. The default threshold is 100 lines.
+
+        * `pr-median-size`: median size of PRs (added + deleted lines) which are active on the time interval ignoring the quantiles.
+
+        * `pr-wip-pending-count`: number of PRs currently in Work In Progress stage.
+
+        * `pr-review-pending-count`: number of PRs currently in Review stage.
+
+        * `pr-merging-pending-count`: number of PRs currently in Merge stage.
+
+        * `pr-release-pending-count`: number of PRs currently in Release stage.
+
+        * `pr-opened-mapped-to-jira`: ratio of created PRs that are mapped to JIRA issues.
+
+        * `pr-done-mapped-to-jira`: ratio of rejected or released PRs that are mapped to JIRA issues.
+
+        * `pr-all-mapped-to-jira`: ratio of all observed PRs that are mapped to JIRA issues.
+
+        * `pr-participants-per`: average number of PR particpants excluding the releasers and the bots.
+
+        * `pr-review-comments-per`: average number of PR review comments for reviewed PRs, bots excluded.
+
+        * `pr-review-comments-per-above-threshold-ratio`: ratio of PRs with a `pr-review-comments-per` above or equal to the threshold, disregarding the quantiles. The threshold is 3 comments.
+
+        * `pr-reviews-per`: average number of PR reviews for reviewed PRs, bots excluded.
+
+        * `pr-comments-per`: average number of PR comments, both regular and review, for reviewed PRs, bots excluded.'
+      enum:
+      - pr-wip-time
+      - pr-wip-time-below-threshold-ratio
+      - pr-wip-count
+      - pr-wip-count-q
+      - pr-review-time
+      - pr-review-count
+      - pr-review-count-q
+      - pr-review-time-below-threshold-ratio
+      - pr-merging-time
+      - pr-merging-time-below-threshold-ratio
+      - pr-merging-count
+      - pr-merging-count-q
+      - pr-release-time
+      - pr-release-count
+      - pr-release-count-q
+      - pr-open-time
+      - pr-open-count
+      - pr-open-count-q
+      - pr-open-time-below-threshold-ratio
+      - pr-lead-time
+      - pr-lead-time-below-threshold-ratio
+      - pr-lead-count
+      - pr-lead-count-q
+      - pr-cycle-time
+      - pr-cycle-time-below-threshold-ratio
+      - pr-cycle-count
+      - pr-cycle-count-q
+      - pr-live-cycle-time
+      - pr-live-cycle-count
+      - pr-live-cycle-count-q
+      - pr-all-count
+      - pr-wait-first-review-time
+      - pr-wait-first-review-count
+      - pr-wait-first-review-count-q
+      - pr-wait-first-review-time-below-threshold-ratio
+      - pr-deployment-time
+      - pr-deployment-count
+      - pr-deployment-count-q
+      - pr-lead-deployment-time
+      - pr-lead-deployment-count
+      - pr-lead-deployment-count-q
+      - pr-cycle-deployment-time
+      - pr-cycle-deployment-count
+      - pr-cycle-deployment-count-q
+      - pr-cycle-deployment-time-below-threshold-ratio
+      - pr-flow-ratio
+      - pr-opened
+      - pr-reviewed
+      - pr-reviewed-closed
+      - pr-not-reviewed
+      - pr-reviewed-ratio
+      - pr-merged
+      - pr-rejected
+      - pr-closed
+      - pr-done
+      - pr-size
+      - pr-size-below-threshold-ratio
+      - pr-median-size
+      - pr-wip-pending-count
+      - pr-review-pending-count
+      - pr-merging-pending-count
+      - pr-release-pending-count
+      - pr-opened-mapped-to-jira
+      - pr-done-mapped-to-jira
+      - pr-all-mapped-to-jira
+      - pr-participants-per
+      - pr-review-comments-per
+      - pr-review-comments-per-above-threshold-ratio
+      - pr-reviews-per
+      - pr-comments-per
+      example: pr-lead-time
+      type: string
+    InvalidRequestError:
+      allOf:
+      - $ref: '#/components/schemas/GenericError'
+      - properties:
+          pointer:
+            description: Path to the offending request item.
+            example: .granularity
+            type: string
+        type: object
+    JIRAMetricID:
+      description: 'Currently supported JIRA activity metrics.
+
+        * `jira-open` - number of issues active by the end of the time interval.
+
+        * `jira-resolved` - number of issues closed in the given time range.
+
+        * `jira-raised` - number of issues reported in the given time range.
+
+        * `jira-acknowledged` - number of issues that are "In Progress" or "Resolved". This number matches the issues considered to calculate `jira-acknowledge-time` before applying the quantiles.
+
+        * `jira-acknowledged-q` - number of issues that are "In Progress" or "Resolved". This number matches the issues considered to calculate `jira-acknowledge-time` after applying the quantiles.
+
+        * `jira-life-time` - Mean Life Time - the time between min(issue creation, work began) and max(issue resolution, fixes released).
+
+        * `jira-life-time-below-threshold-ratio` - ratio of issues with a `jira-life-time` below the threshold, disregarding the quantiles. The default threshold is 5 days.
+
+        * `jira-lead-time` - Mean Lead Time - the time between when the work began and max(issue resolution, fixes released).
+
+        * `jira-lead-time-below-threshold-ratio` - ratio of issues with a `jira-lead-time` below the threshold, disregarding the quantiles. The default threshold is 5 days.
+
+        * `jira-acknowledge-time` - Mean Acknowledge Time - the time between when the issue was created and the work began = `min(transitioned to "In Progress", PR created)`. It equals to 0 for retrofitted issues with PRs before their creation times.
+
+        * `jira-acknowledge-time-below-threshold-ratio` - ratio of issues with a `jira-acknowledge-time` below the threshold, disregarding the quantiles. The default threshold is 3 days.
+
+        * `jira-pr-lag-time` - the time between when the issue transitioned to "In Progress" and the first PR was created. It equals to 0 if the difference is negative or no PRs are mapped to the issue.
+
+        * `jira-backlog-time` - the time between when the issue was created and transitioned to "In Progress".
+
+        * `jira-resolution-rate` - ratio between the number of resolved issues to the number of raised issues.'
+      enum:
+      - jira-open
+      - jira-resolved
+      - jira-raised
+      - jira-acknowledged
+      - jira-acknowledged-q
+      - jira-life-time
+      - jira-life-time-below-threshold-ratio
+      - jira-lead-time
+      - jira-lead-time-below-threshold-ratio
+      - jira-acknowledge-time
+      - jira-acknowledge-time-below-threshold-ratio
+      - jira-pr-lag-time
+      - jira-backlog-time
+      - jira-resolution-rate
+      example: jira-resolved
+      type: string
+    RepositorySet:
+      description: Set of repositories. An empty list raises a bad response 400. Duplicates are automatically ignored.
+      example:
+      - github.com/athenianco/athenian-webapp
+      - github.com/athenianco/athenian-api
+      items:
+        $ref: '#/components/schemas/RepositoryID'
+      type: array
+    GoalMetricParams:
+      description: The parameters used to compute `metric` for the goal.
+      properties:
+        threshold:
+          oneOf:
+          - type: number
+          - $ref: '#/components/schemas/TimeDuration'
+      type: object
+    ReleaseMetricID:
+      description: 'Currently supported release metric types.
+
+        * `release-count` - number of all releases in the time interval.
+
+        * `release-tag-count` - number of releases by tag in the time interval.
+
+        * `release-branch-count` - number of releases by branch merge in the time interval.
+
+        * `release-prs` - number of PRs released in the time interval.
+
+        * `release-tag-prs` - number of PRs released by tag in the time interval.
+
+        * `release-branch-prs` - number of PRs released by branch merge in the time interval.
+
+        * `release-commits` - number of commits which were released in the time interval.
+
+        * `release-tag-commits` - number of commits which were released by tag in the time interval.
+
+        * `release-branch-commits` - number of commits which were released by branch merge in the time interval.
+
+        * `release-lines` - sum of the changed (added or removed) diff lines of the commits released in the time interval.
+
+        * `release-tag-lines` - sum of the changed (added or removed) diff lines of the commits released by tag in the time interval.
+
+        * `release-branch-lines` - sum of the changed (added or removed) diff lines of the commits released by branch merge in the time interval.
+
+        * `release-avg-prs` - average (by release) number of PRs released in the time interval. Quantiles are applied.
+
+        * `release-tag-avg-prs` - average (by release) number of PRs released by tag in the time interval. Quantiles are applied.
+
+        * `release-branch-avg-prs` - average number of PRs released by branch merge in the time interval. Quantiles are applied.
+
+        * `release-avg-commits` - average (by release) number of commits released in the time interval. Quantiles are applied.
+
+        * `release-tag-avg-commits` - average (by release) number of commits released by tag in the time interval. Quantiles are applied.
+
+        * `release-branch-avg-commits` - average (by release) number of commits released by branch merge in the time interval. Quantiles are applied.
+
+        * `release-avg-lines` - average (by release) number of changed (added + removed) diff lines of the commits released in the time interval. Quantiles are applied.
+
+        * `release-tag-avg-lines` - average (by release) number of changed (added + removed) diff lines of the commits released by tag in the time interval. Quantiles are applied.
+
+        * `release-branch-avg-lines` - average (by release) number of changed (added + removed) diff lines of the commits released by branch merge in the time interval. Quantiles are applied.
+
+        * `release-age` - average timedelta between releases of the same alignment (as determined by the commit DAG). Quantiles are applied.
+
+        * `release-tag-age` - average timedelta between releases by tag of the same alignment (as determined by the commit DAG). Quantiles are applied.
+
+        * `release-branch-age` - average timedelta between releases by branch of the same alignment (as determined by the commit DAG). Quantiles are applied.
+
+        * `release-time-to-deploy` - average time passed since release happened until deployed.'
+      enum:
+      - release-count
+      - release-tag-count
+      - release-branch-count
+      - release-prs
+      - release-tag-prs
+      - release-branch-prs
+      - release-commits
+      - release-tag-commits
+      - release-branch-commits
+      - release-lines
+      - release-tag-lines
+      - release-branch-lines
+      - release-avg-prs
+      - release-tag-avg-prs
+      - release-branch-avg-prs
+      - release-avg-commits
+      - release-tag-avg-commits
+      - release-branch-avg-commits
+      - release-avg-lines
+      - release-tag-avg-lines
+      - release-branch-avg-lines
+      - release-age
+      - release-tag-age
+      - release-branch-age
+      - release-time-to-deploy
+      type: string
+    GoalTemplateName:
+      description: Name of the template.
+      example: Untitled Template
+      minLength: 1
+      type: string
+    GoalTemplateUpdateRequest:
+      additionalProperties: false
+      description: Goal template update request body. A missing property means removal.
+      example:
+        name: New template name
+        metric: pr-lead-time
+      properties:
+        name:
+          $ref: '#/components/schemas/GoalTemplateName'
+        metric:
+          oneOf:
+          - $ref: '#/components/schemas/PullRequestMetricID'
+          - $ref: '#/components/schemas/JIRAMetricID'
+          - $ref: '#/components/schemas/ReleaseMetricID'
+        metric_params:
+          $ref: '#/components/schemas/GoalMetricParams'
+        repositories:
+          $ref: '#/components/schemas/RepositorySet'
+      required:
+      - name
+      - metric
+      type: object
+    GoalTemplateCreateRequest:
+      additionalProperties: false
+      description: Goal template creation request body.
+      example:
+        account: 30
+        metric: pr-review-time
+        name: My New Goal Template
+        repositories:
+        - github.com/athenianco/api-spec
+        - github.com/athenianco/athenian-webapp
+      properties:
+        account:
+          description: Account identifier. That account will own the created goal template.
+          type: integer
+        metric:
+          oneOf:
+          - $ref: '#/components/schemas/PullRequestMetricID'
+          - $ref: '#/components/schemas/JIRAMetricID'
+          - $ref: '#/components/schemas/ReleaseMetricID'
+        metric_params:
+          $ref: '#/components/schemas/GoalMetricParams'
+        name:
+          $ref: '#/components/schemas/GoalTemplateName'
+        repositories:
+          $ref: '#/components/schemas/RepositorySet'
+      required:
+      - account
+      - metric
+      - name
+      type: object
+    GoalTemplate:
+      additionalProperties: false
+      description: A template to generate a goal.
+      example:
+        available: true
+        id: 42
+        metric: pr-release-time
+        name: Untitled Template
+        repositories:
+        - github.com/athenianco/athenian-api
+        - github.com/athenianco/api-spec
+      properties:
+        available:
+          description: Whether the templates is avaiable for use.
+          type: boolean
+        id:
+          description: Identifier of the template.
+          type: integer
+        metric:
+          oneOf:
+          - $ref: '#/components/schemas/PullRequestMetricID'
+          - $ref: '#/components/schemas/JIRAMetricID'
+          - $ref: '#/components/schemas/ReleaseMetricID'
+        metric_params:
+          $ref: '#/components/schemas/GoalMetricParams'
+        name:
+          $ref: '#/components/schemas/GoalTemplateName'
+        repositories:
+          $ref: '#/components/schemas/RepositorySet'
+      required:
+      - available
+      - id
+      - name
+      - metric
+      type: object
+    CreatedIdentifier:
+      additionalProperties: false
+      example:
+        id: 777
+      properties:
+        id:
+          description: Identifier of the created entity.
+          example: 777
+          type: integer
+      required:
+      - id
+      type: object
+    GoalTemplateList:
+      description: List of goal templates.
+      example:
+      - available: false
+        id: 42
+        metric: pr-release-time
+        name: Untitled Template 0
+      - available: true
+        id: 43
+        metric: jira-raised
+        name: Untitled Template 1
+        repositories:
+        - github.com/athenianco/athenian-webapp
+      items:
+        $ref: '#/components/schemas/GoalTemplate'
+      type: array
+  responses:
+    EmptySuccessfulResponse:
+      content:
+        application/json:
+          schema:
+            enum:
+            - {}
+            type: object
+      description: Empty object indicates a successful operation.
+    GoalTemplateNotFoundResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GenericError'
+      description: The goal template was not found.
+    InvalidRequestErrorResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InvalidRequestError'
+      description: The request is invalid.
+  securitySchemes:
+    apiKeyAuth:
+      description: 'Authorization by the value of `X-API-Key` header aka API token.
+
+        The tokens are user- and account-specific. Create them by calling `/token/create`.
+
+        The server automatically inserts `account` in the request''s body if it was not
+
+        supplied by the user.'
+      in: header
+      name: X-API-Key
+      type: apiKey
+      x-apikeyInfoFunc: athenian.api.controllers.security_controller.info_from_apiKeyAuth
+    bearerAuth:
+      bearerFormat: JWT
+      description: 'Regular JSON Web Token authorization powered by Auth0.
+
+        The server expects an `Authorization: Bearer <token>` header and checks `<token>` by
+
+        sending it to Auth0. Visit [{{ server_url | replace("api", "app") }}/bearer]({{ server_url | replace("api", "app") }}/bearer)
+
+        to copy your current JWT that will expire within 24 hours.'
+      scheme: bearer
+      type: http
+      x-bearerInfoFunc: athenian.api.controllers.security_controller.info_from_bearerAuth

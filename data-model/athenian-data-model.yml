@@ -1,0 +1,707 @@
+generated: '2026-07-18'
+method: derived
+source: openapi/athenian-openapi-original.yml
+note: 'Entity graph derived from OpenAPI components.schemas $ref links. Athenian models
+  software-delivery analytics: Accounts own Users/Teams/RepositorySets/Goals; metrics
+  and filters operate over PullRequests, Releases, Deployments, JIRA issues, Contributors.'
+entity_count: 218
+entities:
+- AcceptedInvitation
+- Account
+- AccountStatus
+- AccountUserChangeRequest
+- CalculatedCodeCheckHistogram
+- CalculatedCodeCheckHistograms
+- CalculatedCodeCheckMetrics
+- CalculatedCodeCheckMetricsItem
+- CalculatedDeploymentMetric
+- CalculatedDeploymentMetrics
+- CalculatedDeveloperMetrics
+- CalculatedDeveloperMetricsItem
+- CalculatedJIRAHistogram
+- CalculatedJIRAHistograms
+- CalculatedJIRAMetricValues
+- CalculatedJIRAMetrics
+- CalculatedLinearMetricValues
+- CalculatedPullRequestHistogram
+- CalculatedPullRequestHistograms
+- CalculatedPullRequestMetrics
+- CalculatedPullRequestMetricsItem
+- CalculatedReleaseMetric
+- CalculatedReleaseMetrics
+- CodeBypassingPRsMeasurement
+- CodeCheckHistogramDefinition
+- CodeCheckHistogramsRequest
+- CodeCheckMetricID
+- CodeCheckMetricsRequest
+- CodeCheckRunStatistics
+- CodeFilter
+- Color
+- Commit
+- CommitHash
+- CommitPushers
+- CommitSignature
+- CommitsList
+- Contributor
+- ContributorIdentity
+- Contributors
+- CreateTokenRequest
+- CreatedIdentifier
+- CreatedToken
+- Datasource
+- DeleteEventsCacheRequest
+- DeployedComponent
+- DeployedPullRequest
+- DeployedRelease
+- DeploymentAnalysis
+- DeploymentConclusion
+- DeploymentLabels
+- DeploymentMetricID
+- DeploymentMetricsRequest
+- DeploymentModifyLabelsRequest
+- DeploymentNotification
+- DeploymentWith
+- DeveloperID
+- DeveloperMetricID
+- DeveloperMetricsRequest
+- DeveloperSet
+- DeveloperSummaries
+- DeveloperSummary
+- DeveloperUpdates
+- DiffReleasesRequest
+- DiffedReleases
+- FilterCodeChecksRequest
+- FilterCommitsRequest
+- FilterContributorsRequest
+- FilterDeploymentsRequest
+- FilterEnvironmentsRequest
+- FilterJIRACommon
+- FilterJIRAStuff
+- FilterLabelsRequest
+- FilterPullRequestsRequest
+- FilterReleasesRequest
+- FilterRepositoriesRequest
+- FilteredCodeCheckRun
+- FilteredCodeCheckRuns
+- FilteredDeployment
+- FilteredDeployments
+- FilteredEnvironment
+- FilteredEnvironments
+- FilteredJIRAStuff
+- FilteredLabel
+- FilteredLabels
+- FilteredRelease
+- ForSetCodeChecks
+- ForSetDeployments
+- ForSetDevelopers
+- ForSetPullRequests
+- GenericError
+- GetJIRAIssuesInclude
+- GetJIRAIssuesRequest
+- GetJIRAIssuesResponse
+- GetPullRequestsRequest
+- GetReleasesRequest
+- GoalMetricParams
+- GoalTemplate
+- GoalTemplateCreateRequest
+- GoalTemplateList
+- GoalTemplateName
+- GoalTemplateUpdateRequest
+- Granularities
+- Granularity
+- HistogramScale
+- IncludedDeployments
+- IncludedJIRAIssues
+- IncludedNativeUser
+- IncludedNativeUsers
+- IndexedGroups
+- InstallationProgress
+- Interquartile
+- InvalidRequestError
+- InvitationCheckResult
+- InvitationLink
+- InvitedUser
+- JIRAComment
+- JIRAEpic
+- JIRAEpicChild
+- JIRAEpicIssueCommon
+- JIRAFilter
+- JIRAFilterReturn
+- JIRAFilterWith
+- JIRAGroups
+- JIRAHistogramDefinition
+- JIRAHistogramsRequest
+- JIRAInstallation
+- JIRAIssue
+- JIRAIssueType
+- JIRALabel
+- JIRAMetricID
+- JIRAMetricsRequest
+- JIRAPriority
+- JIRAProject
+- JIRAProjects
+- JIRAProjectsRequest
+- JIRAStatus
+- JIRAStatusCategory
+- JIRAUser
+- LinkedJIRAIssue
+- ListedToken
+- ListedTokens
+- LogicalDeploymentRules
+- LogicalPRRules
+- LogicalRepositories
+- LogicalRepository
+- LogicalRepositoryGetRequest
+- LogicalRepositoryRequest
+- MappedJIRAIdentities
+- MappedJIRAIdentity
+- MappedJIRAIdentityChange
+- MatchIdentitiesRequest
+- MatchedIdentities
+- MatchedIdentity
+- MeasuredCodeBypassingPRs
+- MissingSettingsError
+- NoSourceDataError
+- NotifiedDeployments
+- NotifyDeploymentsRequest
+- NotifyReleasesRequest
+- NotifyReleasesResponse
+- Organization
+- PaginatePullRequestsRequest
+- PatchTokenRequest
+- ProductFeature
+- ProductFeatures
+- PullRequest
+- PullRequestEvent
+- PullRequestHistogramDefinition
+- PullRequestHistogramsRequest
+- PullRequestLabel
+- PullRequestMetricID
+- PullRequestMetricsRequest
+- PullRequestNumbers
+- PullRequestPaginationPlan
+- PullRequestParticipant
+- PullRequestSet
+- PullRequestStage
+- PullRequestWith
+- Quantiles
+- ReleaseDiff
+- ReleaseMatchRequest
+- ReleaseMatchSetting
+- ReleaseMatchSettings
+- ReleaseMatchStrategy
+- ReleaseMetricID
+- ReleaseMetricsRequest
+- ReleaseNames
+- ReleaseNotification
+- ReleaseNotificationStatus
+- ReleasePair
+- ReleaseSet
+- ReleaseWith
+- ReleasedPullRequest
+- RepositoryID
+- RepositorySet
+- RepositorySetCreateRequest
+- RepositorySetList
+- RepositorySetListItem
+- RepositorySetWithName
+- SetMappedJIRAIdentitiesRequest
+- Share
+- StageTimings
+- TableFetchingProgress
+- Team
+- TeamCreateRequest
+- TeamList
+- TeamUpdateRequest
+- TimeDuration
+- TimeZone
+- User
+- Versions
+- WithBothJiraAndJiragroups
+- WorkType
+- WorkTypeGetRequest
+- WorkTypeName
+- WorkTypePutRequest
+- WorkTypeRule
+- WorkTypes
+relationships:
+- from: GoalTemplate
+  to: JIRAMetricID
+  kind: references
+  via: $ref
+- from: GoalTemplate
+  to: GoalMetricParams
+  kind: references
+  via: $ref
+- from: GoalTemplate
+  to: RepositorySet
+  kind: references
+  via: $ref
+- from: GoalTemplate
+  to: PullRequestMetricID
+  kind: references
+  via: $ref
+- from: GoalTemplate
+  to: ReleaseMetricID
+  kind: references
+  via: $ref
+- from: GoalTemplate
+  to: GoalTemplateName
+  kind: references
+  via: $ref
+- from: GoalTemplateCreateRequest
+  to: JIRAMetricID
+  kind: references
+  via: $ref
+- from: GoalTemplateCreateRequest
+  to: GoalMetricParams
+  kind: references
+  via: $ref
+- from: GoalTemplateCreateRequest
+  to: RepositorySet
+  kind: references
+  via: $ref
+- from: GoalTemplateCreateRequest
+  to: PullRequestMetricID
+  kind: references
+  via: $ref
+- from: GoalTemplateCreateRequest
+  to: ReleaseMetricID
+  kind: references
+  via: $ref
+- from: GoalTemplateCreateRequest
+  to: GoalTemplateName
+  kind: references
+  via: $ref
+- from: GoalMetricParams
+  to: TimeDuration
+  kind: references
+  via: $ref
+- from: GoalTemplateUpdateRequest
+  to: JIRAMetricID
+  kind: references
+  via: $ref
+- from: GoalTemplateUpdateRequest
+  to: GoalMetricParams
+  kind: references
+  via: $ref
+- from: GoalTemplateUpdateRequest
+  to: RepositorySet
+  kind: references
+  via: $ref
+- from: GoalTemplateUpdateRequest
+  to: PullRequestMetricID
+  kind: references
+  via: $ref
+- from: GoalTemplateUpdateRequest
+  to: ReleaseMetricID
+  kind: references
+  via: $ref
+- from: GoalTemplateUpdateRequest
+  to: GoalTemplateName
+  kind: references
+  via: $ref
+- from: Contributor
+  to: DeveloperID
+  kind: references
+  via: $ref
+- from: TeamCreateRequest
+  to: DeveloperSet
+  kind: references
+  via: $ref
+- from: TeamUpdateRequest
+  to: DeveloperSet
+  kind: references
+  via: $ref
+- from: Team
+  to: Contributors
+  kind: references
+  via: $ref
+- from: RepositorySetWithName
+  to: RepositoryID
+  kind: references
+  via: $ref
+- from: RepositorySetCreateRequest
+  to: RepositoryID
+  kind: references
+  via: $ref
+- from: User
+  to: AccountStatus
+  kind: references
+  via: $ref
+- from: InvitedUser
+  to: User
+  kind: references
+  via: $ref
+- from: Account
+  to: Datasource
+  kind: references
+  via: $ref
+- from: Account
+  to: JIRAInstallation
+  kind: references
+  via: $ref
+- from: Account
+  to: User
+  kind: references
+  via: $ref
+- from: Account
+  to: Organization
+  kind: references
+  via: $ref
+- from: InstallationProgress
+  to: TableFetchingProgress
+  kind: references
+  via: $ref
+- from: ForSetPullRequests
+  to: RepositorySet
+  kind: references
+  via: $ref
+- from: ForSetPullRequests
+  to: IndexedGroups
+  kind: references
+  via: $ref
+- from: ForSetPullRequests
+  to: JIRAFilter
+  kind: references
+  via: $ref
+- from: ForSetPullRequests
+  to: JIRAGroups
+  kind: references
+  via: $ref
+- from: ForSetPullRequests
+  to: PullRequestWith
+  kind: references
+  via: $ref
+- from: ForSetDevelopers
+  to: JIRAFilter
+  kind: references
+  via: $ref
+- from: ForSetDevelopers
+  to: RepositorySet
+  kind: references
+  via: $ref
+- from: ForSetDevelopers
+  to: DeveloperSet
+  kind: references
+  via: $ref
+- from: ForSetDevelopers
+  to: IndexedGroups
+  kind: references
+  via: $ref
+- from: PullRequestMetricsRequest
+  to: TimeZone
+  kind: references
+  via: $ref
+- from: PullRequestMetricsRequest
+  to: Granularities
+  kind: references
+  via: $ref
+- from: PullRequestMetricsRequest
+  to: PullRequestMetricID
+  kind: references
+  via: $ref
+- from: PullRequestMetricsRequest
+  to: ForSetPullRequests
+  kind: references
+  via: $ref
+- from: PullRequestMetricsRequest
+  to: Quantiles
+  kind: references
+  via: $ref
+- from: CalculatedPullRequestMetricsItem
+  to: ForSetPullRequests
+  kind: references
+  via: $ref
+- from: CalculatedPullRequestMetricsItem
+  to: CalculatedLinearMetricValues
+  kind: references
+  via: $ref
+- from: CalculatedPullRequestMetricsItem
+  to: Granularity
+  kind: references
+  via: $ref
+- from: CalculatedPullRequestMetrics
+  to: TimeZone
+  kind: references
+  via: $ref
+- from: CalculatedPullRequestMetrics
+  to: Granularities
+  kind: references
+  via: $ref
+- from: CalculatedPullRequestMetrics
+  to: PullRequestMetricID
+  kind: references
+  via: $ref
+- from: CalculatedPullRequestMetrics
+  to: CalculatedPullRequestMetricsItem
+  kind: references
+  via: $ref
+- from: CalculatedPullRequestMetrics
+  to: Quantiles
+  kind: references
+  via: $ref
+- from: CalculatedLinearMetricValues
+  to: TimeDuration
+  kind: references
+  via: $ref
+- from: FilterRepositoriesRequest
+  to: RepositorySet
+  kind: references
+  via: $ref
+- from: FilterRepositoriesRequest
+  to: TimeZone
+  kind: references
+  via: $ref
+- from: FilterReleasesRequest
+  to: JIRAFilter
+  kind: references
+  via: $ref
+- from: FilterReleasesRequest
+  to: ReleaseWith
+  kind: references
+  via: $ref
+- from: FilterReleasesRequest
+  to: RepositorySet
+  kind: references
+  via: $ref
+- from: FilterReleasesRequest
+  to: TimeZone
+  kind: references
+  via: $ref
+- from: FilterContributorsRequest
+  to: RepositorySet
+  kind: references
+  via: $ref
+- from: FilterContributorsRequest
+  to: TimeZone
+  kind: references
+  via: $ref
+- from: FilterPullRequestsRequest
+  to: RepositorySet
+  kind: references
+  via: $ref
+- from: FilterPullRequestsRequest
+  to: TimeZone
+  kind: references
+  via: $ref
+- from: FilterPullRequestsRequest
+  to: JIRAFilter
+  kind: references
+  via: $ref
+- from: FilterPullRequestsRequest
+  to: PullRequestStage
+  kind: references
+  via: $ref
+- from: FilterPullRequestsRequest
+  to: PullRequestEvent
+  kind: references
+  via: $ref
+- from: FilterPullRequestsRequest
+  to: PullRequestWith
+  kind: references
+  via: $ref
+- from: PullRequestSet
+  to: PullRequest
+  kind: references
+  via: $ref
+- from: PullRequestSet
+  to: IncludedDeployments
+  kind: references
+  via: $ref
+- from: PullRequestSet
+  to: IncludedNativeUsers
+  kind: references
+  via: $ref
+- from: IncludedNativeUsers
+  to: IncludedNativeUser
+  kind: references
+  via: $ref
+- from: IncludedDeployments
+  to: DeploymentNotification
+  kind: references
+  via: $ref
+- from: PullRequest
+  to: PullRequestParticipant
+  kind: references
+  via: $ref
+- from: PullRequest
+  to: LinkedJIRAIssue
+  kind: references
+  via: $ref
+- from: PullRequest
+  to: PullRequestStage
+  kind: references
+  via: $ref
+- from: PullRequest
+  to: StageTimings
+  kind: references
+  via: $ref
+- from: PullRequest
+  to: PullRequestLabel
+  kind: references
+  via: $ref
+- from: PullRequest
+  to: PullRequestEvent
+  kind: references
+  via: $ref
+- from: StageTimings
+  to: TimeDuration
+  kind: references
+  via: $ref
+- from: PullRequestWith
+  to: DeveloperSet
+  kind: references
+  via: $ref
+- from: PullRequestLabel
+  to: Color
+  kind: references
+  via: $ref
+- from: FilterCommitsRequest
+  to: RepositorySet
+  kind: references
+  via: $ref
+- from: FilterCommitsRequest
+  to: DeveloperSet
+  kind: references
+  via: $ref
+- from: FilterCommitsRequest
+  to: TimeZone
+  kind: references
+  via: $ref
+- from: CommitsList
+  to: IncludedNativeUsers
+  kind: references
+  via: $ref
+- from: CommitsList
+  to: IncludedDeployments
+  kind: references
+  via: $ref
+- from: CommitsList
+  to: Commit
+  kind: references
+  via: $ref
+- from: Commit
+  to: RepositoryID
+  kind: references
+  via: $ref
+- from: Commit
+  to: CommitSignature
+  kind: references
+  via: $ref
+- from: CommitSignature
+  to: DeveloperID
+  kind: references
+  via: $ref
+- from: CodeFilter
+  to: RepositorySet
+  kind: references
+  via: $ref
+- from: CodeFilter
+  to: Granularity
+  kind: references
+  via: $ref
+- from: CodeFilter
+  to: DeveloperSet
+  kind: references
+  via: $ref
+- from: CodeFilter
+  to: TimeZone
+  kind: references
+  via: $ref
+- from: DeveloperMetricsRequest
+  to: Granularities
+  kind: references
+  via: $ref
+- from: DeveloperMetricsRequest
+  to: DeveloperMetricID
+  kind: references
+  via: $ref
+- from: DeveloperMetricsRequest
+  to: ForSetDevelopers
+  kind: references
+  via: $ref
+- from: DeveloperMetricsRequest
+  to: TimeZone
+  kind: references
+  via: $ref
+- from: CalculatedDeveloperMetrics
+  to: TimeZone
+  kind: references
+  via: $ref
+- from: CalculatedDeveloperMetrics
+  to: Granularities
+  kind: references
+  via: $ref
+- from: CalculatedDeveloperMetrics
+  to: DeveloperMetricID
+  kind: references
+  via: $ref
+- from: CalculatedDeveloperMetrics
+  to: CalculatedDeveloperMetricsItem
+  kind: references
+  via: $ref
+- from: CalculatedDeveloperMetricsItem
+  to: CalculatedLinearMetricValues
+  kind: references
+  via: $ref
+- from: CalculatedDeveloperMetricsItem
+  to: Granularity
+  kind: references
+  via: $ref
+- from: CalculatedDeveloperMetricsItem
+  to: ForSetDevelopers
+  kind: references
+  via: $ref
+- from: DeveloperSummary
+  to: DeveloperUpdates
+  kind: references
+  via: $ref
+- from: ReleaseSet
+  to: IncludedJIRAIssues
+  kind: references
+  via: $ref
+- from: ReleaseSet
+  to: FilteredRelease
+  kind: references
+  via: $ref
+- from: ReleaseSet
+  to: IncludedDeployments
+  kind: references
+  via: $ref
+- from: ReleaseSet
+  to: IncludedNativeUsers
+  kind: references
+  via: $ref
+- from: FilteredRelease
+  to: DeveloperID
+  kind: references
+  via: $ref
+- from: FilteredRelease
+  to: ReleasedPullRequest
+  kind: references
+  via: $ref
+- from: DeployedRelease
+  to: DeveloperID
+  kind: references
+  via: $ref
+- from: ReleasedPullRequest
+  to: DeveloperID
+  kind: references
+  via: $ref
+- from: GetReleasesRequest
+  to: ReleaseNames
+  kind: references
+  via: $ref
+- from: IncludedJIRAIssues
+  to: LinkedJIRAIssue
+  kind: references
+  via: $ref
+- from: ReleaseMatchRequest
+  to: ReleaseMatchStrategy
+  kind: references
+  via: $ref
+- from: ReleaseMatchRequest
+  to: RepositorySet
+  kind: references
+  via: $ref

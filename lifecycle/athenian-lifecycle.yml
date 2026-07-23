@@ -1,0 +1,21 @@
+generated: '2026-07-18'
+method: searched
+source: https://github.com/athenianco
+note: Athenian wound down. Both athenian.com and athenian.co now 301-redirect to github.com/athenianco;
+  api.athenian.co no longer resolves. The OpenAPI spec (api-spec) and open-source
+  code (athenian-api-open, MIT) remain published on GitHub.
+status: discontinued
+versioning:
+  scheme: uri-path
+  current: v1
+  spec_version: 2.1.86
+deprecation:
+  policy_url: null
+  sunset_header: false
+sla:
+  url: null
+status_page: null
+source_code:
+- https://github.com/athenianco/athenian-api-open
+- https://github.com/athenianco/api-spec
+deprecated_operations: []

@@ -1,0 +1,329 @@
+openapi: 3.0.3
+info:
+  contact:
+    email: admin@athenian.co
+    name: the administrator by email
+  description: 'Server version: {{ server_version }} built on {{ build_date }} @ [{{ commit }}](https://github.com/athenianco/athenian-api/commit/{{ commit }})
+
+
+    Origin GitHub repository: [athenianco/api-spec](https://github.com/athenianco/api-spec).
+
+
+    Authorization persists between sessions. Marks:
+
+    * 🛡️ endpoint requires account admin privileges.
+
+    * 👤 endpoint only works with JWT authentication.
+
+    <details>
+
+    <summary>List of common server errors.</summary>
+
+    * __500__ endpoint crashed. We reported the incident to Sentry and will fix it soon! Please include the value of `instance` in the response if you contact the support. Repeating the request will not help, most probably.
+
+    * __501__ some functions are missing, either because they are not implemented yet or a non-critical runtime dependency is not satisfied. Repeating the request will not help, guaranteed.
+
+    * __502__ server crashed badly, either due to a memory access violation in native code or running out of memory. We reported this incident to Sentry and will fix it soon! Try repeating the request.
+
+    * __503__ server has not fully launched yet, e.g. hasn''t connected to the database; server is shutting down; we are experiencing a partial outage. Try repeating the request.
+
+    * __504__ endpoint took too much time and was interrupted. We reported the incident to Sentry and will see how to improve the performance. Repeating the request will not help, most probably.
+
+    </details>'
+  license:
+    name: CC-BY-4.0
+  title: '{{ title }} align security API'
+  version: 2.1.86
+servers:
+- description: '{{ server_description }} - {{ server_url }}'
+  url: '{{ server_url }}/v1'
+tags:
+- name: security
+paths:
+  /token/create:
+    post:
+      operationId: create_token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTokenRequest'
+        x-body-name: body
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatedToken'
+          description: Value and ID of the generated Personal Access Token.
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The user does not belong to the specified account or no such account exists.
+        409:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: There is another token with the same name belonging to the user in the account.
+      security:
+      - bearerAuth: []
+      summary: 👤 Create a new Personal Access Token for the calling user and the specified account.
+      tags:
+      - security
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: athenian.api.controllers.security_controller
+  /token/{id}:
+    delete:
+      operationId: delete_token
+      parameters:
+      - description: Numeric identifier of the token.
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: object
+          description: Empty object indicates a successful removal.
+        403:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The user does not own the token.
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The token does not exist.
+      security:
+      - bearerAuth: []
+      summary: 👤 Delete a Personal Access Token belonging to the user.
+      tags:
+      - security
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: athenian.api.controllers.security_controller
+    patch:
+      operationId: patch_token
+      parameters:
+      - description: Numeric identifier of the token.
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchTokenRequest'
+        x-body-name: body
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: object
+          description: Empty object indicates a successful patch operation.
+        403:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The user does not own the token.
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The token does not exist.
+        409:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: There is another token with the same name belonging to the user in the account.
+      security:
+      - bearerAuth: []
+      summary: 👤 Change Personal Access Token's details.
+      tags:
+      - security
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: athenian.api.controllers.security_controller
+  /tokens/{id}:
+    get:
+      operationId: list_tokens
+      parameters:
+      - $ref: '#/components/parameters/pathAccountID'
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListedTokens'
+          description: List of Personal Access Tokens belonging to the user in the specified account.
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The user does not belong to the specified account or no such account exists.
+      security:
+      - bearerAuth: []
+      - apiKeyAuth: []
+      summary: List Personal Access Tokens of the user in the account.
+      tags:
+      - security
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: athenian.api.controllers.security_controller
+components:
+  schemas:
+    CreateTokenRequest:
+      additionalProperties: false
+      description: Request body of `/token/create` - creating a new Personal Access Token.
+      example:
+        account: 1
+        name: Release webhook
+      properties:
+        account:
+          description: Account ID.
+          type: integer
+        name:
+          type: string
+      required:
+      - account
+      - name
+      type: object
+    CreatedToken:
+      additionalProperties: false
+      description: Value and ID of the generated Personal Access Token.
+      example:
+        id: 1007
+        token: 99129c581b6d2950233dac583629ba591319b2c6
+      properties:
+        id:
+          description: Token identifier - can be used in `/token/{id}` DELETE.
+          type: integer
+        token:
+          description: Secret token - not stored server-side!
+          type: string
+      required:
+      - id
+      - token
+      type: object
+    ListedToken:
+      additionalProperties: false
+      description: Details about a token - without the token itself, which is not stored.
+      example:
+        last_used: 2020-06-23 04:56:07+00:00
+        name: webhook
+        id: 1008
+      properties:
+        id:
+          description: Token identifier - can be used in `/token/{id}` DELETE.
+          type: integer
+        name:
+          description: Name of the token (see `/token/create`).
+          type: string
+        last_used:
+          description: When this token was used last time.
+          format: date-time
+          type: string
+      required:
+      - id
+      - last_used
+      - name
+      type: object
+    ListedTokens:
+      items:
+        $ref: '#/components/schemas/ListedToken'
+      type: array
+    GenericError:
+      example:
+        detail: 'Unsupported metric: pr-xxx-time'
+        status: 400
+        title: Bad request syntax or unsupported method.
+        type: /errors/InvalidRequestError
+      properties:
+        detail:
+          description: Human-readable explanation specific to this occurrence of the problem.
+          example: 'Unsupported metric: pr-xxx-time'
+          type: string
+        instance:
+          description: URI reference that identifies the specific occurrence of the problem. It is `null` for 4xx, Sentry event ID for 5xx.
+          example: 2763c4eabd7240f59829ee1a02546293
+          type: string
+        status:
+          description: Duplicated HTTP status code.
+          example: 400
+          type: integer
+        title:
+          description: Short, human-readable summary of the problem type.
+          example: Bad request syntax or unsupported method.
+          type: string
+        type:
+          description: URI reference that identifies the problem type (RFC 7807).
+          example: /errors/InvalidRequestError
+          type: string
+      required:
+      - status
+      - title
+      - type
+      type: object
+    PatchTokenRequest:
+      additionalProperties: false
+      description: Request body of `/token/{id}` PATCH. Allows changing the token name.
+      example:
+        name: release-webhook
+      properties:
+        name:
+          description: New name of the token.
+          type: string
+      type: object
+  parameters:
+    pathAccountID:
+      description: Numeric identifier of the account.
+      explode: false
+      in: path
+      name: id
+      required: true
+      schema:
+        type: integer
+      style: simple
+  securitySchemes:
+    apiKeyAuth:
+      description: 'Authorization by the value of `X-API-Key` header aka API token.
+
+        The tokens are user- and account-specific. Create them by calling `/token/create`.
+
+        The server automatically inserts `account` in the request''s body if it was not
+
+        supplied by the user.'
+      in: header
+      name: X-API-Key
+      type: apiKey
+      x-apikeyInfoFunc: athenian.api.controllers.security_controller.info_from_apiKeyAuth
+    bearerAuth:
+      bearerFormat: JWT
+      description: 'Regular JSON Web Token authorization powered by Auth0.
+
+        The server expects an `Authorization: Bearer <token>` header and checks `<token>` by
+
+        sending it to Auth0. Visit [{{ server_url | replace("api", "app") }}/bearer]({{ server_url | replace("api", "app") }}/bearer)
+
+        to copy your current JWT that will expire within 24 hours.'
+      scheme: bearer
+      type: http
+      x-bearerInfoFunc: athenian.api.controllers.security_controller.info_from_bearerAuth

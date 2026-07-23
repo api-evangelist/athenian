@@ -1,0 +1,602 @@
+openapi: 3.0.3
+info:
+  contact:
+    email: admin@athenian.co
+    name: the administrator by email
+  description: 'Server version: {{ server_version }} built on {{ build_date }} @ [{{ commit }}](https://github.com/athenianco/athenian-api/commit/{{ commit }})
+
+
+    Origin GitHub repository: [athenianco/api-spec](https://github.com/athenianco/api-spec).
+
+
+    Authorization persists between sessions. Marks:
+
+    * 🛡️ endpoint requires account admin privileges.
+
+    * 👤 endpoint only works with JWT authentication.
+
+    <details>
+
+    <summary>List of common server errors.</summary>
+
+    * __500__ endpoint crashed. We reported the incident to Sentry and will fix it soon! Please include the value of `instance` in the response if you contact the support. Repeating the request will not help, most probably.
+
+    * __501__ some functions are missing, either because they are not implemented yet or a non-critical runtime dependency is not satisfied. Repeating the request will not help, guaranteed.
+
+    * __502__ server crashed badly, either due to a memory access violation in native code or running out of memory. We reported this incident to Sentry and will fix it soon! Try repeating the request.
+
+    * __503__ server has not fully launched yet, e.g. hasn''t connected to the database; server is shutting down; we are experiencing a partial outage. Try repeating the request.
+
+    * __504__ endpoint took too much time and was interrupted. We reported the incident to Sentry and will see how to improve the performance. Repeating the request will not help, most probably.
+
+    </details>'
+  license:
+    name: CC-BY-4.0
+  title: '{{ title }} align registration API'
+  version: 2.1.86
+servers:
+- description: '{{ server_description }} - {{ server_url }}'
+  url: '{{ server_url }}/v1'
+tags:
+- name: registration
+paths:
+  /invite/accept:
+    put:
+      operationId: accept_invitation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AcceptedInvitation'
+        description: Accepted invitation details.
+        required: true
+        x-body-name: body
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvitedUser'
+          description: Details about the new user.
+        400:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidRequestError'
+          description: Something is wrong with the invitation URL.
+        403:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: Invitation is disabled or user is not a member of the GitHub organization.
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: Invitation was not found.
+        409:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: Concurrent requests.
+        422:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoSourceDataError'
+          description: Account's installation has not finished yet.
+      security:
+      - bearerAuth: []
+      summary: 👤 Accept the account membership invitation and finish registration. The user must be already authorized in Auth0.
+      tags:
+      - registration
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: athenian.api.controllers.invitation_controller
+  /invite/check:
+    post:
+      operationId: check_invitation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvitationLink'
+        description: Checked invitation details.
+        required: true
+        x-body-name: body
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvitationCheckResult'
+          description: 'Result of checking an invitation URL: invitation type, whether it is correctly formed and is enabled.'
+      summary: Given an invitation URL, get its type (admin or regular account member) and find whether it is correctly formed and is enabled or disabled.
+      tags:
+      - registration
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: athenian.api.controllers.invitation_controller
+  /invite/generate/{id}:
+    get:
+      operationId: gen_user_invitation
+      parameters:
+      - description: Numeric identifier of the account where to invite new users.
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvitationLink'
+          description: The invitation link has been generated successfully.
+        403:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The user is forbidden to invite for this account.
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The account was not found.
+      security:
+      - bearerAuth: []
+      summary: '👤 Create an account invitation link for regular users. The caller must
+
+        be an admin of the specified account. The link is persistent, so multiple
+
+        calls return the same result.
+
+        '
+      tags:
+      - registration
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: athenian.api.controllers.invitation_controller
+  /invite/jira/{id}:
+    get:
+      operationId: gen_jira_link
+      parameters:
+      - description: Numeric identifier of the account who is installing JIRA integration.
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvitationLink'
+          description: The invitation link has been generated successfully.
+        403:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The user is forbidden to invite for this account.
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The account was not found.
+      security:
+      - bearerAuth: []
+      summary: 👤 Generate a JIRA integration installation link. The caller must be an admin of the specified account.
+      tags:
+      - registration
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: athenian.api.controllers.invitation_controller
+  /invite/jira_progress/{id}:
+    get:
+      operationId: eval_jira_progress
+      parameters:
+      - description: Numeric identifier of the account that is installing JIRA.
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstallationProgress'
+          description: Status of fetching JIRA data to Athenian.
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The account does not exist or the user is not its member.
+        422:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoSourceDataError'
+          description: The installation has not started yet.
+      security:
+      - bearerAuth: []
+      - apiKeyAuth: []
+      summary: Return the current JIRA installation progress in Athenian.
+      tags:
+      - registration
+      x-openapi-router-controller: athenian.api.controllers.invitation_controller
+  /invite/progress/{id}:
+    get:
+      operationId: eval_metadata_progress
+      parameters:
+      - description: Numeric identifier of the account that is installing GitHub.
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstallationProgress'
+          description: Status of fetching GitHub data to Athenian.
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: The account does not exist or the user is not its member.
+        422:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoSourceDataError'
+          description: The installation has not started yet.
+      security:
+      - bearerAuth: []
+      - apiKeyAuth: []
+      summary: Return the current GitHub installation progress in Athenian.
+      tags:
+      - registration
+      x-openapi-router-controller: athenian.api.controllers.invitation_controller
+components:
+  schemas:
+    User:
+      additionalProperties: false
+      description: User details. "updated" and "accounts" are populated only for the calling user.
+      example:
+        id: github|60340680
+        native_id: '60340680'
+        login: gkwillie
+        name: Groundskeeper Willie
+        email: bot@athenian.co
+        picture: https://avatars0.githubusercontent.com/u/60340680?v=4
+        updated: 2020-01-23 12:00:00+00:00
+        accounts:
+          1:
+            is_admin: true
+            expired: false
+            has_jira: true
+            has_ci: true
+            has_deployments: true
+            stale: false
+          2:
+            is_admin: false
+            expired: false
+            has_jira: false
+            has_ci: true
+            has_deployments: false
+            stale: false
+      properties:
+        accounts:
+          additionalProperties:
+            $ref: '#/components/schemas/AccountStatus'
+          description: Mapping from user's account ID the membership status.
+          type: object
+        email:
+          description: Email of the user.
+          type: string
+        id:
+          description: Auth0 user identifier.
+          type: string
+        impersonated_by:
+          description: Identifier of the super admin user who is acting on behalf of.
+          type: string
+        login:
+          description: Auth backend user login name.
+          type: string
+        native_id:
+          description: Auth backend user identifier.
+          type: string
+        name:
+          description: Full name of the user.
+          type: string
+        picture:
+          description: Avatar URL of the user.
+          type: string
+        updated:
+          description: Date and time of the last profile update.
+          format: date-time
+          type: string
+      required:
+      - id
+      - login
+      - native_id
+      type: object
+    InstallationProgress:
+      additionalProperties: false
+      description: 'Status of fetching data to Athenian.
+
+        GitHub progress always returns `owner` and `repositories`.
+
+        '
+      example:
+        tables:
+        - fetched: 50
+          name: Commit
+          total: 100
+        - fetched: 0
+          name: PullRequest
+          total: 20
+        finished_date: 2020-01-23 04:56:07+00:00
+        started_date: 2020-01-23 06:56:07+00:00
+        owner: vmarkovtsev
+        repositories: 30
+      properties:
+        started_date:
+          description: Date and time when the historical data collection began.
+          format: date-time
+          type: string
+        finished_date:
+          description: Date and time when the historical data collection ended.
+          format: date-time
+          nullable: true
+          type: string
+        owner:
+          description: Login of the person who installed the metadata.
+          type: string
+        repositories:
+          description: Number of discovered repositories.
+          minimum: 0
+          type: integer
+        tables:
+          example:
+          - fetched: 50
+            name: Commit
+            total: 100
+          - fetched: 0
+            total: 200
+            name: PullRequest
+          items:
+            $ref: '#/components/schemas/TableFetchingProgress'
+          type: array
+      required:
+      - finished_date
+      - started_date
+      - tables
+      type: object
+    AcceptedInvitation:
+      additionalProperties: false
+      example:
+        url: https://app.athenian.co/i/deadf88d
+        email: vadim@athenian.co
+      description: Request for entering the product.
+      properties:
+        email:
+          description: Calling user's email address.
+          format: email
+          type: string
+        name:
+          description: Calling user's name.
+          type: string
+        url:
+          description: Invitation URL. Users are supposed to click it and become admins or regular account members.
+          format: url
+          type: string
+      required:
+      - url
+      type: object
+    InvitedUser:
+      additionalProperties: false
+      description: Details about the user who has accepted an invitation.
+      example:
+        user:
+          id: github|60340681
+          native_id: '60340681'
+          login: gkwillie
+          name: Groundskeeper Willie
+          email: bot@athenian.co
+          picture: https://avatars0.githubusercontent.com/u/60340681?v=4
+          updated: 2020-01-23 12:00:00+00:00
+        account: 0
+      properties:
+        account:
+          description: Joined account ID.
+          type: integer
+        user:
+          $ref: '#/components/schemas/User'
+      required:
+      - account
+      - user
+      type: object
+    TableFetchingProgress:
+      additionalProperties: false
+      description: Used in InstallationProgress.tables to indicate how much data has been loaded in each DB table.
+      example:
+        fetched: 50
+        name: Commit
+        total: 100
+      properties:
+        fetched:
+          description: How many records have been stored in the DB table so far.
+          minimum: 0
+          type: integer
+        name:
+          description: DB table identifier.
+          type: string
+        total:
+          description: How many records the DB table is expected to have.
+          minimum: 1
+          type: integer
+      required:
+      - fetched
+      - name
+      - total
+      type: object
+    InvitationLink:
+      additionalProperties: false
+      example:
+        url: https://app.athenian.co/i/deadf88d
+      description: Product invitation URL.
+      properties:
+        url:
+          description: Invitation URL. Users are supposed to click it and become admins or regular account members.
+          format: url
+          type: string
+      required:
+      - url
+      type: object
+    InvalidRequestError:
+      allOf:
+      - $ref: '#/components/schemas/GenericError'
+      - properties:
+          pointer:
+            description: Path to the offending request item.
+            example: .granularity
+            type: string
+        type: object
+    AccountStatus:
+      additionalProperties: false
+      description: Status of the user's account membership.
+      example:
+        is_admin: true
+        expired: false
+        stale: false
+        has_jira: true
+        has_ci: true
+        has_deployments: true
+      properties:
+        is_admin:
+          description: Indicates whether the user is an account administrator.
+          type: boolean
+        expired:
+          description: Indicates whether the account is disabled.
+          type: boolean
+        stale:
+          description: Indicates whether the account is temporarily not receiving data updates.
+          type: boolean
+        has_jira:
+          description: Indicates whether the account installed the integration with JIRA.
+          type: boolean
+        has_ci:
+          description: Indicates whether the account permitted the access to check suites.
+          type: boolean
+        has_deployments:
+          description: Indicates whether the account has submitted at least one deployment.
+          type: boolean
+      required:
+      - expired
+      - has_ci
+      - has_deployments
+      - has_jira
+      - is_admin
+      - stale
+      type: object
+    NoSourceDataError:
+      $ref: '#/components/schemas/GenericError'
+    GenericError:
+      example:
+        detail: 'Unsupported metric: pr-xxx-time'
+        status: 400
+        title: Bad request syntax or unsupported method.
+        type: /errors/InvalidRequestError
+      properties:
+        detail:
+          description: Human-readable explanation specific to this occurrence of the problem.
+          example: 'Unsupported metric: pr-xxx-time'
+          type: string
+        instance:
+          description: URI reference that identifies the specific occurrence of the problem. It is `null` for 4xx, Sentry event ID for 5xx.
+          example: 2763c4eabd7240f59829ee1a02546293
+          type: string
+        status:
+          description: Duplicated HTTP status code.
+          example: 400
+          type: integer
+        title:
+          description: Short, human-readable summary of the problem type.
+          example: Bad request syntax or unsupported method.
+          type: string
+        type:
+          description: URI reference that identifies the problem type (RFC 7807).
+          example: /errors/InvalidRequestError
+          type: string
+      required:
+      - status
+      - title
+      - type
+      type: object
+    InvitationCheckResult:
+      additionalProperties: false
+      example:
+        active: true
+        type: regular
+        valid: true
+      properties:
+        active:
+          description: Value indicating whether the invitation is still enabled.
+          type: boolean
+        type:
+          description: Invited user's account membership status.
+          enum:
+          - admin
+          - regular
+          type: string
+        valid:
+          description: Value indicating whether the invitation URL is correctly formed.
+          type: boolean
+      required:
+      - valid
+      type: object
+  securitySchemes:
+    apiKeyAuth:
+      description: 'Authorization by the value of `X-API-Key` header aka API token.
+
+        The tokens are user- and account-specific. Create them by calling `/token/create`.
+
+        The server automatically inserts `account` in the request''s body if it was not
+
+        supplied by the user.'
+      in: header
+      name: X-API-Key
+      type: apiKey
+      x-apikeyInfoFunc: athenian.api.controllers.security_controller.info_from_apiKeyAuth
+    bearerAuth:
+      bearerFormat: JWT
+      description: 'Regular JSON Web Token authorization powered by Auth0.
+
+        The server expects an `Authorization: Bearer <token>` header and checks `<token>` by
+
+        sending it to Auth0. Visit [{{ server_url | replace("api", "app") }}/bearer]({{ server_url | replace("api", "app") }}/bearer)
+
+        to copy your current JWT that will expire within 24 hours.'
+      scheme: bearer
+      type: http
+      x-bearerInfoFunc: athenian.api.controllers.security_controller.info_from_bearerAuth
