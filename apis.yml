@@ -341,6 +341,13 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: Overlay
+  url: overlays/athenian-openapi-overlay.yaml
+- type: IssueTracker
+  url: https://github.com/athenianco/athenian-api-open/issues
+- type: License
+  name: MIT
+  url: https://github.com/athenianco/athenian-api-open/blob/master/LICENSE
 - type: AgenticAccess
   url: agentic-access/athenian-agentic-access.yml
 - type: DomainSecurity
