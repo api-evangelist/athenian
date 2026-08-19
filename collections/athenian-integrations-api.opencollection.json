@@ -1,0 +1,66 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "{{ title }} align integrations API",
+    "version": "2.1.86"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "integrations",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Download all the data collected by Athenian for custom analysis.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{ server_url }}/v1/get/export",
+            "params": [
+              {
+                "name": "account",
+                "value": "",
+                "type": "query",
+                "description": "Numeric identifier of the account. Raises HTTP 400 if the user belongs to more than one account."
+              },
+              {
+                "name": "format",
+                "value": "",
+                "type": "query",
+                "description": "Output file format. The default is `parquet`."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Download all the data collected by Athenian for custom analysis."
+        },
+        {
+          "info": {
+            "name": "Match provided people names/logins/emails to the account's GitHub organization members.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/match/identities",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Match provided people names/logins/emails to the account's GitHub organization members."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

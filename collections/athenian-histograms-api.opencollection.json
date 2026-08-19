@@ -1,0 +1,75 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "{{ title }} align histograms API",
+    "version": "2.1.86"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "histograms",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Calculate histograms on continuous integration runs, such as GitHub Actions, Jenkins, Circle, etc.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/histograms/code_checks",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Calculate histograms on continuous integration runs, such as GitHub Actions, Jenkins, Circle, etc."
+        },
+        {
+          "info": {
+            "name": "Calculate histograms over JIRA issue activities.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/histograms/jira",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Calculate histograms over JIRA issue activities."
+        },
+        {
+          "info": {
+            "name": "Calculate histograms over PR distributions.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/histograms/pull_requests",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Calculate histograms over PR distributions."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

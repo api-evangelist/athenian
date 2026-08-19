@@ -1,0 +1,140 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "{{ title }} align user API",
+    "version": "2.1.86"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "user",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "🛡️👤 Change the status of an account member: regular, admin, or banished (deleted). This endpoint is allowed only for account admins.",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{ server_url }}/v1/account/user",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "🛡️👤 Change the status of an account member: regular, admin, or banished (deleted). This endpoint is allowed only for account admins."
+        },
+        {
+          "info": {
+            "name": "List the calling user's account members and installed GitHub and JIRA organizations.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{ server_url }}/v1/account/:id/details",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the account. The user must belong to that account. To find out which accounts the user belongs to, see `/user`."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List the calling user's account members and installed GitHub and JIRA organizations."
+        },
+        {
+          "info": {
+            "name": "List the product features enabled for the account.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{ server_url }}/v1/account/:id/features",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the account. The user must belong to that account. To find out which accounts the user belongs to, see `/user`."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List the product features enabled for the account."
+        },
+        {
+          "info": {
+            "name": "👤 Save the state of UI views and return a reference.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/share",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "👤 Save the state of UI views and return a reference."
+        },
+        {
+          "info": {
+            "name": "👤 Load the previously saved state of the UI views.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{ server_url }}/v1/share/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Reference to the share previously saved by `PUT /share`."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "👤 Load the previously saved state of the UI views."
+        },
+        {
+          "info": {
+            "name": "Show details about the calling user.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{ server_url }}/v1/user",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Show details about the calling user."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,29 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "{{ title }} align version API",
+    "version": "2.1.86"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "version",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Query the versions of the backend components.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{ server_url }}/v1/versions"
+          },
+          "docs": "Query the versions of the backend components."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

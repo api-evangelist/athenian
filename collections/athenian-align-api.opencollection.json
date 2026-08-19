@@ -1,0 +1,139 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "{{ title }} align API",
+    "version": "2.1.86"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "align",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "👤 Create a goal template.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/goal_template/create",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "👤 Create a goal template."
+        },
+        {
+          "info": {
+            "name": "Retrieve a goal template.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{ server_url }}/v1/goal_template/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the goal template."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Retrieve a goal template."
+        },
+        {
+          "info": {
+            "name": "👤 Update a goal template.",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{ server_url }}/v1/goal_template/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the goal template."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "👤 Update a goal template."
+        },
+        {
+          "info": {
+            "name": "👤 Delete a goal template.",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{ server_url }}/v1/goal_template/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the goal template."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "👤 Delete a goal template."
+        },
+        {
+          "info": {
+            "name": "List the goal templates for the account.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{ server_url }}/v1/goal_templates/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the account."
+              },
+              {
+                "name": "include_tlo",
+                "value": "",
+                "type": "query",
+                "description": "Include templates for TLOs goals, i.e. goals based on parameterized metrics."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List the goal templates for the account."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

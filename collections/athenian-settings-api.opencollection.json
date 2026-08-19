@@ -1,0 +1,285 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "{{ title }} align settings API",
+    "version": "2.1.86"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "settings",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "👤 Add, remove or override GitHub<>JIRA user identity mapping.",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{ server_url }}/v1/settings/jira/identities",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "👤 Add, remove or override GitHub<>JIRA user identity mapping."
+        },
+        {
+          "info": {
+            "name": "Fetch the GitHub<>JIRA user identity mapping.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{ server_url }}/v1/settings/jira/identities/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the account."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Fetch the GitHub<>JIRA user identity mapping."
+        },
+        {
+          "info": {
+            "name": "🛡️👤 Set the enabled JIRA projects.",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{ server_url }}/v1/settings/jira/projects",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "🛡️👤 Set the enabled JIRA projects."
+        },
+        {
+          "info": {
+            "name": "List the currently enabled JIRA project settings.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{ server_url }}/v1/settings/jira/projects/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the account."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List the currently enabled JIRA project settings."
+        },
+        {
+          "info": {
+            "name": "List the currently configured logical repositories.\nA logical repository is a set of rules to match PRs, releases, and deployments\nthat has a name and pretends to be a regular GitHub repository everywhere in UI\nand API requests.\nThis feature is particularly useful to reap monorepos into separate, joint or disjoint\nparts.\n",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{ server_url }}/v1/settings/logical_repositories/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the account."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List the currently configured logical repositories.\nA logical repository is a set of rules to match PRs, releases, and deployments\nthat has a name and pretends to be a regular GitHub repository everywhere in UI\nand API requests.\nThis feature is particularly useful to reap monorepos into separate, joint or disjoint\nparts.\n"
+        },
+        {
+          "info": {
+            "name": "🛡️👤 Insert or update a logical repository - a named set of rules to match PRs, releases,\nand deployments that pretends to be a regular GitHub repository everywhere in UI and\nAPI requests.\n",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{ server_url }}/v1/settings/logical_repository",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "🛡️👤 Insert or update a logical repository - a named set of rules to match PRs, releases,\nand deployments that pretends to be a regular GitHub repository everywhere in UI and\nAPI requests.\n"
+        },
+        {
+          "info": {
+            "name": "🛡️ Delete a logical repository.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/settings/logical_repository/delete",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "🛡️ Delete a logical repository."
+        },
+        {
+          "info": {
+            "name": "👤 Set the release matching rule for a list of repositories. Only for account admins.\nRelease settings are rules by which to mark releases in GitHub repositories.\n",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{ server_url }}/v1/settings/release_match",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "👤 Set the release matching rule for a list of repositories. Only for account admins.\nRelease settings are rules by which to mark releases in GitHub repositories.\n"
+        },
+        {
+          "info": {
+            "name": "List the current release matching settings.\nRelease settings are rules by which to mark releases in GitHub repositories.\n",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{ server_url }}/v1/settings/release_match/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the account."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List the current release matching settings.\nRelease settings are rules by which to mark releases in GitHub repositories.\n"
+        },
+        {
+          "info": {
+            "name": "👤 Create or update a work type - a rule set to group PRs, releases, etc. together.",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{ server_url }}/v1/settings/work_type",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "👤 Create or update a work type - a rule set to group PRs, releases, etc. together."
+        },
+        {
+          "info": {
+            "name": "👤 Remove the work type given the name.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/settings/work_type/delete",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "👤 Remove the work type given the name."
+        },
+        {
+          "info": {
+            "name": "Fetch the definition of the work type given the name.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/settings/work_type/get",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Fetch the definition of the work type given the name."
+        },
+        {
+          "info": {
+            "name": "List the current work types - rule sets to group PRs, releases, etc. together.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{ server_url }}/v1/settings/work_types/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the account."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List the current work types - rule sets to group PRs, releases, etc. together."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,110 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "{{ title }} align security API",
+    "version": "2.1.86"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "security",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "👤 Create a new Personal Access Token for the calling user and the specified account.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/token/create",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "👤 Create a new Personal Access Token for the calling user and the specified account."
+        },
+        {
+          "info": {
+            "name": "👤 Change Personal Access Token's details.",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{ server_url }}/v1/token/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the token."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "👤 Change Personal Access Token's details."
+        },
+        {
+          "info": {
+            "name": "👤 Delete a Personal Access Token belonging to the user.",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{ server_url }}/v1/token/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the token."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "👤 Delete a Personal Access Token belonging to the user."
+        },
+        {
+          "info": {
+            "name": "List Personal Access Tokens of the user in the account.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{ server_url }}/v1/tokens/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the account."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List Personal Access Tokens of the user in the account."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

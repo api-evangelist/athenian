@@ -1,0 +1,98 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "{{ title }} align get API",
+    "version": "2.1.86"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "get",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all the contributors belonging to the specified account.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{ server_url }}/v1/get/contributors/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the account."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List all the contributors belonging to the specified account."
+        },
+        {
+          "info": {
+            "name": "Retrieve Jira issues by key.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/get/jira_issues",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Retrieve Jira issues by key."
+        },
+        {
+          "info": {
+            "name": "List pull requests by repository and number.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/get/pull_requests",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List pull requests by repository and number."
+        },
+        {
+          "info": {
+            "name": "List releases by repository and name.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/get/releases",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List releases by repository and name."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

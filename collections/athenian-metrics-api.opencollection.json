@@ -1,0 +1,151 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "{{ title }} align metrics API",
+    "version": "2.1.86"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "metrics",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Measure the amount of code that was pushed outside of pull requests.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/metrics/code_bypassing_prs",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Measure the amount of code that was pushed outside of pull requests."
+        },
+        {
+          "info": {
+            "name": "Calculate metrics on continuous integration runs, such as GitHub Actions, Jenkins, Circle, etc.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/metrics/code_checks",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Calculate metrics on continuous integration runs, such as GitHub Actions, Jenkins, Circle, etc."
+        },
+        {
+          "info": {
+            "name": "Calculate metrics on deployments submitted by `/events/deployments`.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/metrics/deployments",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Calculate metrics on deployments submitted by `/events/deployments`."
+        },
+        {
+          "info": {
+            "name": "Calculate metrics over developer activities.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/metrics/developers",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Calculate metrics over developer activities."
+        },
+        {
+          "info": {
+            "name": "Calculate metrics over JIRA issue activities.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/metrics/jira",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Calculate metrics over JIRA issue activities."
+        },
+        {
+          "info": {
+            "name": "Calculate linear metrics over PRs.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/metrics/pull_requests",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Calculate linear metrics over PRs."
+        },
+        {
+          "info": {
+            "name": "Calculate linear metrics over releases.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/metrics/releases",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Calculate linear metrics over releases."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

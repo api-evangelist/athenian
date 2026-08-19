@@ -1,0 +1,1051 @@
+{
+  "item": [
+    {
+      "id": "128a4bcf-88ef-4c6d-a0a4-0e59738f9d61",
+      "name": "user",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "0d6a7f80-d6f0-4e87-9aba-181e89a48d5d",
+          "name": "🛡️👤 Change the status of an account member: regular, admin, or banished (deleted). This endpoint is allowed only for account admins.",
+          "request": {
+            "name": "🛡️👤 Change the status of an account member: regular, admin, or banished (deleted). This endpoint is allowed only for account admins.",
+            "description": {},
+            "url": {
+              "path": [
+                "account",
+                "user"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"account\": \"<integer>\",\n  \"status\": \"<string>\",\n  \"user\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "368ad0da-6eeb-4d33-81df-2d63ab93ed1a",
+              "name": "Effective account members.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "account",
+                    "user"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"user\": \"github|60340680\",\n  \"account\": 1,\n  \"status\": \"regular\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"admins\": [\n    {\n      \"id\": \"string\",\n      \"login\": \"string\",\n      \"native_id\": \"string\",\n      \"accounts\": {\n        \"key_0\": {\n          \"is_admin\": true,\n          \"expired\": false,\n          \"stale\": false,\n          \"has_jira\": true,\n          \"has_ci\": true,\n          \"has_deployments\": true\n        }\n      },\n      \"email\": \"string\",\n      \"impersonated_by\": \"string\",\n      \"name\": \"string\",\n      \"picture\": \"string\",\n      \"updated\": \"1988-11-28T04:48:55.949Z\"\n    },\n    {\n      \"id\": \"string\",\n      \"login\": \"string\",\n      \"native_id\": \"string\",\n      \"accounts\": {\n        \"key_0\": {\n          \"is_admin\": true,\n          \"expired\": false,\n          \"stale\": false,\n          \"has_jira\": true,\n          \"has_ci\": true,\n          \"has_deployments\": true\n        },\n        \"key_1\": {\n          \"is_admin\": true,\n          \"expired\": false,\n          \"stale\": false,\n          \"has_jira\": true,\n          \"has_ci\": true,\n          \"has_deployments\": true\n        },\n        \"key_2\": {\n          \"is_admin\": true,\n          \"expired\": false,\n          \"stale\": false,\n          \"has_jira\": true,\n          \"has_ci\": true,\n          \"has_deployments\": true\n        }\n      },\n      \"email\": \"string\",\n      \"impersonated_by\": \"string\",\n      \"name\": \"string\",\n      \"picture\": \"string\",\n      \"updated\": \"1958-10-28T16:23:30.750Z\"\n    }\n  ],\n  \"organizations\": [\n    {\n      \"name\": \"Athenian\",\n      \"login\": \"athenianco\",\n      \"avatar_url\": \"https://avatars3.githubusercontent.com/u/58329504?s=200&v=4\"\n    },\n    {\n      \"name\": \"Athenian\",\n      \"login\": \"athenianco\",\n      \"avatar_url\": \"https://avatars3.githubusercontent.com/u/58329504?s=200&v=4\"\n    }\n  ],\n  \"regulars\": [\n    {\n      \"id\": \"string\",\n      \"login\": \"string\",\n      \"native_id\": \"string\",\n      \"accounts\": {\n        \"key_0\": {\n          \"is_admin\": true,\n          \"expired\": false,\n          \"stale\": false,\n          \"has_jira\": true,\n          \"has_ci\": true,\n          \"has_deployments\": true\n        },\n        \"key_1\": {\n          \"is_admin\": true,\n          \"expired\": false,\n          \"stale\": false,\n          \"has_jira\": true,\n          \"has_ci\": true,\n          \"has_deployments\": true\n        }\n      },\n      \"email\": \"string\",\n      \"impersonated_by\": \"string\",\n      \"name\": \"string\",\n      \"picture\": \"string\",\n      \"updated\": \"2016-06-23T11:13:02.954Z\"\n    },\n    {\n      \"id\": \"string\",\n      \"login\": \"string\",\n      \"native_id\": \"string\",\n      \"accounts\": {\n        \"key_0\": {\n          \"is_admin\": true,\n          \"expired\": false,\n          \"stale\": false,\n          \"has_jira\": true,\n          \"has_ci\": true,\n          \"has_deployments\": true\n        },\n        \"key_1\": {\n          \"is_admin\": true,\n          \"expired\": false,\n          \"stale\": false,\n          \"has_jira\": true,\n          \"has_ci\": true,\n          \"has_deployments\": true\n        }\n      },\n      \"email\": \"string\",\n      \"impersonated_by\": \"string\",\n      \"name\": \"string\",\n      \"picture\": \"string\",\n      \"updated\": \"1981-03-31T06:03:04.265Z\"\n    }\n  ],\n  \"datasources\": [\n    \"string\",\n    \"string\"\n  ],\n  \"jira\": {\n    \"url\": \"https://athenianco.atlassian.net\",\n    \"projects\": [\n      \"DEV\",\n      \"ENG\"\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9b3f1e8a-21f8-4321-9ead-2956f87f7a75",
+              "name": "Requesting user is not an admin of the account.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "account",
+                    "user"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"user\": \"github|60340680\",\n  \"account\": 1,\n  \"status\": \"regular\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Unsupported metric: pr-xxx-time\",\n  \"status\": 400,\n  \"title\": \"Bad request syntax or unsupported method.\",\n  \"type\": \"/errors/InvalidRequestError\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "71f5a48f-2b4d-4287-8ec1-55d6bba71a95",
+              "name": "The account was not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "account",
+                    "user"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"user\": \"github|60340680\",\n  \"account\": 1,\n  \"status\": \"regular\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Unsupported metric: pr-xxx-time\",\n  \"status\": 400,\n  \"title\": \"Bad request syntax or unsupported method.\",\n  \"type\": \"/errors/InvalidRequestError\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "6b989b3f-028d-4225-ab03-32992dbdb176",
+          "name": "List the calling user's account members and installed GitHub and JIRA organizations.",
+          "request": {
+            "name": "List the calling user's account members and installed GitHub and JIRA organizations.",
+            "description": {},
+            "url": {
+              "path": [
+                "account",
+                ":id",
+                "details"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "id",
+                  "description": "(Required) Numeric identifier of the account. The user must belong to that account. To find out which accounts the user belongs to, see `/user`."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "6814722a-63be-4a09-bfeb-e416c5f14403",
+              "name": "List of the account members and installed GitHub and JIRA organizations.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "account",
+                    ":id",
+                    "details"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) Numeric identifier of the account. The user must belong to that account. To find out which accounts the user belongs to, see `/user`."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"admins\": [\n    {\n      \"id\": \"string\",\n      \"login\": \"string\",\n      \"native_id\": \"string\",\n      \"accounts\": {\n        \"key_0\": {\n          \"is_admin\": true,\n          \"expired\": false,\n          \"stale\": false,\n          \"has_jira\": true,\n          \"has_ci\": true,\n          \"has_deployments\": true\n        },\n        \"key_1\": {\n          \"is_admin\": true,\n          \"expired\": false,\n          \"stale\": false,\n          \"has_jira\": true,\n          \"has_ci\": true,\n          \"has_deployments\": true\n        },\n        \"key_2\": {\n          \"is_admin\": true,\n          \"expired\": false,\n          \"stale\": false,\n          \"has_jira\": true,\n          \"has_ci\": true,\n          \"has_deployments\": true\n        }\n      },\n      \"email\": \"string\",\n      \"impersonated_by\": \"string\",\n      \"name\": \"string\",\n      \"picture\": \"string\",\n      \"updated\": \"2023-12-21T19:53:41.266Z\"\n    },\n    {\n      \"id\": \"string\",\n      \"login\": \"string\",\n      \"native_id\": \"string\",\n      \"accounts\": {\n        \"key_0\": {\n          \"is_admin\": true,\n          \"expired\": false,\n          \"stale\": false,\n          \"has_jira\": true,\n          \"has_ci\": true,\n          \"has_deployments\": true\n        },\n        \"key_1\": {\n          \"is_admin\": true,\n          \"expired\": false,\n          \"stale\": false,\n          \"has_jira\": true,\n          \"has_ci\": true,\n          \"has_deployments\": true\n        },\n        \"key_2\": {\n          \"is_admin\": true,\n          \"expired\": false,\n          \"stale\": false,\n          \"has_jira\": true,\n          \"has_ci\": true,\n          \"has_deployments\": true\n        }\n      },\n      \"email\": \"string\",\n      \"impersonated_by\": \"string\",\n      \"name\": \"string\",\n      \"picture\": \"string\",\n      \"updated\": \"2010-08-30T18:24:59.809Z\"\n    }\n  ],\n  \"organizations\": [\n    {\n      \"name\": \"Athenian\",\n      \"login\": \"athenianco\",\n      \"avatar_url\": \"https://avatars3.githubusercontent.com/u/58329504?s=200&v=4\"\n    },\n    {\n      \"name\": \"Athenian\",\n      \"login\": \"athenianco\",\n      \"avatar_url\": \"https://avatars3.githubusercontent.com/u/58329504?s=200&v=4\"\n    }\n  ],\n  \"regulars\": [\n    {\n      \"id\": \"string\",\n      \"login\": \"string\",\n      \"native_id\": \"string\",\n      \"accounts\": {\n        \"key_0\": {\n          \"is_admin\": true,\n          \"expired\": false,\n          \"stale\": false,\n          \"has_jira\": true,\n          \"has_ci\": true,\n          \"has_deployments\": true\n        }\n      },\n      \"email\": \"string\",\n      \"impersonated_by\": \"string\",\n      \"name\": \"string\",\n      \"picture\": \"string\",\n      \"updated\": \"2001-11-13T19:09:46.829Z\"\n    },\n    {\n      \"id\": \"string\",\n      \"login\": \"string\",\n      \"native_id\": \"string\",\n      \"accounts\": {\n        \"key_0\": {\n          \"is_admin\": true,\n          \"expired\": false,\n          \"stale\": false,\n          \"has_jira\": true,\n          \"has_ci\": true,\n          \"has_deployments\": true\n        }\n      },\n      \"email\": \"string\",\n      \"impersonated_by\": \"string\",\n      \"name\": \"string\",\n      \"picture\": \"string\",\n      \"updated\": \"2012-12-05T01:45:56.411Z\"\n    }\n  ],\n  \"datasources\": [\n    \"string\",\n    \"string\"\n  ],\n  \"jira\": {\n    \"url\": \"https://athenianco.atlassian.net\",\n    \"projects\": [\n      \"DEV\",\n      \"ENG\"\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9e7d9642-d1c8-4a08-98ad-37fa32213e27",
+              "name": "The user does not have access to this account.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "account",
+                    ":id",
+                    "details"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) Numeric identifier of the account. The user must belong to that account. To find out which accounts the user belongs to, see `/user`."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Unsupported metric: pr-xxx-time\",\n  \"status\": 400,\n  \"title\": \"Bad request syntax or unsupported method.\",\n  \"type\": \"/errors/InvalidRequestError\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2c05a6ba-f88a-4b38-8056-585f7bf4b581",
+              "name": "The account was not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "account",
+                    ":id",
+                    "details"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) Numeric identifier of the account. The user must belong to that account. To find out which accounts the user belongs to, see `/user`."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Unsupported metric: pr-xxx-time\",\n  \"status\": 400,\n  \"title\": \"Bad request syntax or unsupported method.\",\n  \"type\": \"/errors/InvalidRequestError\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "9a77773e-dc60-4d34-b425-284747281f37",
+          "name": "List the product features enabled for the account.",
+          "request": {
+            "name": "List the product features enabled for the account.",
+            "description": {},
+            "url": {
+              "path": [
+                "account",
+                ":id",
+                "features"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "id",
+                  "description": "(Required) Numeric identifier of the account. The user must belong to that account. To find out which accounts the user belongs to, see `/user`."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "676de168-15ea-4ffe-b1ef-a5265c507ea8",
+              "name": "List of the enabled product features for the account.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "account",
+                    ":id",
+                    "features"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) Numeric identifier of the account. The user must belong to that account. To find out which accounts the user belongs to, see `/user`."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"name\": \"string\",\n    \"parameters\": 6248.6568224753455\n  },\n  {\n    \"name\": \"string\",\n    \"parameters\": 5458.1335328196665\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "42761fde-b968-4320-be6b-35244b0f33d5",
+              "name": "The user does not have access to this account.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "account",
+                    ":id",
+                    "features"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) Numeric identifier of the account. The user must belong to that account. To find out which accounts the user belongs to, see `/user`."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Unsupported metric: pr-xxx-time\",\n  \"status\": 400,\n  \"title\": \"Bad request syntax or unsupported method.\",\n  \"type\": \"/errors/InvalidRequestError\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ebe67576-e672-4b8b-a309-25a82e08c045",
+              "name": "The account was not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "account",
+                    ":id",
+                    "features"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) Numeric identifier of the account. The user must belong to that account. To find out which accounts the user belongs to, see `/user`."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Unsupported metric: pr-xxx-time\",\n  \"status\": 400,\n  \"title\": \"Bad request syntax or unsupported method.\",\n  \"type\": \"/errors/InvalidRequestError\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "c1f691b5-9c45-4af0-9159-078a228d7205",
+          "name": "👤 Save the state of UI views and return a reference.",
+          "request": {
+            "name": "👤 Save the state of UI views and return a reference.",
+            "description": {},
+            "url": {
+              "path": [
+                "share"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "<object>",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "3ed9e374-e536-4b4f-bab1-4645f5dca149",
+              "name": "Saved share identifier.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "share"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<object>",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "\"string\"",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2bae2605-862d-4ff9-ae10-40ffc3e336fa",
+              "name": "The request is invalid.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "share"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<object>",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Unsupported metric: pr-xxx-time\",\n  \"status\": 400,\n  \"title\": \"Bad request syntax or unsupported method.\",\n  \"type\": \"/errors/InvalidRequestError\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "4c2507c4-ff9b-4c0f-b277-dc4a96d7e097",
+          "name": "👤 Load the previously saved state of the UI views.",
+          "request": {
+            "name": "👤 Load the previously saved state of the UI views.",
+            "description": {},
+            "url": {
+              "path": [
+                "share",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) Reference to the share previously saved by `PUT /share`."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "f38e77ff-d700-4225-b38e-fa7a3b936d49",
+              "name": "Saved state of the UI views.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "share",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) Reference to the share previously saved by `PUT /share`."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"author\": \"Vadim Markovtsev\",\n  \"created\": \"2022-05-05 12:00:00+00:00\",\n  \"data\": {\n    \"whatever\": 777\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "19ccda94-a29a-428b-aa41-dff1370823f8",
+              "name": "Share does not exist or the user is not allowed to access.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "share",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) Reference to the share previously saved by `PUT /share`."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Unsupported metric: pr-xxx-time\",\n  \"status\": 400,\n  \"title\": \"Bad request syntax or unsupported method.\",\n  \"type\": \"/errors/InvalidRequestError\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "dc469d0d-f492-4935-8e67-e9316c7eff24",
+          "name": "Show details about the calling user.",
+          "request": {
+            "name": "Show details about the calling user.",
+            "description": {},
+            "url": {
+              "path": [
+                "user"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "a3d51da9-fa59-4762-b1ed-179727c2917e",
+              "name": "Information about the calling user: name, email, login, etc.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "user"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"login\": \"string\",\n  \"native_id\": \"string\",\n  \"accounts\": {\n    \"key_0\": {\n      \"is_admin\": true,\n      \"expired\": false,\n      \"stale\": false,\n      \"has_jira\": true,\n      \"has_ci\": true,\n      \"has_deployments\": true\n    },\n    \"key_1\": {\n      \"is_admin\": true,\n      \"expired\": false,\n      \"stale\": false,\n      \"has_jira\": true,\n      \"has_ci\": true,\n      \"has_deployments\": true\n    }\n  },\n  \"email\": \"string\",\n  \"impersonated_by\": \"string\",\n  \"name\": \"string\",\n  \"picture\": \"string\",\n  \"updated\": \"2001-05-21T15:51:14.686Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "{{ server_url }}/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "09cefca5-6980-40c9-958b-fc1ebfc78163",
+    "name": "{{ title }} align user API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Server version: {{ server_version }} built on {{ build_date }} @ [{{ commit }}](https://github.com/athenianco/athenian-api/commit/{{ commit }})\n\nOrigin GitHub repository: [athenianco/api-spec](https://github.com/athenianco/api-spec).\n\nAuthorization persists between sessions. Marks:\n* 🛡️ endpoint requires account admin privileges.\n* 👤 endpoint only works with JWT authentication.\n<details>\n<summary>List of common server errors.</summary>\n* __500__ endpoint crashed. We reported the incident to Sentry and will fix it soon! Please include the value of `instance` in the response if you contact the support. Repeating the request will not help, most probably.\n* __501__ some functions are missing, either because they are not implemented yet or a non-critical runtime dependency is not satisfied. Repeating the request will not help, guaranteed.\n* __502__ server crashed badly, either due to a memory access violation in native code or running out of memory. We reported this incident to Sentry and will fix it soon! Try repeating the request.\n* __503__ server has not fully launched yet, e.g. hasn't connected to the database; server is shutting down; we are experiencing a partial outage. Try repeating the request.\n* __504__ endpoint took too much time and was interrupted. We reported the incident to Sentry and will see how to improve the performance. Repeating the request will not help, most probably.\n</details>\n\nContact Support:\n Name: the administrator by email\n Email: admin@athenian.co",
+      "type": "text/plain"
+    }
+  }
+}

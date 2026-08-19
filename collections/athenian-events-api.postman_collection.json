@@ -1,0 +1,1415 @@
+{
+  "item": [
+    {
+      "id": "404c4913-85e1-4c29-9c53-8138c2a3fe80",
+      "name": "events",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "9de45867-b6f1-41d7-b0f4-55a2dafc8cc4",
+          "name": "Reset the precomputed data related to the pushed events.",
+          "request": {
+            "name": "Reset the precomputed data related to the pushed events.",
+            "description": {},
+            "url": {
+              "path": [
+                "events",
+                "clear_cache"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"account\": \"<integer>\",\n  \"repositories\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"targets\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "c481cf8c-7f7a-494f-8e17-a57f56284323",
+              "name": "Empty response indicates a successful operation.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "events",
+                    "clear_cache"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"account\": \"<integer>\",\n  \"repositories\": [\n    \"github.com/athenianco/athenian-webapp\",\n    \"github.com/athenianco/athenian-api\"\n  ],\n  \"targets\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "022cd744-b613-4a8e-92df-7d15eec3b86c",
+              "name": "Calling user is not allowed to access the specified repositories.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "events",
+                    "clear_cache"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"account\": \"<integer>\",\n  \"repositories\": [\n    \"github.com/athenianco/athenian-webapp\",\n    \"github.com/athenianco/athenian-api\"\n  ],\n  \"targets\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Unsupported metric: pr-xxx-time\",\n  \"status\": 400,\n  \"title\": \"Bad request syntax or unsupported method.\",\n  \"type\": \"/errors/InvalidRequestError\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c5e2e112-557f-465f-bf25-50cd0b8bfb5e",
+              "name": "The user does not belong to the specified account.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "events",
+                    "clear_cache"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"account\": \"<integer>\",\n  \"repositories\": [\n    \"github.com/athenianco/athenian-webapp\",\n    \"github.com/athenianco/athenian-api\"\n  ],\n  \"targets\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Unsupported metric: pr-xxx-time\",\n  \"status\": 400,\n  \"title\": \"Bad request syntax or unsupported method.\",\n  \"type\": \"/errors/InvalidRequestError\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "61149be7-ccde-473c-9342-f72697a512c7",
+              "name": "The account's installation has not finished yet.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "events",
+                    "clear_cache"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"account\": \"<integer>\",\n  \"repositories\": [\n    \"github.com/athenianco/athenian-webapp\",\n    \"github.com/athenianco/athenian-api\"\n  ],\n  \"targets\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Unsupported metric: pr-xxx-time\",\n  \"status\": 400,\n  \"title\": \"Bad request syntax or unsupported method.\",\n  \"type\": \"/errors/InvalidRequestError\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "df372879-c98b-43d7-b563-5270454bee79",
+              "name": "One or more logical repositories miss the release settings.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "events",
+                    "clear_cache"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"account\": \"<integer>\",\n  \"repositories\": [\n    \"github.com/athenianco/athenian-webapp\",\n    \"github.com/athenianco/athenian-api\"\n  ],\n  \"targets\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Failed Dependency (WebDAV) (RFC 4918)",
+              "code": 424,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Unsupported metric: pr-xxx-time\",\n  \"status\": 400,\n  \"title\": \"Bad request syntax or unsupported method.\",\n  \"type\": \"/errors/InvalidRequestError\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "6dc224fe-2370-4d5a-acca-bd790effafd1",
+          "name": "Notify about new deployments.",
+          "request": {
+            "name": "Notify about new deployments.",
+            "description": {},
+            "url": {
+              "path": [
+                "events",
+                "deployments"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "X-API-Key"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "[\n  {\n    \"components\": [\n      {\n        \"reference\": \"<string>\",\n        \"repository\": \"<string>\"\n      }\n    ],\n    \"conclusion\": \"<string>\",\n    \"date_finished\": \"<dateTime>\",\n    \"date_started\": \"<dateTime>\",\n    \"environment\": \"<string>\",\n    \"name\": \"<string>\",\n    \"url\": \"<url>\",\n    \"labels\": \"<object>\"\n  },\n  {\n    \"components\": [\n      {\n        \"reference\": \"<string>\",\n        \"repository\": \"<string>\"\n      }\n    ],\n    \"conclusion\": \"<string>\",\n    \"date_finished\": \"<dateTime>\",\n    \"date_started\": \"<dateTime>\",\n    \"environment\": \"<string>\",\n    \"name\": \"<string>\",\n    \"url\": \"<url>\",\n    \"labels\": \"<object>\"\n  }\n]",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "b1243f18-9c00-4d53-8847-6d154cd62a61",
+              "name": "Details about the accepted deployment notifications.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "events",
+                    "deployments"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "[\n  {\n    \"components\": [\n      {\n        \"repository\": \"github.com/athenianco/athenian-api\",\n        \"reference\": \"v0.10.34\"\n      }\n    ],\n    \"environment\": \"production\",\n    \"date_finished\": \"2022-01-23 05:01:07+00:00\",\n    \"date_started\": \"2022-01-23 04:56:07+00:00\",\n    \"conclusion\": \"SUCCESS\",\n    \"labels\": {\n      \"helm_chart\": \"0.0.67\"\n    }\n  },\n  {\n    \"components\": [\n      {\n        \"repository\": \"github.com/athenianco/athenian-api\",\n        \"reference\": \"v0.10.34\"\n      }\n    ],\n    \"environment\": \"production\",\n    \"date_finished\": \"2022-01-23 05:01:07+00:00\",\n    \"date_started\": \"2022-01-23 04:56:07+00:00\",\n    \"conclusion\": \"SUCCESS\",\n    \"labels\": {\n      \"helm_chart\": \"0.0.67\"\n    }\n  }\n]",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"deployments\": [\n    {\n      \"name\": \"prod-1984-05-01-ABCDEFGH\",\n      \"resolved\": true\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "859e7225-6d24-4996-9972-8017c5f25684",
+              "name": "The request is invalid.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "events",
+                    "deployments"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "[\n  {\n    \"components\": [\n      {\n        \"repository\": \"github.com/athenianco/athenian-api\",\n        \"reference\": \"v0.10.34\"\n      }\n    ],\n    \"environment\": \"production\",\n    \"date_finished\": \"2022-01-23 05:01:07+00:00\",\n    \"date_started\": \"2022-01-23 04:56:07+00:00\",\n    \"conclusion\": \"SUCCESS\",\n    \"labels\": {\n      \"helm_chart\": \"0.0.67\"\n    }\n  },\n  {\n    \"components\": [\n      {\n        \"repository\": \"github.com/athenianco/athenian-api\",\n        \"reference\": \"v0.10.34\"\n      }\n    ],\n    \"environment\": \"production\",\n    \"date_finished\": \"2022-01-23 05:01:07+00:00\",\n    \"date_started\": \"2022-01-23 04:56:07+00:00\",\n    \"conclusion\": \"SUCCESS\",\n    \"labels\": {\n      \"helm_chart\": \"0.0.67\"\n    }\n  }\n]",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Unsupported metric: pr-xxx-time\",\n  \"status\": 400,\n  \"title\": \"Bad request syntax or unsupported method.\",\n  \"type\": \"/errors/InvalidRequestError\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "887ed488-b967-4e34-8b65-7f1d18d78892",
+              "name": "Calling user is not allowed to access the specified repositories.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "events",
+                    "deployments"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "[\n  {\n    \"components\": [\n      {\n        \"repository\": \"github.com/athenianco/athenian-api\",\n        \"reference\": \"v0.10.34\"\n      }\n    ],\n    \"environment\": \"production\",\n    \"date_finished\": \"2022-01-23 05:01:07+00:00\",\n    \"date_started\": \"2022-01-23 04:56:07+00:00\",\n    \"conclusion\": \"SUCCESS\",\n    \"labels\": {\n      \"helm_chart\": \"0.0.67\"\n    }\n  },\n  {\n    \"components\": [\n      {\n        \"repository\": \"github.com/athenianco/athenian-api\",\n        \"reference\": \"v0.10.34\"\n      }\n    ],\n    \"environment\": \"production\",\n    \"date_finished\": \"2022-01-23 05:01:07+00:00\",\n    \"date_started\": \"2022-01-23 04:56:07+00:00\",\n    \"conclusion\": \"SUCCESS\",\n    \"labels\": {\n      \"helm_chart\": \"0.0.67\"\n    }\n  }\n]",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Unsupported metric: pr-xxx-time\",\n  \"status\": 400,\n  \"title\": \"Bad request syntax or unsupported method.\",\n  \"type\": \"/errors/InvalidRequestError\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "568bd0be-5efd-41b1-b800-2846af8f04f2",
+              "name": "The specified account does not exist or the user is not a member.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "events",
+                    "deployments"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "[\n  {\n    \"components\": [\n      {\n        \"repository\": \"github.com/athenianco/athenian-api\",\n        \"reference\": \"v0.10.34\"\n      }\n    ],\n    \"environment\": \"production\",\n    \"date_finished\": \"2022-01-23 05:01:07+00:00\",\n    \"date_started\": \"2022-01-23 04:56:07+00:00\",\n    \"conclusion\": \"SUCCESS\",\n    \"labels\": {\n      \"helm_chart\": \"0.0.67\"\n    }\n  },\n  {\n    \"components\": [\n      {\n        \"repository\": \"github.com/athenianco/athenian-api\",\n        \"reference\": \"v0.10.34\"\n      }\n    ],\n    \"environment\": \"production\",\n    \"date_finished\": \"2022-01-23 05:01:07+00:00\",\n    \"date_started\": \"2022-01-23 04:56:07+00:00\",\n    \"conclusion\": \"SUCCESS\",\n    \"labels\": {\n      \"helm_chart\": \"0.0.67\"\n    }\n  }\n]",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Unsupported metric: pr-xxx-time\",\n  \"status\": 400,\n  \"title\": \"Bad request syntax or unsupported method.\",\n  \"type\": \"/errors/InvalidRequestError\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8a641731-5f77-4040-9245-28b6223b6c69",
+              "name": "The account's installation has not finished yet.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "events",
+                    "deployments"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "[\n  {\n    \"components\": [\n      {\n        \"repository\": \"github.com/athenianco/athenian-api\",\n        \"reference\": \"v0.10.34\"\n      }\n    ],\n    \"environment\": \"production\",\n    \"date_finished\": \"2022-01-23 05:01:07+00:00\",\n    \"date_started\": \"2022-01-23 04:56:07+00:00\",\n    \"conclusion\": \"SUCCESS\",\n    \"labels\": {\n      \"helm_chart\": \"0.0.67\"\n    }\n  },\n  {\n    \"components\": [\n      {\n        \"repository\": \"github.com/athenianco/athenian-api\",\n        \"reference\": \"v0.10.34\"\n      }\n    ],\n    \"environment\": \"production\",\n    \"date_finished\": \"2022-01-23 05:01:07+00:00\",\n    \"date_started\": \"2022-01-23 04:56:07+00:00\",\n    \"conclusion\": \"SUCCESS\",\n    \"labels\": {\n      \"helm_chart\": \"0.0.67\"\n    }\n  }\n]",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Unsupported metric: pr-xxx-time\",\n  \"status\": 400,\n  \"title\": \"Bad request syntax or unsupported method.\",\n  \"type\": \"/errors/InvalidRequestError\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "32dfed1a-83a4-4fb8-ab70-b5e45806b930",
+          "name": "Retrieve the labels associated with the deployment.",
+          "request": {
+            "name": "Retrieve the labels associated with the deployment.",
+            "description": {},
+            "url": {
+              "path": [
+                "events",
+                "deployment",
+                ":name",
+                "labels"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "name",
+                  "description": "(Required) Name of the deployment."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "X-API-Key"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "ada0f6c8-fe60-4029-8a62-7077a29c4a5a",
+              "name": "The labels now associated with the deployment.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "events",
+                    "deployment",
+                    ":name",
+                    "labels"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "name",
+                      "description": "(Required) Name of the deployment."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"labels\": \"<object>\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "75e04441-656a-4b4f-b381-039c08ca2eb4",
+              "name": "A deployment with the given name was not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "events",
+                    "deployment",
+                    ":name",
+                    "labels"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "name",
+                      "description": "(Required) Name of the deployment."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Unsupported metric: pr-xxx-time\",\n  \"status\": 400,\n  \"title\": \"Bad request syntax or unsupported method.\",\n  \"type\": \"/errors/InvalidRequestError\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "667bdda6-d43e-4421-a177-de9561017a7a",
+          "name": "Modify the labels for the deployment applying the given instructions.\n",
+          "request": {
+            "name": "Modify the labels for the deployment applying the given instructions.\n",
+            "description": {},
+            "url": {
+              "path": [
+                "events",
+                "deployment",
+                ":name",
+                "labels"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "name",
+                  "description": "(Required) Name of the deployment."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "X-API-Key"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"delete\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"upsert\": \"<object>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "942ff7e8-707c-482b-9055-95c3a92ebc5d",
+              "name": "The labels now associated with the deployment.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "events",
+                    "deployment",
+                    ":name",
+                    "labels"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "name",
+                      "description": "(Required) Name of the deployment."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"labels\": \"<object>\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ebe4a5a4-2ab8-4db7-823d-d9f6f4b2ebe4",
+              "name": "The request is invalid.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "events",
+                    "deployment",
+                    ":name",
+                    "labels"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "name",
+                      "description": "(Required) Name of the deployment."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Unsupported metric: pr-xxx-time\",\n  \"status\": 400,\n  \"title\": \"Bad request syntax or unsupported method.\",\n  \"type\": \"/errors/InvalidRequestError\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "deaa4260-9ba5-417b-955d-1fce14a9b73a",
+              "name": "A deployment with the given name was not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "events",
+                    "deployment",
+                    ":name",
+                    "labels"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "name",
+                      "description": "(Required) Name of the deployment."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Unsupported metric: pr-xxx-time\",\n  \"status\": 400,\n  \"title\": \"Bad request syntax or unsupported method.\",\n  \"type\": \"/errors/InvalidRequestError\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "ace80470-8a45-4915-b99e-faf52b765405",
+          "name": "Notify about new releases. The release settings must be set to \"event\".",
+          "request": {
+            "name": "Notify about new releases. The release settings must be set to \"event\".",
+            "description": {},
+            "url": {
+              "path": [
+                "events",
+                "releases"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "X-API-Key"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "[\n  {\n    \"commit\": \"<string>\",\n    \"repository\": \"<string>\",\n    \"name\": \"<string>\",\n    \"author\": \"<string>\",\n    \"url\": \"<url>\",\n    \"published_at\": \"<dateTime>\"\n  },\n  {\n    \"commit\": \"<string>\",\n    \"repository\": \"<string>\",\n    \"name\": \"<string>\",\n    \"author\": \"<string>\",\n    \"url\": \"<url>\",\n    \"published_at\": \"<dateTime>\"\n  }\n]",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "8dfec847-7134-4508-90ab-ff66670aec23",
+              "name": "Summary of the accepted and the rejected releases.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "events",
+                    "releases"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "[\n  {\n    \"author\": \"Vadim Markovtsev\",\n    \"commit\": \"c3f4d3a\",\n    \"name\": \"0.8.66\",\n    \"repository\": \"github.com/athenianco/athenian-api\",\n    \"published_at\": \"2021-02-23 15:16:07+00:00\",\n    \"url\": \"https://github.com/athenianco/athenian-api/releases/tag/v0.8.66\"\n  },\n  {\n    \"author\": \"Vadim Markovtsev\",\n    \"commit\": \"c3f4d3a\",\n    \"name\": \"0.8.66\",\n    \"repository\": \"github.com/athenianco/athenian-api\",\n    \"published_at\": \"2021-02-23 15:16:07+00:00\",\n    \"url\": \"https://github.com/athenianco/athenian-api/releases/tag/v0.8.66\"\n  }\n]",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  \"accepted-pending\",\n  \"accepted-pending\"\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4ce655e2-82e8-4bad-91da-0831ce446a76",
+              "name": "The request is invalid.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "events",
+                    "releases"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "[\n  {\n    \"author\": \"Vadim Markovtsev\",\n    \"commit\": \"c3f4d3a\",\n    \"name\": \"0.8.66\",\n    \"repository\": \"github.com/athenianco/athenian-api\",\n    \"published_at\": \"2021-02-23 15:16:07+00:00\",\n    \"url\": \"https://github.com/athenianco/athenian-api/releases/tag/v0.8.66\"\n  },\n  {\n    \"author\": \"Vadim Markovtsev\",\n    \"commit\": \"c3f4d3a\",\n    \"name\": \"0.8.66\",\n    \"repository\": \"github.com/athenianco/athenian-api\",\n    \"published_at\": \"2021-02-23 15:16:07+00:00\",\n    \"url\": \"https://github.com/athenianco/athenian-api/releases/tag/v0.8.66\"\n  }\n]",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Unsupported metric: pr-xxx-time\",\n  \"status\": 400,\n  \"title\": \"Bad request syntax or unsupported method.\",\n  \"type\": \"/errors/InvalidRequestError\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "16d7739d-2c63-43e5-8c1a-b1f382f1cd3f",
+              "name": "Calling user is not allowed to access the specified repositories.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "events",
+                    "releases"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "[\n  {\n    \"author\": \"Vadim Markovtsev\",\n    \"commit\": \"c3f4d3a\",\n    \"name\": \"0.8.66\",\n    \"repository\": \"github.com/athenianco/athenian-api\",\n    \"published_at\": \"2021-02-23 15:16:07+00:00\",\n    \"url\": \"https://github.com/athenianco/athenian-api/releases/tag/v0.8.66\"\n  },\n  {\n    \"author\": \"Vadim Markovtsev\",\n    \"commit\": \"c3f4d3a\",\n    \"name\": \"0.8.66\",\n    \"repository\": \"github.com/athenianco/athenian-api\",\n    \"published_at\": \"2021-02-23 15:16:07+00:00\",\n    \"url\": \"https://github.com/athenianco/athenian-api/releases/tag/v0.8.66\"\n  }\n]",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Unsupported metric: pr-xxx-time\",\n  \"status\": 400,\n  \"title\": \"Bad request syntax or unsupported method.\",\n  \"type\": \"/errors/InvalidRequestError\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "df7126f2-10bb-47c6-83ab-7fd773ff540c",
+              "name": "The specified account does not exist or the user is not a member.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "events",
+                    "releases"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "[\n  {\n    \"author\": \"Vadim Markovtsev\",\n    \"commit\": \"c3f4d3a\",\n    \"name\": \"0.8.66\",\n    \"repository\": \"github.com/athenianco/athenian-api\",\n    \"published_at\": \"2021-02-23 15:16:07+00:00\",\n    \"url\": \"https://github.com/athenianco/athenian-api/releases/tag/v0.8.66\"\n  },\n  {\n    \"author\": \"Vadim Markovtsev\",\n    \"commit\": \"c3f4d3a\",\n    \"name\": \"0.8.66\",\n    \"repository\": \"github.com/athenianco/athenian-api\",\n    \"published_at\": \"2021-02-23 15:16:07+00:00\",\n    \"url\": \"https://github.com/athenianco/athenian-api/releases/tag/v0.8.66\"\n  }\n]",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Unsupported metric: pr-xxx-time\",\n  \"status\": 400,\n  \"title\": \"Bad request syntax or unsupported method.\",\n  \"type\": \"/errors/InvalidRequestError\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "37746e4f-3cdc-4063-b49f-6741197cf193",
+              "name": "The account's installation has not finished yet.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "events",
+                    "releases"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "[\n  {\n    \"author\": \"Vadim Markovtsev\",\n    \"commit\": \"c3f4d3a\",\n    \"name\": \"0.8.66\",\n    \"repository\": \"github.com/athenianco/athenian-api\",\n    \"published_at\": \"2021-02-23 15:16:07+00:00\",\n    \"url\": \"https://github.com/athenianco/athenian-api/releases/tag/v0.8.66\"\n  },\n  {\n    \"author\": \"Vadim Markovtsev\",\n    \"commit\": \"c3f4d3a\",\n    \"name\": \"0.8.66\",\n    \"repository\": \"github.com/athenianco/athenian-api\",\n    \"published_at\": \"2021-02-23 15:16:07+00:00\",\n    \"url\": \"https://github.com/athenianco/athenian-api/releases/tag/v0.8.66\"\n  }\n]",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Unsupported metric: pr-xxx-time\",\n  \"status\": 400,\n  \"title\": \"Bad request syntax or unsupported method.\",\n  \"type\": \"/errors/InvalidRequestError\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "{{ server_url }}/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "cd857421-96ce-4a9b-8355-15b373f0acec",
+    "name": "{{ title }} align events API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Server version: {{ server_version }} built on {{ build_date }} @ [{{ commit }}](https://github.com/athenianco/athenian-api/commit/{{ commit }})\n\nOrigin GitHub repository: [athenianco/api-spec](https://github.com/athenianco/api-spec).\n\nAuthorization persists between sessions. Marks:\n* 🛡️ endpoint requires account admin privileges.\n* 👤 endpoint only works with JWT authentication.\n<details>\n<summary>List of common server errors.</summary>\n* __500__ endpoint crashed. We reported the incident to Sentry and will fix it soon! Please include the value of `instance` in the response if you contact the support. Repeating the request will not help, most probably.\n* __501__ some functions are missing, either because they are not implemented yet or a non-critical runtime dependency is not satisfied. Repeating the request will not help, guaranteed.\n* __502__ server crashed badly, either due to a memory access violation in native code or running out of memory. We reported this incident to Sentry and will fix it soon! Try repeating the request.\n* __503__ server has not fully launched yet, e.g. hasn't connected to the database; server is shutting down; we are experiencing a partial outage. Try repeating the request.\n* __504__ endpoint took too much time and was interrupted. We reported the incident to Sentry and will see how to improve the performance. Repeating the request will not help, most probably.\n</details>\n\nContact Support:\n Name: the administrator by email\n Email: admin@athenian.co",
+      "type": "text/plain"
+    }
+  }
+}

@@ -1,0 +1,227 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "{{ title }} align filter API",
+    "version": "2.1.86"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "filter",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Find releases between the two given ones per repository.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/diff/releases",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Find releases between the two given ones per repository."
+        },
+        {
+          "info": {
+            "name": "Find code check runs that match the specified query. [What a code check run is exactly.](https://docs.github.com/en/rest/guides/getting-started-with-the-checks-api#about-check-runs)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/filter/code_checks",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Find code check runs that match the specified query. [What a code check run is exactly.](https://docs.github.com/en/rest/guides/getting-started-with-the-checks-api#about-check-runs)"
+        },
+        {
+          "info": {
+            "name": "Find commits that match the specified query.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/filter/commits",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Find commits that match the specified query."
+        },
+        {
+          "info": {
+            "name": "Find developers that made an action within the given timeframe.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/filter/contributors",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Find developers that made an action within the given timeframe."
+        },
+        {
+          "info": {
+            "name": "List the deployments that satisfy the provided filters. We accept new deployment notifications at `/events/deployments`.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/filter/deployments",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List the deployments that satisfy the provided filters. We accept new deployment notifications at `/events/deployments`."
+        },
+        {
+          "info": {
+            "name": "List the deployment environments.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/filter/environments",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List the deployment environments."
+        },
+        {
+          "info": {
+            "name": "Find various JIRA entities relevant to the specified date interval.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/filter/jira",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Find various JIRA entities relevant to the specified date interval."
+        },
+        {
+          "info": {
+            "name": "Find labels used in the given repositories.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/filter/labels",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Find labels used in the given repositories."
+        },
+        {
+          "info": {
+            "name": "List pull requests that satisfy the query.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/filter/pull_requests",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List pull requests that satisfy the query."
+        },
+        {
+          "info": {
+            "name": "Find releases that were published in the given time fram in the given repositories.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/filter/releases",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Find releases that were published in the given time fram in the given repositories."
+        },
+        {
+          "info": {
+            "name": "Find repositories that were updated within the given timeframe.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/filter/repositories",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Find repositories that were updated within the given timeframe."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

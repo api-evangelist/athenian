@@ -1,0 +1,144 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "{{ title }} align registration API",
+    "version": "2.1.86"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "registration",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "👤 Accept the account membership invitation and finish registration. The user must be already authorized in Auth0.",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{ server_url }}/v1/invite/accept",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "👤 Accept the account membership invitation and finish registration. The user must be already authorized in Auth0."
+        },
+        {
+          "info": {
+            "name": "Given an invitation URL, get its type (admin or regular account member) and find whether it is correctly formed and is enabled or disabled.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/invite/check",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Given an invitation URL, get its type (admin or regular account member) and find whether it is correctly formed and is enabled or disabled."
+        },
+        {
+          "info": {
+            "name": "👤 Create an account invitation link for regular users. The caller must\nbe an admin of the specified account. The link is persistent, so multiple\ncalls return the same result.\n",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{ server_url }}/v1/invite/generate/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the account where to invite new users."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "👤 Create an account invitation link for regular users. The caller must\nbe an admin of the specified account. The link is persistent, so multiple\ncalls return the same result.\n"
+        },
+        {
+          "info": {
+            "name": "👤 Generate a JIRA integration installation link. The caller must be an admin of the specified account.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{ server_url }}/v1/invite/jira/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the account who is installing JIRA integration."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "👤 Generate a JIRA integration installation link. The caller must be an admin of the specified account."
+        },
+        {
+          "info": {
+            "name": "Return the current JIRA installation progress in Athenian.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{ server_url }}/v1/invite/jira_progress/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the account that is installing JIRA."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Return the current JIRA installation progress in Athenian."
+        },
+        {
+          "info": {
+            "name": "Return the current GitHub installation progress in Athenian.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{ server_url }}/v1/invite/progress/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the account that is installing GitHub."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Return the current GitHub installation progress in Athenian."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

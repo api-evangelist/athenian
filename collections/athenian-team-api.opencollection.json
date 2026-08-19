@@ -1,0 +1,162 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "{{ title }} align team API",
+    "version": "2.1.86"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "team",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "👤 Create a team. Admin is not required.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/team/create",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "👤 Create a team. Admin is not required."
+        },
+        {
+          "info": {
+            "name": "List the team's members. The user must belong to the account that owns the team.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{ server_url }}/v1/team/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the team to list."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List the team's members. The user must belong to the account that owns the team."
+        },
+        {
+          "info": {
+            "name": "👤 Update a team.",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{ server_url }}/v1/team/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the team to update."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "👤 Update a team."
+        },
+        {
+          "info": {
+            "name": "👤 Delete a team.",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{ server_url }}/v1/team/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the team to delete."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "👤 Delete a team."
+        },
+        {
+          "info": {
+            "name": "List the teams belonging to the calling user.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{ server_url }}/v1/teams/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the account."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List the teams belonging to the calling user."
+        },
+        {
+          "info": {
+            "name": "🛡️ Delete all the teams belonging to the account and then clone from GitHub. The \"Bots\" team will remain intact. The rest of the teams will be identical to what's on GitHub.",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{ server_url }}/v1/teams/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the account."
+              },
+              {
+                "name": "unmapped",
+                "value": "",
+                "type": "query",
+                "description": "Delete teams that are not backed by GitHub."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "🛡️ Delete all the teams belonging to the account and then clone from GitHub. The \"Bots\" team will remain intact. The rest of the teams will be identical to what's on GitHub."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

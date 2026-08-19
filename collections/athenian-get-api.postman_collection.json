@@ -1,0 +1,1184 @@
+{
+  "item": [
+    {
+      "id": "87e44aea-fccd-473f-9c49-49cf589b6cf0",
+      "name": "get",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "ceeae217-d555-4551-b171-6f6d5f0f794b",
+          "name": "List all the contributors belonging to the specified account.",
+          "request": {
+            "name": "List all the contributors belonging to the specified account.",
+            "description": {},
+            "url": {
+              "path": [
+                "get",
+                "contributors",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "id",
+                  "description": "(Required) Numeric identifier of the account."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "8824cfb6-9c5c-42a1-86d3-72996a2f516a",
+              "name": "List of all contributors belonging to the specified account.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "get",
+                    "contributors",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) Numeric identifier of the account."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"email\": \"bot@athenian.co\",\n    \"login\": \"github.com/gkwillie\",\n    \"name\": \"Groundskeeper Willie\",\n    \"picture\": \"https://avatars0.githubusercontent.com/u/60340680?v=4\"\n  },\n  {\n    \"email\": \"loumarvincaraig@gmail.com\",\n    \"login\": \"github.com/se7entyse7en\",\n    \"name\": \"Lou Marvin Caraig\",\n    \"picture\": \"https://avatars1.githubusercontent.com/u/5599208?v=4\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "54b779e8-de0a-49cc-b608-cfe59a046820",
+              "name": "The user does not belong to the specified account.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "get",
+                    "contributors",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) Numeric identifier of the account."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Unsupported metric: pr-xxx-time\",\n  \"status\": 400,\n  \"title\": \"Bad request syntax or unsupported method.\",\n  \"type\": \"/errors/InvalidRequestError\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "07906489-05c4-430b-b2a4-e43aeaf8032f",
+              "name": "The installation has not finished yet.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "get",
+                    "contributors",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) Numeric identifier of the account."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Unsupported metric: pr-xxx-time\",\n  \"status\": 400,\n  \"title\": \"Bad request syntax or unsupported method.\",\n  \"type\": \"/errors/InvalidRequestError\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "99ce87e9-57dc-44f4-9ab9-24f85efbd47d",
+              "name": "One or more logical repositories miss the release settings.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "get",
+                    "contributors",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) Numeric identifier of the account."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Failed Dependency (WebDAV) (RFC 4918)",
+              "code": 424,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Unsupported metric: pr-xxx-time\",\n  \"status\": 400,\n  \"title\": \"Bad request syntax or unsupported method.\",\n  \"type\": \"/errors/InvalidRequestError\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "8d408268-0086-4af3-8487-e1594f2da636",
+          "name": "Retrieve Jira issues by key.",
+          "request": {
+            "name": "Retrieve Jira issues by key.",
+            "description": {},
+            "url": {
+              "path": [
+                "get",
+                "jira_issues"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"account\": \"<integer>\",\n  \"issues\": [\n    \"<string>\"\n  ],\n  \"include\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "538eed98-0f88-4dbc-a7c9-1c7e5151c66d",
+              "name": "List of Jira issues, in the requested order.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "get",
+                    "jira_issues"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"account\": \"<integer>\",\n  \"issues\": [\n    \"<string>\"\n  ],\n  \"include\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"issues\": [\n    {\n      \"acknowledge_time\": \"839018500s\",\n      \"comments\": 3192,\n      \"created\": \"2024-10-17T00:41:13.208Z\",\n      \"id\": \"string\",\n      \"life_time\": \"9327808551s\",\n      \"priority\": \"string\",\n      \"project\": \"string\",\n      \"reporter\": \"string\",\n      \"status\": \"string\",\n      \"title\": \"string\",\n      \"type\": \"string\",\n      \"updated\": \"2013-11-05T05:36:06.548Z\",\n      \"url\": \"string\",\n      \"work_began\": \"1984-10-02T19:28:05.219Z\",\n      \"resolved\": \"1947-02-10T16:42:30.262Z\",\n      \"lead_time\": \"259520s\",\n      \"assignee\": \"string\",\n      \"comment_list\": [\n        {\n          \"author\": \"string\",\n          \"created\": \"1966-12-17T13:05:46.805Z\",\n          \"rendered_body\": \"string\"\n        },\n        {\n          \"author\": \"string\",\n          \"created\": \"2005-10-17T06:19:20.841Z\",\n          \"rendered_body\": \"string\"\n        }\n      ],\n      \"rendered_description\": \"string\",\n      \"story_points\": 5024.168801371186,\n      \"prs\": [\n        {\n          \"comments\": 7844,\n          \"commits\": 7215,\n          \"created\": \"2008-12-09T21:52:06.658Z\",\n          \"events_now\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ],\n          \"files_changed\": 2489,\n          \"number\": 8380,\n          \"participants\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ],\n          \"repository\": \"string\",\n          \"size_added\": 2496,\n          \"size_removed\": 5676,\n          \"stage_timings\": {\n            \"wip\": \"120s\",\n            \"review\": \"600s\"\n          },\n          \"stages_now\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ],\n          \"title\": \"string\",\n          \"updated\": \"2023-10-02T04:49:53.234Z\",\n          \"closed\": \"2006-07-11T20:13:15.771Z\",\n          \"review_requested\": \"1989-12-10T02:35:44.034Z\",\n          \"first_review\": \"2002-01-24T15:02:00.762Z\",\n          \"approved\": \"2025-12-11T11:44:17.412Z\",\n          \"review_comments\": 9797,\n          \"reviews\": 3325,\n          \"merged\": \"1995-12-21T15:02:28.079Z\",\n          \"merged_with_failed_check_runs\": [\n            \"string\",\n            \"string\"\n          ],\n          \"released\": \"2025-12-07T04:34:13.393Z\",\n          \"release_url\": \"string\",\n          \"deployments\": [\n            \"string\",\n            \"string\"\n          ],\n          \"events_time_machine\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ],\n          \"stages_time_machine\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ],\n          \"labels\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ],\n          \"jira\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ]\n        },\n        {\n          \"comments\": 4525,\n          \"commits\": 7902,\n          \"created\": \"2026-07-24T12:46:07.586Z\",\n          \"events_now\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ],\n          \"files_changed\": 5901,\n          \"number\": 7896,\n          \"participants\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ],\n          \"repository\": \"string\",\n          \"size_added\": 9191,\n          \"size_removed\": 2078,\n          \"stage_timings\": {\n            \"wip\": \"120s\",\n            \"review\": \"600s\"\n          },\n          \"stages_now\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ],\n          \"title\": \"string\",\n          \"updated\": \"1979-09-28T14:45:58.236Z\",\n          \"closed\": \"1979-12-31T19:35:28.165Z\",\n          \"review_requested\": \"1993-06-13T11:38:06.265Z\",\n          \"first_review\": \"2006-12-26T03:12:10.585Z\",\n          \"approved\": \"2005-08-13T16:44:23.673Z\",\n          \"review_comments\": 9062,\n          \"reviews\": 250,\n          \"merged\": \"2009-08-18T21:22:19.800Z\",\n          \"merged_with_failed_check_runs\": [\n            \"string\",\n            \"string\"\n          ],\n          \"released\": \"1994-02-23T22:54:52.034Z\",\n          \"release_url\": \"string\",\n          \"deployments\": [\n            \"string\",\n            \"string\"\n          ],\n          \"events_time_machine\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ],\n          \"stages_time_machine\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ],\n          \"labels\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ],\n          \"jira\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ]\n        }\n      ]\n    },\n    {\n      \"acknowledge_time\": \"03956623519s\",\n      \"comments\": 3537,\n      \"created\": \"2018-04-10T06:14:03.117Z\",\n      \"id\": \"string\",\n      \"life_time\": \"9575932829s\",\n      \"priority\": \"string\",\n      \"project\": \"string\",\n      \"reporter\": \"string\",\n      \"status\": \"string\",\n      \"title\": \"string\",\n      \"type\": \"string\",\n      \"updated\": \"2011-01-14T09:38:07.051Z\",\n      \"url\": \"string\",\n      \"work_began\": \"1963-02-16T17:17:57.313Z\",\n      \"resolved\": \"1957-11-29T12:58:05.916Z\",\n      \"lead_time\": \"45753422288s\",\n      \"assignee\": \"string\",\n      \"comment_list\": [\n        {\n          \"author\": \"string\",\n          \"created\": \"1997-09-10T00:24:09.352Z\",\n          \"rendered_body\": \"string\"\n        },\n        {\n          \"author\": \"string\",\n          \"created\": \"1963-11-18T12:13:24.455Z\",\n          \"rendered_body\": \"string\"\n        }\n      ],\n      \"rendered_description\": \"string\",\n      \"story_points\": 5837.8378791109035,\n      \"prs\": [\n        {\n          \"comments\": 8669,\n          \"commits\": 7011,\n          \"created\": \"1981-09-24T00:26:39.569Z\",\n          \"events_now\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ],\n          \"files_changed\": 9282,\n          \"number\": 4407,\n          \"participants\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ],\n          \"repository\": \"string\",\n          \"size_added\": 8964,\n          \"size_removed\": 3492,\n          \"stage_timings\": {\n            \"wip\": \"120s\",\n            \"review\": \"600s\"\n          },\n          \"stages_now\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ],\n          \"title\": \"string\",\n          \"updated\": \"2024-05-06T06:12:24.119Z\",\n          \"closed\": \"1979-03-11T07:12:59.589Z\",\n          \"review_requested\": \"2018-09-26T09:53:49.179Z\",\n          \"first_review\": \"1984-03-15T14:50:29.946Z\",\n          \"approved\": \"1961-01-29T02:47:16.477Z\",\n          \"review_comments\": 3357,\n          \"reviews\": 9591,\n          \"merged\": \"2001-05-07T23:16:26.046Z\",\n          \"merged_with_failed_check_runs\": [\n            \"string\",\n            \"string\"\n          ],\n          \"released\": \"2009-04-26T07:28:21.022Z\",\n          \"release_url\": \"string\",\n          \"deployments\": [\n            \"string\",\n            \"string\"\n          ],\n          \"events_time_machine\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ],\n          \"stages_time_machine\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ],\n          \"labels\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ],\n          \"jira\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ]\n        },\n        {\n          \"comments\": 1162,\n          \"commits\": 4020,\n          \"created\": \"1947-05-18T14:28:18.702Z\",\n          \"events_now\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ],\n          \"files_changed\": 2551,\n          \"number\": 5659,\n          \"participants\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ],\n          \"repository\": \"string\",\n          \"size_added\": 6940,\n          \"size_removed\": 285,\n          \"stage_timings\": {\n            \"wip\": \"120s\",\n            \"review\": \"600s\"\n          },\n          \"stages_now\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ],\n          \"title\": \"string\",\n          \"updated\": \"2003-04-28T13:29:04.809Z\",\n          \"closed\": \"1973-01-29T11:11:50.224Z\",\n          \"review_requested\": \"2015-05-06T20:30:24.087Z\",\n          \"first_review\": \"2024-07-28T01:05:58.951Z\",\n          \"approved\": \"2019-05-29T22:30:36.774Z\",\n          \"review_comments\": 7413,\n          \"reviews\": 1093,\n          \"merged\": \"1963-11-23T14:57:28.150Z\",\n          \"merged_with_failed_check_runs\": [\n            \"string\",\n            \"string\"\n          ],\n          \"released\": \"1993-08-22T11:11:19.862Z\",\n          \"release_url\": \"string\",\n          \"deployments\": [\n            \"string\",\n            \"string\"\n          ],\n          \"events_time_machine\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ],\n          \"stages_time_machine\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ],\n          \"labels\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ],\n          \"jira\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ]\n        }\n      ]\n    }\n  ],\n  \"include\": {\n    \"github_users\": {\n      \"key_0\": {\n        \"avatar\": \"https://avatars0.githubusercontent.com/u/60340680?v=4\"\n      },\n      \"key_1\": {\n        \"avatar\": \"https://avatars0.githubusercontent.com/u/60340680?v=4\"\n      },\n      \"key_2\": {\n        \"avatar\": \"https://avatars0.githubusercontent.com/u/60340680?v=4\"\n      }\n    },\n    \"jira_users\": [\n      {\n        \"name\": \"Vadim Markovtsev\",\n        \"avatar\": \"https://avatar-management-avatars.us-west-2.prod.public.atl-paas.net/5de504edde32fb0d03a3b4e3/8c3ffc1b-2ac0-488e-ac55-295ff06f9e28/48\",\n        \"type\": \"atlassian\"\n      },\n      {\n        \"name\": \"Vadim Markovtsev\",\n        \"avatar\": \"https://avatar-management-avatars.us-west-2.prod.public.atl-paas.net/5de504edde32fb0d03a3b4e3/8c3ffc1b-2ac0-488e-ac55-295ff06f9e28/48\",\n        \"type\": \"atlassian\"\n      }\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "574fdaf1-e3da-4a6d-bdea-e36a1104c329",
+              "name": "The request is invalid.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "get",
+                    "jira_issues"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"account\": \"<integer>\",\n  \"issues\": [\n    \"<string>\"\n  ],\n  \"include\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Unsupported metric: pr-xxx-time\",\n  \"status\": 400,\n  \"title\": \"Bad request syntax or unsupported method.\",\n  \"type\": \"/errors/InvalidRequestError\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "aef86a91-251c-4434-a49d-a48042471062",
+          "name": "List pull requests by repository and number.",
+          "request": {
+            "name": "List pull requests by repository and number.",
+            "description": {},
+            "url": {
+              "path": [
+                "get",
+                "pull_requests"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"account\": \"<integer>\",\n  \"prs\": [\n    {\n      \"numbers\": [\n        \"<integer>\",\n        \"<integer>\"\n      ],\n      \"repository\": \"<string>\"\n    }\n  ],\n  \"environments\": [\n    \"<string>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "e0292510-4a84-4926-a105-9c769df6e33e",
+              "name": "List of pull requests, in the requested order.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "get",
+                    "pull_requests"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"account\": \"<integer>\",\n  \"prs\": [\n    {\n      \"numbers\": [\n        \"<integer>\",\n        \"<integer>\"\n      ],\n      \"repository\": \"github.com/athenianco/athenian-webapp\"\n    }\n  ],\n  \"environments\": [\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"comments\": 7473,\n      \"commits\": 5366,\n      \"created\": \"1983-08-30T00:48:32.248Z\",\n      \"events_now\": [\n        \"created\",\n        \"created\"\n      ],\n      \"files_changed\": 7592,\n      \"number\": 3724,\n      \"participants\": [\n        {\n          \"id\": \"github.com/vmarkovtsev\",\n          \"status\": [\n            \"merger\",\n            \"commit_committer\"\n          ]\n        },\n        {\n          \"id\": \"github.com/vmarkovtsev\",\n          \"status\": [\n            \"commit_committer\",\n            \"author\"\n          ]\n        }\n      ],\n      \"repository\": \"string\",\n      \"size_added\": 4344,\n      \"size_removed\": 1222,\n      \"stage_timings\": {\n        \"wip\": \"120s\",\n        \"review\": \"600s\"\n      },\n      \"stages_now\": [\n        \"done\",\n        \"done\"\n      ],\n      \"title\": \"string\",\n      \"updated\": \"1988-09-19T01:33:12.135Z\",\n      \"closed\": \"2025-03-14T10:36:23.997Z\",\n      \"review_requested\": \"1977-09-26T14:42:05.015Z\",\n      \"first_review\": \"1986-03-22T12:32:23.688Z\",\n      \"approved\": \"1963-12-20T23:38:55.299Z\",\n      \"review_comments\": 2000,\n      \"reviews\": 5509,\n      \"merged\": \"1975-09-03T10:39:46.840Z\",\n      \"merged_with_failed_check_runs\": [\n        \"string\",\n        \"string\"\n      ],\n      \"released\": \"2001-04-03T12:34:59.315Z\",\n      \"release_url\": \"string\",\n      \"deployments\": [\n        \"string\",\n        \"string\"\n      ],\n      \"events_time_machine\": [\n        \"created\",\n        \"created\"\n      ],\n      \"stages_time_machine\": [\n        \"done\",\n        \"done\"\n      ],\n      \"labels\": [\n        {\n          \"name\": \"bug\",\n          \"color\": \"fc2929\"\n        },\n        {\n          \"name\": \"bug\",\n          \"color\": \"fc2929\"\n        }\n      ],\n      \"jira\": [\n        {\n          \"id\": \"string\",\n          \"title\": \"string\",\n          \"type\": \"string\",\n          \"epic\": \"string\",\n          \"labels\": [\n            \"string\",\n            \"string\"\n          ]\n        },\n        {\n          \"id\": \"string\",\n          \"title\": \"string\",\n          \"type\": \"string\",\n          \"epic\": \"string\",\n          \"labels\": [\n            \"string\",\n            \"string\"\n          ]\n        }\n      ]\n    },\n    {\n      \"comments\": 6738,\n      \"commits\": 2721,\n      \"created\": \"1984-08-05T10:15:01.413Z\",\n      \"events_now\": [\n        \"created\",\n        \"created\"\n      ],\n      \"files_changed\": 9394,\n      \"number\": 9307,\n      \"participants\": [\n        {\n          \"id\": \"github.com/vmarkovtsev\",\n          \"status\": [\n            \"commit_author\",\n            \"releaser\"\n          ]\n        },\n        {\n          \"id\": \"github.com/vmarkovtsev\",\n          \"status\": [\n            \"author\",\n            \"commit_author\"\n          ]\n        }\n      ],\n      \"repository\": \"string\",\n      \"size_added\": 2797,\n      \"size_removed\": 7527,\n      \"stage_timings\": {\n        \"wip\": \"120s\",\n        \"review\": \"600s\"\n      },\n      \"stages_now\": [\n        \"done\",\n        \"done\"\n      ],\n      \"title\": \"string\",\n      \"updated\": \"2022-12-18T09:05:10.398Z\",\n      \"closed\": \"2020-12-11T20:25:10.019Z\",\n      \"review_requested\": \"1965-12-13T13:57:04.392Z\",\n      \"first_review\": \"2009-10-08T14:35:54.341Z\",\n      \"approved\": \"2016-09-13T18:49:48.058Z\",\n      \"review_comments\": 8293,\n      \"reviews\": 9601,\n      \"merged\": \"2016-01-20T08:55:09.034Z\",\n      \"merged_with_failed_check_runs\": [\n        \"string\",\n        \"string\"\n      ],\n      \"released\": \"1963-04-16T06:49:13.836Z\",\n      \"release_url\": \"string\",\n      \"deployments\": [\n        \"string\",\n        \"string\"\n      ],\n      \"events_time_machine\": [\n        \"created\",\n        \"created\"\n      ],\n      \"stages_time_machine\": [\n        \"done\",\n        \"done\"\n      ],\n      \"labels\": [\n        {\n          \"name\": \"bug\",\n          \"color\": \"fc2929\"\n        },\n        {\n          \"name\": \"bug\",\n          \"color\": \"fc2929\"\n        }\n      ],\n      \"jira\": [\n        {\n          \"id\": \"string\",\n          \"title\": \"string\",\n          \"type\": \"string\",\n          \"epic\": \"string\",\n          \"labels\": [\n            \"string\",\n            \"string\"\n          ]\n        },\n        {\n          \"id\": \"string\",\n          \"title\": \"string\",\n          \"type\": \"string\",\n          \"epic\": \"string\",\n          \"labels\": [\n            \"string\",\n            \"string\"\n          ]\n        }\n      ]\n    }\n  ],\n  \"include\": {\n    \"users\": {\n      \"github.com/gkwillie\": {\n        \"avatar\": \"https://avatars0.githubusercontent.com/u/60340680?v=4\"\n      }\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "282c12fc-f404-4be4-8793-7e0557daee07",
+              "name": "The request is invalid.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "get",
+                    "pull_requests"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"account\": \"<integer>\",\n  \"prs\": [\n    {\n      \"numbers\": [\n        \"<integer>\",\n        \"<integer>\"\n      ],\n      \"repository\": \"github.com/athenianco/athenian-webapp\"\n    }\n  ],\n  \"environments\": [\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Unsupported metric: pr-xxx-time\",\n  \"status\": 400,\n  \"title\": \"Bad request syntax or unsupported method.\",\n  \"type\": \"/errors/InvalidRequestError\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7c280ad5-b2d0-4c86-8e2a-c20d5f1a6d59",
+              "name": "Calling user is not allowed to access the specified pull requests.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "get",
+                    "pull_requests"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"account\": \"<integer>\",\n  \"prs\": [\n    {\n      \"numbers\": [\n        \"<integer>\",\n        \"<integer>\"\n      ],\n      \"repository\": \"github.com/athenianco/athenian-webapp\"\n    }\n  ],\n  \"environments\": [\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Unsupported metric: pr-xxx-time\",\n  \"status\": 400,\n  \"title\": \"Bad request syntax or unsupported method.\",\n  \"type\": \"/errors/InvalidRequestError\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9850357a-3a17-4afa-ad15-3a23f283656c",
+              "name": "The specified account does not exist or the user is not a member.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "get",
+                    "pull_requests"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"account\": \"<integer>\",\n  \"prs\": [\n    {\n      \"numbers\": [\n        \"<integer>\",\n        \"<integer>\"\n      ],\n      \"repository\": \"github.com/athenianco/athenian-webapp\"\n    }\n  ],\n  \"environments\": [\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Unsupported metric: pr-xxx-time\",\n  \"status\": 400,\n  \"title\": \"Bad request syntax or unsupported method.\",\n  \"type\": \"/errors/InvalidRequestError\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5ab5b2a0-f794-4dd2-ab87-443d3dbe0441",
+              "name": "The account's installation has not finished yet.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "get",
+                    "pull_requests"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"account\": \"<integer>\",\n  \"prs\": [\n    {\n      \"numbers\": [\n        \"<integer>\",\n        \"<integer>\"\n      ],\n      \"repository\": \"github.com/athenianco/athenian-webapp\"\n    }\n  ],\n  \"environments\": [\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Unsupported metric: pr-xxx-time\",\n  \"status\": 400,\n  \"title\": \"Bad request syntax or unsupported method.\",\n  \"type\": \"/errors/InvalidRequestError\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0961ff47-898f-497c-aa93-a78062cfd970",
+              "name": "One or more logical repositories miss the release settings.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "get",
+                    "pull_requests"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"account\": \"<integer>\",\n  \"prs\": [\n    {\n      \"numbers\": [\n        \"<integer>\",\n        \"<integer>\"\n      ],\n      \"repository\": \"github.com/athenianco/athenian-webapp\"\n    }\n  ],\n  \"environments\": [\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Failed Dependency (WebDAV) (RFC 4918)",
+              "code": 424,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Unsupported metric: pr-xxx-time\",\n  \"status\": 400,\n  \"title\": \"Bad request syntax or unsupported method.\",\n  \"type\": \"/errors/InvalidRequestError\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "237c01f9-0da7-4a0a-b3c8-94fcc4ebec5a",
+          "name": "List releases by repository and name.",
+          "request": {
+            "name": "List releases by repository and name.",
+            "description": {},
+            "url": {
+              "path": [
+                "get",
+                "releases"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"account\": \"<integer>\",\n  \"releases\": [\n    {\n      \"names\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"repository\": \"<string>\"\n    },\n    {\n      \"names\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"repository\": \"<string>\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "4580516a-4f9a-48d8-8bd0-49e10edb7239",
+              "name": "List of releases satisfying the specified filters.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "get",
+                    "releases"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"account\": \"<integer>\",\n  \"releases\": [\n    {\n      \"repository\": \"github.com/athenianco/athenian-api\",\n      \"names\": [\n        \"v0.7.53\",\n        \"v0.6.10\"\n      ]\n    },\n    {\n      \"repository\": \"github.com/athenianco/athenian-api\",\n      \"names\": [\n        \"v0.7.53\",\n        \"v0.6.10\"\n      ]\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"include\": {\n    \"users\": {\n      \"github.com/gkwillie\": {\n        \"avatar\": \"https://avatars0.githubusercontent.com/u/60340680?v=4\"\n      }\n    },\n    \"deployments\": {\n      \"production-2020-03-26-W9J3uzHl\": {\n        \"components\": [\n          {\n            \"repository\": \"github.com/athenianco/athenian-api\",\n            \"reference\": \"v0.10.34\"\n          }\n        ],\n        \"environment\": \"production\",\n        \"date_finished\": \"2022-01-23 05:01:07+00:00\",\n        \"date_started\": \"2022-01-23 04:56:07+00:00\",\n        \"conclusion\": \"SUCCESS\",\n        \"labels\": {\n          \"helm_chart\": \"0.0.67\"\n        }\n      }\n    }\n  },\n  \"data\": [\n    {\n      \"added_lines\": 1000,\n      \"commits\": 20,\n      \"deleted_lines\": 200,\n      \"name\": \"v0.0.93\",\n      \"sha\": \"e337123fc32c38cf6a8149b518f2e58ae836c8e6\",\n      \"published\": \"2020-03-25 10:57:00+00:00\",\n      \"publisher\": \"github.com/vmarkovtsev\",\n      \"repository\": \"github.com/athenianco/athenian-api\",\n      \"url\": \"https://github.com/athenianco/athenian-api/releases/tag/v0.0.93\",\n      \"age\": \"1000s\",\n      \"commit_authors\": [\n        \"github.com/vmarkovtsev\"\n      ],\n      \"prs\": []\n    },\n    {\n      \"added_lines\": 1000,\n      \"commits\": 20,\n      \"deleted_lines\": 200,\n      \"name\": \"v0.0.93\",\n      \"sha\": \"e337123fc32c38cf6a8149b518f2e58ae836c8e6\",\n      \"published\": \"2020-03-25 10:57:00+00:00\",\n      \"publisher\": \"github.com/vmarkovtsev\",\n      \"repository\": \"github.com/athenianco/athenian-api\",\n      \"url\": \"https://github.com/athenianco/athenian-api/releases/tag/v0.0.93\",\n      \"age\": \"2000s\",\n      \"commit_authors\": [\n        \"github.com/vmarkovtsev\"\n      ],\n      \"prs\": []\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6a5088a3-519a-48f4-a885-6f24fc894269",
+              "name": "The request is invalid.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "get",
+                    "releases"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"account\": \"<integer>\",\n  \"releases\": [\n    {\n      \"repository\": \"github.com/athenianco/athenian-api\",\n      \"names\": [\n        \"v0.7.53\",\n        \"v0.6.10\"\n      ]\n    },\n    {\n      \"repository\": \"github.com/athenianco/athenian-api\",\n      \"names\": [\n        \"v0.7.53\",\n        \"v0.6.10\"\n      ]\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Unsupported metric: pr-xxx-time\",\n  \"status\": 400,\n  \"title\": \"Bad request syntax or unsupported method.\",\n  \"type\": \"/errors/InvalidRequestError\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "94954d42-bf5d-4ce6-995b-3632662f90d2",
+              "name": "Calling user is not allowed to access the specified pull requests.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "get",
+                    "releases"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"account\": \"<integer>\",\n  \"releases\": [\n    {\n      \"repository\": \"github.com/athenianco/athenian-api\",\n      \"names\": [\n        \"v0.7.53\",\n        \"v0.6.10\"\n      ]\n    },\n    {\n      \"repository\": \"github.com/athenianco/athenian-api\",\n      \"names\": [\n        \"v0.7.53\",\n        \"v0.6.10\"\n      ]\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Unsupported metric: pr-xxx-time\",\n  \"status\": 400,\n  \"title\": \"Bad request syntax or unsupported method.\",\n  \"type\": \"/errors/InvalidRequestError\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e081ca00-867f-44e9-a053-5ec99c9a30db",
+              "name": "The specified account does not exist or the user is not a member.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "get",
+                    "releases"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"account\": \"<integer>\",\n  \"releases\": [\n    {\n      \"repository\": \"github.com/athenianco/athenian-api\",\n      \"names\": [\n        \"v0.7.53\",\n        \"v0.6.10\"\n      ]\n    },\n    {\n      \"repository\": \"github.com/athenianco/athenian-api\",\n      \"names\": [\n        \"v0.7.53\",\n        \"v0.6.10\"\n      ]\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Unsupported metric: pr-xxx-time\",\n  \"status\": 400,\n  \"title\": \"Bad request syntax or unsupported method.\",\n  \"type\": \"/errors/InvalidRequestError\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4f98927a-58f9-46e7-8fa7-58d97a4e579d",
+              "name": "The account's installation has not finished yet.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "get",
+                    "releases"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"account\": \"<integer>\",\n  \"releases\": [\n    {\n      \"repository\": \"github.com/athenianco/athenian-api\",\n      \"names\": [\n        \"v0.7.53\",\n        \"v0.6.10\"\n      ]\n    },\n    {\n      \"repository\": \"github.com/athenianco/athenian-api\",\n      \"names\": [\n        \"v0.7.53\",\n        \"v0.6.10\"\n      ]\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Unsupported metric: pr-xxx-time\",\n  \"status\": 400,\n  \"title\": \"Bad request syntax or unsupported method.\",\n  \"type\": \"/errors/InvalidRequestError\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "41943050-2887-4bb7-a077-f0ef878a5745",
+              "name": "One or more logical repositories miss the release settings.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "get",
+                    "releases"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"account\": \"<integer>\",\n  \"releases\": [\n    {\n      \"repository\": \"github.com/athenianco/athenian-api\",\n      \"names\": [\n        \"v0.7.53\",\n        \"v0.6.10\"\n      ]\n    },\n    {\n      \"repository\": \"github.com/athenianco/athenian-api\",\n      \"names\": [\n        \"v0.7.53\",\n        \"v0.6.10\"\n      ]\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Failed Dependency (WebDAV) (RFC 4918)",
+              "code": 424,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Unsupported metric: pr-xxx-time\",\n  \"status\": 400,\n  \"title\": \"Bad request syntax or unsupported method.\",\n  \"type\": \"/errors/InvalidRequestError\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "{{ server_url }}/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "641b8e2d-e036-49fb-b9d0-37f022e5b964",
+    "name": "{{ title }} align get API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Server version: {{ server_version }} built on {{ build_date }} @ [{{ commit }}](https://github.com/athenianco/athenian-api/commit/{{ commit }})\n\nOrigin GitHub repository: [athenianco/api-spec](https://github.com/athenianco/api-spec).\n\nAuthorization persists between sessions. Marks:\n* 🛡️ endpoint requires account admin privileges.\n* 👤 endpoint only works with JWT authentication.\n<details>\n<summary>List of common server errors.</summary>\n* __500__ endpoint crashed. We reported the incident to Sentry and will fix it soon! Please include the value of `instance` in the response if you contact the support. Repeating the request will not help, most probably.\n* __501__ some functions are missing, either because they are not implemented yet or a non-critical runtime dependency is not satisfied. Repeating the request will not help, guaranteed.\n* __502__ server crashed badly, either due to a memory access violation in native code or running out of memory. We reported this incident to Sentry and will fix it soon! Try repeating the request.\n* __503__ server has not fully launched yet, e.g. hasn't connected to the database; server is shutting down; we are experiencing a partial outage. Try repeating the request.\n* __504__ endpoint took too much time and was interrupted. We reported the incident to Sentry and will see how to improve the performance. Repeating the request will not help, most probably.\n</details>\n\nContact Support:\n Name: the administrator by email\n Email: admin@athenian.co",
+      "type": "text/plain"
+    }
+  }
+}

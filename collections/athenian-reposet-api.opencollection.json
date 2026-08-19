@@ -1,0 +1,133 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "{{ title }} align reposet API",
+    "version": "2.1.86"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "reposet",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "🛡️👤 Create a repository set.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/reposet/create",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "🛡️👤 Create a repository set."
+        },
+        {
+          "info": {
+            "name": "List a repository set. The user must be in the account that owns the reposet.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{ server_url }}/v1/reposet/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the repository set to list."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List a repository set. The user must be in the account that owns the reposet."
+        },
+        {
+          "info": {
+            "name": "🛡️👤 Update a repository set. The user must be an admin of the account that owns the reposet.",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{ server_url }}/v1/reposet/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the repository set to update."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "🛡️👤 Update a repository set. The user must be an admin of the account that owns the reposet."
+        },
+        {
+          "info": {
+            "name": "🛡️👤 Delete a repository set. The user must be an admin of the account that owns the reposet.",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{ server_url }}/v1/reposet/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the repository set to delete."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "🛡️👤 Delete a repository set. The user must be an admin of the account that owns the reposet."
+        },
+        {
+          "info": {
+            "name": "List the repository sets belonging to the calling user.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{ server_url }}/v1/reposets/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the account."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List the repository sets belonging to the calling user."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

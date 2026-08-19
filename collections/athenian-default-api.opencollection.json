@@ -1,0 +1,1677 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "{{ title }} align default API",
+    "version": "2.1.86"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "default",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "🛡️👤 Change the status of an account member: regular, admin, or banished (deleted). This endpoint is allowed only for account admins.",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{ server_url }}/v1/account/user",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "🛡️👤 Change the status of an account member: regular, admin, or banished (deleted). This endpoint is allowed only for account admins."
+        },
+        {
+          "info": {
+            "name": "List the calling user's account members and installed GitHub and JIRA organizations.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{ server_url }}/v1/account/:id/details",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the account. The user must belong to that account. To find out which accounts the user belongs to, see `/user`."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List the calling user's account members and installed GitHub and JIRA organizations."
+        },
+        {
+          "info": {
+            "name": "List the product features enabled for the account.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{ server_url }}/v1/account/:id/features",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the account. The user must belong to that account. To find out which accounts the user belongs to, see `/user`."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List the product features enabled for the account."
+        },
+        {
+          "info": {
+            "name": "Find releases between the two given ones per repository.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/diff/releases",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Find releases between the two given ones per repository."
+        },
+        {
+          "info": {
+            "name": "Reset the precomputed data related to the pushed events.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/events/clear_cache",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Reset the precomputed data related to the pushed events."
+        },
+        {
+          "info": {
+            "name": "Notify about new deployments.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/events/deployments",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Notify about new deployments."
+        },
+        {
+          "info": {
+            "name": "Retrieve the labels associated with the deployment.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{ server_url }}/v1/events/deployment/:name/labels",
+            "params": [
+              {
+                "name": "name",
+                "value": "",
+                "type": "path",
+                "description": "Name of the deployment."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieve the labels associated with the deployment."
+        },
+        {
+          "info": {
+            "name": "Modify the labels for the deployment applying the given instructions.\n",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{ server_url }}/v1/events/deployment/:name/labels",
+            "params": [
+              {
+                "name": "name",
+                "value": "",
+                "type": "path",
+                "description": "Name of the deployment."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Modify the labels for the deployment applying the given instructions.\n"
+        },
+        {
+          "info": {
+            "name": "Notify about new releases. The release settings must be set to \"event\".",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/events/releases",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Notify about new releases. The release settings must be set to \"event\"."
+        },
+        {
+          "info": {
+            "name": "Find code check runs that match the specified query. [What a code check run is exactly.](https://docs.github.com/en/rest/guides/getting-started-with-the-checks-api#about-check-runs)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/filter/code_checks",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Find code check runs that match the specified query. [What a code check run is exactly.](https://docs.github.com/en/rest/guides/getting-started-with-the-checks-api#about-check-runs)"
+        },
+        {
+          "info": {
+            "name": "Find commits that match the specified query.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/filter/commits",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Find commits that match the specified query."
+        },
+        {
+          "info": {
+            "name": "Find developers that made an action within the given timeframe.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/filter/contributors",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Find developers that made an action within the given timeframe."
+        },
+        {
+          "info": {
+            "name": "List the deployments that satisfy the provided filters. We accept new deployment notifications at `/events/deployments`.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/filter/deployments",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List the deployments that satisfy the provided filters. We accept new deployment notifications at `/events/deployments`."
+        },
+        {
+          "info": {
+            "name": "List the deployment environments.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/filter/environments",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List the deployment environments."
+        },
+        {
+          "info": {
+            "name": "Find various JIRA entities relevant to the specified date interval.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/filter/jira",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Find various JIRA entities relevant to the specified date interval."
+        },
+        {
+          "info": {
+            "name": "Find labels used in the given repositories.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/filter/labels",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Find labels used in the given repositories."
+        },
+        {
+          "info": {
+            "name": "List pull requests that satisfy the query.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/filter/pull_requests",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List pull requests that satisfy the query."
+        },
+        {
+          "info": {
+            "name": "Find releases that were published in the given time fram in the given repositories.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/filter/releases",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Find releases that were published in the given time fram in the given repositories."
+        },
+        {
+          "info": {
+            "name": "Find repositories that were updated within the given timeframe.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/filter/repositories",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Find repositories that were updated within the given timeframe."
+        },
+        {
+          "info": {
+            "name": "List all the contributors belonging to the specified account.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{ server_url }}/v1/get/contributors/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the account."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List all the contributors belonging to the specified account."
+        },
+        {
+          "info": {
+            "name": "Download all the data collected by Athenian for custom analysis.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{ server_url }}/v1/get/export",
+            "params": [
+              {
+                "name": "account",
+                "value": "",
+                "type": "query",
+                "description": "Numeric identifier of the account. Raises HTTP 400 if the user belongs to more than one account."
+              },
+              {
+                "name": "format",
+                "value": "",
+                "type": "query",
+                "description": "Output file format. The default is `parquet`."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Download all the data collected by Athenian for custom analysis."
+        },
+        {
+          "info": {
+            "name": "Retrieve Jira issues by key.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/get/jira_issues",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Retrieve Jira issues by key."
+        },
+        {
+          "info": {
+            "name": "List pull requests by repository and number.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/get/pull_requests",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List pull requests by repository and number."
+        },
+        {
+          "info": {
+            "name": "List releases by repository and name.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/get/releases",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List releases by repository and name."
+        },
+        {
+          "info": {
+            "name": "👤 Create a goal template.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/goal_template/create",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "👤 Create a goal template."
+        },
+        {
+          "info": {
+            "name": "Retrieve a goal template.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{ server_url }}/v1/goal_template/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the goal template."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Retrieve a goal template."
+        },
+        {
+          "info": {
+            "name": "👤 Update a goal template.",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{ server_url }}/v1/goal_template/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the goal template."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "👤 Update a goal template."
+        },
+        {
+          "info": {
+            "name": "👤 Delete a goal template.",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{ server_url }}/v1/goal_template/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the goal template."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "👤 Delete a goal template."
+        },
+        {
+          "info": {
+            "name": "List the goal templates for the account.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{ server_url }}/v1/goal_templates/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the account."
+              },
+              {
+                "name": "include_tlo",
+                "value": "",
+                "type": "query",
+                "description": "Include templates for TLOs goals, i.e. goals based on parameterized metrics."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List the goal templates for the account."
+        },
+        {
+          "info": {
+            "name": "Calculate histograms on continuous integration runs, such as GitHub Actions, Jenkins, Circle, etc.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/histograms/code_checks",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Calculate histograms on continuous integration runs, such as GitHub Actions, Jenkins, Circle, etc."
+        },
+        {
+          "info": {
+            "name": "Calculate histograms over JIRA issue activities.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/histograms/jira",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Calculate histograms over JIRA issue activities."
+        },
+        {
+          "info": {
+            "name": "Calculate histograms over PR distributions.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/histograms/pull_requests",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Calculate histograms over PR distributions."
+        },
+        {
+          "info": {
+            "name": "👤 Accept the account membership invitation and finish registration. The user must be already authorized in Auth0.",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{ server_url }}/v1/invite/accept",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "👤 Accept the account membership invitation and finish registration. The user must be already authorized in Auth0."
+        },
+        {
+          "info": {
+            "name": "Given an invitation URL, get its type (admin or regular account member) and find whether it is correctly formed and is enabled or disabled.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/invite/check",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Given an invitation URL, get its type (admin or regular account member) and find whether it is correctly formed and is enabled or disabled."
+        },
+        {
+          "info": {
+            "name": "👤 Create an account invitation link for regular users. The caller must\nbe an admin of the specified account. The link is persistent, so multiple\ncalls return the same result.\n",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{ server_url }}/v1/invite/generate/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the account where to invite new users."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "👤 Create an account invitation link for regular users. The caller must\nbe an admin of the specified account. The link is persistent, so multiple\ncalls return the same result.\n"
+        },
+        {
+          "info": {
+            "name": "👤 Generate a JIRA integration installation link. The caller must be an admin of the specified account.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{ server_url }}/v1/invite/jira/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the account who is installing JIRA integration."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "👤 Generate a JIRA integration installation link. The caller must be an admin of the specified account."
+        },
+        {
+          "info": {
+            "name": "Return the current JIRA installation progress in Athenian.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{ server_url }}/v1/invite/jira_progress/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the account that is installing JIRA."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Return the current JIRA installation progress in Athenian."
+        },
+        {
+          "info": {
+            "name": "Return the current GitHub installation progress in Athenian.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{ server_url }}/v1/invite/progress/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the account that is installing GitHub."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Return the current GitHub installation progress in Athenian."
+        },
+        {
+          "info": {
+            "name": "Match provided people names/logins/emails to the account's GitHub organization members.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/match/identities",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Match provided people names/logins/emails to the account's GitHub organization members."
+        },
+        {
+          "info": {
+            "name": "Measure the amount of code that was pushed outside of pull requests.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/metrics/code_bypassing_prs",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Measure the amount of code that was pushed outside of pull requests."
+        },
+        {
+          "info": {
+            "name": "Calculate metrics on continuous integration runs, such as GitHub Actions, Jenkins, Circle, etc.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/metrics/code_checks",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Calculate metrics on continuous integration runs, such as GitHub Actions, Jenkins, Circle, etc."
+        },
+        {
+          "info": {
+            "name": "Calculate metrics on deployments submitted by `/events/deployments`.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/metrics/deployments",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Calculate metrics on deployments submitted by `/events/deployments`."
+        },
+        {
+          "info": {
+            "name": "Calculate metrics over developer activities.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/metrics/developers",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Calculate metrics over developer activities."
+        },
+        {
+          "info": {
+            "name": "Calculate metrics over JIRA issue activities.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/metrics/jira",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Calculate metrics over JIRA issue activities."
+        },
+        {
+          "info": {
+            "name": "Calculate linear metrics over PRs.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/metrics/pull_requests",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Calculate linear metrics over PRs."
+        },
+        {
+          "info": {
+            "name": "Calculate linear metrics over releases.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/metrics/releases",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Calculate linear metrics over releases."
+        },
+        {
+          "info": {
+            "name": "Compute the balanced pagination plan for `/filter/pull_requests`.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/paginate/pull_requests",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Compute the balanced pagination plan for `/filter/pull_requests`."
+        },
+        {
+          "info": {
+            "name": "🛡️👤 Create a repository set.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/reposet/create",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "🛡️👤 Create a repository set."
+        },
+        {
+          "info": {
+            "name": "List a repository set. The user must be in the account that owns the reposet.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{ server_url }}/v1/reposet/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the repository set to list."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List a repository set. The user must be in the account that owns the reposet."
+        },
+        {
+          "info": {
+            "name": "🛡️👤 Update a repository set. The user must be an admin of the account that owns the reposet.",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{ server_url }}/v1/reposet/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the repository set to update."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "🛡️👤 Update a repository set. The user must be an admin of the account that owns the reposet."
+        },
+        {
+          "info": {
+            "name": "🛡️👤 Delete a repository set. The user must be an admin of the account that owns the reposet.",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{ server_url }}/v1/reposet/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the repository set to delete."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "🛡️👤 Delete a repository set. The user must be an admin of the account that owns the reposet."
+        },
+        {
+          "info": {
+            "name": "List the repository sets belonging to the calling user.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{ server_url }}/v1/reposets/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the account."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List the repository sets belonging to the calling user."
+        },
+        {
+          "info": {
+            "name": "👤 Add, remove or override GitHub<>JIRA user identity mapping.",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{ server_url }}/v1/settings/jira/identities",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "👤 Add, remove or override GitHub<>JIRA user identity mapping."
+        },
+        {
+          "info": {
+            "name": "Fetch the GitHub<>JIRA user identity mapping.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{ server_url }}/v1/settings/jira/identities/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the account."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Fetch the GitHub<>JIRA user identity mapping."
+        },
+        {
+          "info": {
+            "name": "🛡️👤 Set the enabled JIRA projects.",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{ server_url }}/v1/settings/jira/projects",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "🛡️👤 Set the enabled JIRA projects."
+        },
+        {
+          "info": {
+            "name": "List the currently enabled JIRA project settings.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{ server_url }}/v1/settings/jira/projects/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the account."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List the currently enabled JIRA project settings."
+        },
+        {
+          "info": {
+            "name": "List the currently configured logical repositories.\nA logical repository is a set of rules to match PRs, releases, and deployments\nthat has a name and pretends to be a regular GitHub repository everywhere in UI\nand API requests.\nThis feature is particularly useful to reap monorepos into separate, joint or disjoint\nparts.\n",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{ server_url }}/v1/settings/logical_repositories/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the account."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List the currently configured logical repositories.\nA logical repository is a set of rules to match PRs, releases, and deployments\nthat has a name and pretends to be a regular GitHub repository everywhere in UI\nand API requests.\nThis feature is particularly useful to reap monorepos into separate, joint or disjoint\nparts.\n"
+        },
+        {
+          "info": {
+            "name": "🛡️👤 Insert or update a logical repository - a named set of rules to match PRs, releases,\nand deployments that pretends to be a regular GitHub repository everywhere in UI and\nAPI requests.\n",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{ server_url }}/v1/settings/logical_repository",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "🛡️👤 Insert or update a logical repository - a named set of rules to match PRs, releases,\nand deployments that pretends to be a regular GitHub repository everywhere in UI and\nAPI requests.\n"
+        },
+        {
+          "info": {
+            "name": "🛡️ Delete a logical repository.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/settings/logical_repository/delete",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "🛡️ Delete a logical repository."
+        },
+        {
+          "info": {
+            "name": "👤 Set the release matching rule for a list of repositories. Only for account admins.\nRelease settings are rules by which to mark releases in GitHub repositories.\n",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{ server_url }}/v1/settings/release_match",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "👤 Set the release matching rule for a list of repositories. Only for account admins.\nRelease settings are rules by which to mark releases in GitHub repositories.\n"
+        },
+        {
+          "info": {
+            "name": "List the current release matching settings.\nRelease settings are rules by which to mark releases in GitHub repositories.\n",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{ server_url }}/v1/settings/release_match/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the account."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List the current release matching settings.\nRelease settings are rules by which to mark releases in GitHub repositories.\n"
+        },
+        {
+          "info": {
+            "name": "👤 Create or update a work type - a rule set to group PRs, releases, etc. together.",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{ server_url }}/v1/settings/work_type",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "👤 Create or update a work type - a rule set to group PRs, releases, etc. together."
+        },
+        {
+          "info": {
+            "name": "👤 Remove the work type given the name.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/settings/work_type/delete",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "👤 Remove the work type given the name."
+        },
+        {
+          "info": {
+            "name": "Fetch the definition of the work type given the name.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/settings/work_type/get",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Fetch the definition of the work type given the name."
+        },
+        {
+          "info": {
+            "name": "List the current work types - rule sets to group PRs, releases, etc. together.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{ server_url }}/v1/settings/work_types/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the account."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List the current work types - rule sets to group PRs, releases, etc. together."
+        },
+        {
+          "info": {
+            "name": "👤 Save the state of UI views and return a reference.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/share",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "👤 Save the state of UI views and return a reference."
+        },
+        {
+          "info": {
+            "name": "👤 Load the previously saved state of the UI views.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{ server_url }}/v1/share/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Reference to the share previously saved by `PUT /share`."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "👤 Load the previously saved state of the UI views."
+        },
+        {
+          "info": {
+            "name": "👤 Create a team. Admin is not required.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/team/create",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "👤 Create a team. Admin is not required."
+        },
+        {
+          "info": {
+            "name": "List the team's members. The user must belong to the account that owns the team.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{ server_url }}/v1/team/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the team to list."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List the team's members. The user must belong to the account that owns the team."
+        },
+        {
+          "info": {
+            "name": "👤 Update a team.",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{ server_url }}/v1/team/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the team to update."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "👤 Update a team."
+        },
+        {
+          "info": {
+            "name": "👤 Delete a team.",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{ server_url }}/v1/team/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the team to delete."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "👤 Delete a team."
+        },
+        {
+          "info": {
+            "name": "List the teams belonging to the calling user.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{ server_url }}/v1/teams/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the account."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List the teams belonging to the calling user."
+        },
+        {
+          "info": {
+            "name": "🛡️ Delete all the teams belonging to the account and then clone from GitHub. The \"Bots\" team will remain intact. The rest of the teams will be identical to what's on GitHub.",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{ server_url }}/v1/teams/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the account."
+              },
+              {
+                "name": "unmapped",
+                "value": "",
+                "type": "query",
+                "description": "Delete teams that are not backed by GitHub."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "🛡️ Delete all the teams belonging to the account and then clone from GitHub. The \"Bots\" team will remain intact. The rest of the teams will be identical to what's on GitHub."
+        },
+        {
+          "info": {
+            "name": "👤 Create a new Personal Access Token for the calling user and the specified account.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{ server_url }}/v1/token/create",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "👤 Create a new Personal Access Token for the calling user and the specified account."
+        },
+        {
+          "info": {
+            "name": "👤 Change Personal Access Token's details.",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{ server_url }}/v1/token/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the token."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "👤 Change Personal Access Token's details."
+        },
+        {
+          "info": {
+            "name": "👤 Delete a Personal Access Token belonging to the user.",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{ server_url }}/v1/token/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the token."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "👤 Delete a Personal Access Token belonging to the user."
+        },
+        {
+          "info": {
+            "name": "List Personal Access Tokens of the user in the account.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{ server_url }}/v1/tokens/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Numeric identifier of the account."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List Personal Access Tokens of the user in the account."
+        },
+        {
+          "info": {
+            "name": "Show details about the calling user.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{ server_url }}/v1/user",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Show details about the calling user."
+        },
+        {
+          "info": {
+            "name": "Query the versions of the backend components.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{ server_url }}/v1/versions"
+          },
+          "docs": "Query the versions of the backend components."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

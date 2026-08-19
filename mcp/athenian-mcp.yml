@@ -2,9 +2,9 @@ generated: '2026-07-18'
 method: derived
 status: candidate
 source: openapi/athenian-openapi-original.yml
-note: Candidate MCP tool surface derived one-tool-per-operation from the published
-  Athenian OpenAPI. No official hosted MCP server exists (Athenian wound down; api.athenian.co
-  no longer resolves). Tools are grounded in real operationIds.
+note: Candidate MCP tool surface derived one-tool-per-operation from the published Athenian OpenAPI. No
+  official hosted MCP server exists (Athenian wound down; api.athenian.co no longer resolves). Tools are
+  grounded in real operationIds.
 server:
   name: athenian
   transport: http
@@ -12,14 +12,13 @@ server:
 tool_count: 79
 tools:
 - name: change_user
-  description: '🛡️👤 Change the status of an account member: regular, admin, or banished
-    (deleted). This endpoint is allowed only for acc'
+  description: '🛡️👤 Change the status of an account member: regular, admin, or banished (deleted). This
+    endpoint is allowed only for acc'
   method: PUT
   path: /account/user
   source_operation: openapi/athenian-openapi-original.yml#change_user
 - name: get_account_details
-  description: List the calling user's account members and installed GitHub and JIRA
-    organizations.
+  description: List the calling user's account members and installed GitHub and JIRA organizations.
   method: GET
   path: /account/{id}/details
   source_operation: openapi/athenian-openapi-original.yml#get_account_details
@@ -59,8 +58,7 @@ tools:
   path: /events/releases
   source_operation: openapi/athenian-openapi-original.yml#notify_releases
 - name: filter_code_checks
-  description: Find code check runs that match the specified query. [What a code check
-    run is exactly.](https://docs.github.com/en/rest
+  description: Find code check runs that match the specified query. [What a code check run is exactly.](https://docs.github.com/en/rest
   method: POST
   path: /filter/code_checks
   source_operation: openapi/athenian-openapi-original.yml#filter_code_checks
@@ -75,8 +73,8 @@ tools:
   path: /filter/contributors
   source_operation: openapi/athenian-openapi-original.yml#filter_contributors
 - name: filter_deployments
-  description: List the deployments that satisfy the provided filters. We accept new
-    deployment notifications at `/events/deployments`.
+  description: List the deployments that satisfy the provided filters. We accept new deployment notifications
+    at `/events/deployments`.
   method: POST
   path: /filter/deployments
   source_operation: openapi/athenian-openapi-original.yml#filter_deployments
@@ -101,8 +99,7 @@ tools:
   path: /filter/pull_requests
   source_operation: openapi/athenian-openapi-original.yml#filter_prs
 - name: filter_releases
-  description: Find releases that were published in the given time fram in the given
-    repositories.
+  description: Find releases that were published in the given time fram in the given repositories.
   method: POST
   path: /filter/releases
   source_operation: openapi/athenian-openapi-original.yml#filter_releases
@@ -162,8 +159,8 @@ tools:
   path: /goal_templates/{id}
   source_operation: openapi/athenian-openapi-original.yml#list_goal_templates
 - name: calc_histogram_code_checks
-  description: Calculate histograms on continuous integration runs, such as GitHub
-    Actions, Jenkins, Circle, etc.
+  description: Calculate histograms on continuous integration runs, such as GitHub Actions, Jenkins, Circle,
+    etc.
   method: POST
   path: /histograms/code_checks
   source_operation: openapi/athenian-openapi-original.yml#calc_histogram_code_checks
@@ -178,14 +175,14 @@ tools:
   path: /histograms/pull_requests
   source_operation: openapi/athenian-openapi-original.yml#calc_histogram_prs
 - name: accept_invitation
-  description: 👤 Accept the account membership invitation and finish registration.
-    The user must be already authorized in Auth0.
+  description: 👤 Accept the account membership invitation and finish registration. The user must be already
+    authorized in Auth0.
   method: PUT
   path: /invite/accept
   source_operation: openapi/athenian-openapi-original.yml#accept_invitation
 - name: check_invitation
-  description: Given an invitation URL, get its type (admin or regular account member)
-    and find whether it is correctly formed and is e
+  description: Given an invitation URL, get its type (admin or regular account member) and find whether
+    it is correctly formed and is e
   method: POST
   path: /invite/check
   source_operation: openapi/athenian-openapi-original.yml#check_invitation
@@ -195,8 +192,8 @@ tools:
   path: /invite/generate/{id}
   source_operation: openapi/athenian-openapi-original.yml#gen_user_invitation
 - name: gen_jira_link
-  description: 👤 Generate a JIRA integration installation link. The caller must be
-    an admin of the specified account.
+  description: 👤 Generate a JIRA integration installation link. The caller must be an admin of the specified
+    account.
   method: GET
   path: /invite/jira/{id}
   source_operation: openapi/athenian-openapi-original.yml#gen_jira_link
@@ -211,8 +208,7 @@ tools:
   path: /invite/progress/{id}
   source_operation: openapi/athenian-openapi-original.yml#eval_metadata_progress
 - name: match_identities
-  description: Match provided people names/logins/emails to the account's GitHub organization
-    members.
+  description: Match provided people names/logins/emails to the account's GitHub organization members.
   method: POST
   path: /match/identities
   source_operation: openapi/athenian-openapi-original.yml#match_identities
@@ -222,8 +218,8 @@ tools:
   path: /metrics/code_bypassing_prs
   source_operation: openapi/athenian-openapi-original.yml#calc_code_bypassing_prs
 - name: calc_metrics_code_checks
-  description: Calculate metrics on continuous integration runs, such as GitHub Actions,
-    Jenkins, Circle, etc.
+  description: Calculate metrics on continuous integration runs, such as GitHub Actions, Jenkins, Circle,
+    etc.
   method: POST
   path: /metrics/code_checks
   source_operation: openapi/athenian-openapi-original.yml#calc_metrics_code_checks
@@ -263,20 +259,17 @@ tools:
   path: /reposet/create
   source_operation: openapi/athenian-openapi-original.yml#create_reposet
 - name: delete_reposet
-  description: 🛡️👤 Delete a repository set. The user must be an admin of the account
-    that owns the reposet.
+  description: 🛡️👤 Delete a repository set. The user must be an admin of the account that owns the reposet.
   method: DELETE
   path: /reposet/{id}
   source_operation: openapi/athenian-openapi-original.yml#delete_reposet
 - name: get_reposet
-  description: List a repository set. The user must be in the account that owns the
-    reposet.
+  description: List a repository set. The user must be in the account that owns the reposet.
   method: GET
   path: /reposet/{id}
   source_operation: openapi/athenian-openapi-original.yml#get_reposet
 - name: update_reposet
-  description: 🛡️👤 Update a repository set. The user must be an admin of the account
-    that owns the reposet.
+  description: 🛡️👤 Update a repository set. The user must be an admin of the account that owns the reposet.
   method: PUT
   path: /reposet/{id}
   source_operation: openapi/athenian-openapi-original.yml#update_reposet
@@ -311,8 +304,7 @@ tools:
   path: /settings/logical_repositories/{id}
   source_operation: openapi/athenian-openapi-original.yml#list_logical_repositories
 - name: set_logical_repository
-  description: 🛡️👤 Insert or update a logical repository - a named set of rules to
-    match PRs, releases,
+  description: 🛡️👤 Insert or update a logical repository - a named set of rules to match PRs, releases,
   method: PUT
   path: /settings/logical_repository
   source_operation: openapi/athenian-openapi-original.yml#set_logical_repository
@@ -322,8 +314,7 @@ tools:
   path: /settings/logical_repository/delete
   source_operation: openapi/athenian-openapi-original.yml#delete_logical_repository
 - name: set_release_match
-  description: 👤 Set the release matching rule for a list of repositories. Only for
-    account admins.
+  description: 👤 Set the release matching rule for a list of repositories. Only for account admins.
   method: PUT
   path: /settings/release_match
   source_operation: openapi/athenian-openapi-original.yml#set_release_match
@@ -333,8 +324,7 @@ tools:
   path: /settings/release_match/{id}
   source_operation: openapi/athenian-openapi-original.yml#list_release_match_settings
 - name: set_work_type
-  description: 👤 Create or update a work type - a rule set to group PRs, releases,
-    etc. together.
+  description: 👤 Create or update a work type - a rule set to group PRs, releases, etc. together.
   method: PUT
   path: /settings/work_type
   source_operation: openapi/athenian-openapi-original.yml#set_work_type
@@ -349,8 +339,7 @@ tools:
   path: /settings/work_type/get
   source_operation: openapi/athenian-openapi-original.yml#get_work_type
 - name: list_work_types
-  description: List the current work types - rule sets to group PRs, releases, etc.
-    together.
+  description: List the current work types - rule sets to group PRs, releases, etc. together.
   method: GET
   path: /settings/work_types/{id}
   source_operation: openapi/athenian-openapi-original.yml#list_work_types
@@ -375,8 +364,7 @@ tools:
   path: /team/{id}
   source_operation: openapi/athenian-openapi-original.yml#delete_team
 - name: get_team
-  description: List the team's members. The user must belong to the account that owns
-    the team.
+  description: List the team's members. The user must belong to the account that owns the team.
   method: GET
   path: /team/{id}
   source_operation: openapi/athenian-openapi-original.yml#get_team
@@ -386,8 +374,8 @@ tools:
   path: /team/{id}
   source_operation: openapi/athenian-openapi-original.yml#update_team
 - name: resync_teams
-  description: 🛡️ Delete all the teams belonging to the account and then clone from
-    GitHub. The "Bots" team will remain intact. The res
+  description: 🛡️ Delete all the teams belonging to the account and then clone from GitHub. The "Bots"
+    team will remain intact. The res
   method: DELETE
   path: /teams/{id}
   source_operation: openapi/athenian-openapi-original.yml#resync_teams
@@ -397,8 +385,7 @@ tools:
   path: /teams/{id}
   source_operation: openapi/athenian-openapi-original.yml#list_teams
 - name: create_token
-  description: 👤 Create a new Personal Access Token for the calling user and the specified
-    account.
+  description: 👤 Create a new Personal Access Token for the calling user and the specified account.
   method: POST
   path: /token/create
   source_operation: openapi/athenian-openapi-original.yml#create_token
@@ -427,3 +414,9 @@ tools:
   method: GET
   path: /versions
   source_operation: openapi/athenian-openapi-original.yml#get_versions
+deployment:
+  mode: none
+  verified: derived
+  tools: 79
+  checked: '2026-08-12'
+  source: catalog MCP census

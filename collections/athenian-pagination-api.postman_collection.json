@@ -1,0 +1,398 @@
+{
+  "item": [
+    {
+      "id": "0f806ea0-3ecf-45f9-a1b0-94d051dc4b68",
+      "name": "pagination",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "0c00303e-beba-4af9-b2cf-de14ea5f8855",
+          "name": "Compute the balanced pagination plan for `/filter/pull_requests`.",
+          "request": {
+            "name": "Compute the balanced pagination plan for `/filter/pull_requests`.",
+            "description": {},
+            "url": {
+              "path": [
+                "paginate",
+                "pull_requests"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"batch\": \"<integer>\",\n  \"request\": {\n    \"account\": \"<integer>\",\n    \"date_from\": \"<date>\",\n    \"date_to\": \"<date>\",\n    \"exclude_inactive\": \"<boolean>\",\n    \"in\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"timezone\": \"<integer>\",\n    \"events\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"stages\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"with\": {\n      \"author\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"reviewer\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"commit_author\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"commit_committer\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"commenter\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"merger\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"releaser\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    },\n    \"labels_include\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"labels_exclude\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"jira\": {\n      \"epics\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"labels_include\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"labels_exclude\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"issue_types\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"priorities\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"projects\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"status_categories\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"unmapped\": \"<boolean>\"\n    },\n    \"updated_from\": \"<date>\",\n    \"updated_to\": \"<date>\",\n    \"limit\": \"<integer>\",\n    \"environments\": [\n      \"<string>\"\n    ]\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "9bc200ed-8066-4389-a9cb-9cc368cd415e",
+              "name": "Identifier of the created repository set.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "paginate",
+                    "pull_requests"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"batch\": \"<integer>\",\n  \"request\": {\n    \"account\": \"<integer>\",\n    \"date_from\": \"<date>\",\n    \"date_to\": \"<date>\",\n    \"exclude_inactive\": \"<boolean>\",\n    \"in\": [\n      \"github.com/athenianco/athenian-webapp\",\n      \"github.com/athenianco/athenian-api\"\n    ],\n    \"timezone\": \"<integer>\",\n    \"events\": [\n      \"created\",\n      \"created\"\n    ],\n    \"stages\": [\n      \"done\",\n      \"done\"\n    ],\n    \"with\": {\n      \"author\": [\n        \"github.com/vmarkovtsev\",\n        \"github.com/dpordomingo\"\n      ],\n      \"reviewer\": [\n        \"github.com/vmarkovtsev\",\n        \"github.com/dpordomingo\"\n      ],\n      \"commit_author\": [\n        \"github.com/vmarkovtsev\",\n        \"github.com/dpordomingo\"\n      ],\n      \"commit_committer\": [\n        \"github.com/vmarkovtsev\",\n        \"github.com/dpordomingo\"\n      ],\n      \"commenter\": [\n        \"github.com/vmarkovtsev\",\n        \"github.com/dpordomingo\"\n      ],\n      \"merger\": [\n        \"github.com/vmarkovtsev\",\n        \"github.com/dpordomingo\"\n      ],\n      \"releaser\": [\n        \"github.com/vmarkovtsev\",\n        \"github.com/dpordomingo\"\n      ]\n    },\n    \"labels_include\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"labels_exclude\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"jira\": {\n      \"epics\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"labels_include\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"labels_exclude\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"issue_types\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"priorities\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"projects\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"status_categories\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"unmapped\": \"<boolean>\"\n    },\n    \"updated_from\": \"<date>\",\n    \"updated_to\": \"<date>\",\n    \"limit\": \"<integer>\",\n    \"environments\": [\n      \"<string>\"\n    ]\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"updated\": [\n    \"1956-09-23\",\n    \"1999-10-27\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ed1042a9-1151-4a26-a614-1c610dd553a8",
+              "name": "The request is invalid.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "paginate",
+                    "pull_requests"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"batch\": \"<integer>\",\n  \"request\": {\n    \"account\": \"<integer>\",\n    \"date_from\": \"<date>\",\n    \"date_to\": \"<date>\",\n    \"exclude_inactive\": \"<boolean>\",\n    \"in\": [\n      \"github.com/athenianco/athenian-webapp\",\n      \"github.com/athenianco/athenian-api\"\n    ],\n    \"timezone\": \"<integer>\",\n    \"events\": [\n      \"created\",\n      \"created\"\n    ],\n    \"stages\": [\n      \"done\",\n      \"done\"\n    ],\n    \"with\": {\n      \"author\": [\n        \"github.com/vmarkovtsev\",\n        \"github.com/dpordomingo\"\n      ],\n      \"reviewer\": [\n        \"github.com/vmarkovtsev\",\n        \"github.com/dpordomingo\"\n      ],\n      \"commit_author\": [\n        \"github.com/vmarkovtsev\",\n        \"github.com/dpordomingo\"\n      ],\n      \"commit_committer\": [\n        \"github.com/vmarkovtsev\",\n        \"github.com/dpordomingo\"\n      ],\n      \"commenter\": [\n        \"github.com/vmarkovtsev\",\n        \"github.com/dpordomingo\"\n      ],\n      \"merger\": [\n        \"github.com/vmarkovtsev\",\n        \"github.com/dpordomingo\"\n      ],\n      \"releaser\": [\n        \"github.com/vmarkovtsev\",\n        \"github.com/dpordomingo\"\n      ]\n    },\n    \"labels_include\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"labels_exclude\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"jira\": {\n      \"epics\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"labels_include\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"labels_exclude\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"issue_types\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"priorities\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"projects\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"status_categories\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"unmapped\": \"<boolean>\"\n    },\n    \"updated_from\": \"<date>\",\n    \"updated_to\": \"<date>\",\n    \"limit\": \"<integer>\",\n    \"environments\": [\n      \"<string>\"\n    ]\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Unsupported metric: pr-xxx-time\",\n  \"status\": 400,\n  \"title\": \"Bad request syntax or unsupported method.\",\n  \"type\": \"/errors/InvalidRequestError\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3cd9d029-7606-4855-9162-eb3896f763d1",
+              "name": "Calling user is not allowed to access the specified repositories.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "paginate",
+                    "pull_requests"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"batch\": \"<integer>\",\n  \"request\": {\n    \"account\": \"<integer>\",\n    \"date_from\": \"<date>\",\n    \"date_to\": \"<date>\",\n    \"exclude_inactive\": \"<boolean>\",\n    \"in\": [\n      \"github.com/athenianco/athenian-webapp\",\n      \"github.com/athenianco/athenian-api\"\n    ],\n    \"timezone\": \"<integer>\",\n    \"events\": [\n      \"created\",\n      \"created\"\n    ],\n    \"stages\": [\n      \"done\",\n      \"done\"\n    ],\n    \"with\": {\n      \"author\": [\n        \"github.com/vmarkovtsev\",\n        \"github.com/dpordomingo\"\n      ],\n      \"reviewer\": [\n        \"github.com/vmarkovtsev\",\n        \"github.com/dpordomingo\"\n      ],\n      \"commit_author\": [\n        \"github.com/vmarkovtsev\",\n        \"github.com/dpordomingo\"\n      ],\n      \"commit_committer\": [\n        \"github.com/vmarkovtsev\",\n        \"github.com/dpordomingo\"\n      ],\n      \"commenter\": [\n        \"github.com/vmarkovtsev\",\n        \"github.com/dpordomingo\"\n      ],\n      \"merger\": [\n        \"github.com/vmarkovtsev\",\n        \"github.com/dpordomingo\"\n      ],\n      \"releaser\": [\n        \"github.com/vmarkovtsev\",\n        \"github.com/dpordomingo\"\n      ]\n    },\n    \"labels_include\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"labels_exclude\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"jira\": {\n      \"epics\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"labels_include\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"labels_exclude\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"issue_types\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"priorities\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"projects\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"status_categories\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"unmapped\": \"<boolean>\"\n    },\n    \"updated_from\": \"<date>\",\n    \"updated_to\": \"<date>\",\n    \"limit\": \"<integer>\",\n    \"environments\": [\n      \"<string>\"\n    ]\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Unsupported metric: pr-xxx-time\",\n  \"status\": 400,\n  \"title\": \"Bad request syntax or unsupported method.\",\n  \"type\": \"/errors/InvalidRequestError\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0a810083-15cb-416c-a6df-aee0bfe08016",
+              "name": "The specified account does not exist or the user is not a member.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "paginate",
+                    "pull_requests"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"batch\": \"<integer>\",\n  \"request\": {\n    \"account\": \"<integer>\",\n    \"date_from\": \"<date>\",\n    \"date_to\": \"<date>\",\n    \"exclude_inactive\": \"<boolean>\",\n    \"in\": [\n      \"github.com/athenianco/athenian-webapp\",\n      \"github.com/athenianco/athenian-api\"\n    ],\n    \"timezone\": \"<integer>\",\n    \"events\": [\n      \"created\",\n      \"created\"\n    ],\n    \"stages\": [\n      \"done\",\n      \"done\"\n    ],\n    \"with\": {\n      \"author\": [\n        \"github.com/vmarkovtsev\",\n        \"github.com/dpordomingo\"\n      ],\n      \"reviewer\": [\n        \"github.com/vmarkovtsev\",\n        \"github.com/dpordomingo\"\n      ],\n      \"commit_author\": [\n        \"github.com/vmarkovtsev\",\n        \"github.com/dpordomingo\"\n      ],\n      \"commit_committer\": [\n        \"github.com/vmarkovtsev\",\n        \"github.com/dpordomingo\"\n      ],\n      \"commenter\": [\n        \"github.com/vmarkovtsev\",\n        \"github.com/dpordomingo\"\n      ],\n      \"merger\": [\n        \"github.com/vmarkovtsev\",\n        \"github.com/dpordomingo\"\n      ],\n      \"releaser\": [\n        \"github.com/vmarkovtsev\",\n        \"github.com/dpordomingo\"\n      ]\n    },\n    \"labels_include\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"labels_exclude\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"jira\": {\n      \"epics\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"labels_include\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"labels_exclude\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"issue_types\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"priorities\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"projects\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"status_categories\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"unmapped\": \"<boolean>\"\n    },\n    \"updated_from\": \"<date>\",\n    \"updated_to\": \"<date>\",\n    \"limit\": \"<integer>\",\n    \"environments\": [\n      \"<string>\"\n    ]\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Unsupported metric: pr-xxx-time\",\n  \"status\": 400,\n  \"title\": \"Bad request syntax or unsupported method.\",\n  \"type\": \"/errors/InvalidRequestError\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4b12d16e-0ac0-467b-b941-817a3552f38d",
+              "name": "The account's installation has not finished yet.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "paginate",
+                    "pull_requests"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"batch\": \"<integer>\",\n  \"request\": {\n    \"account\": \"<integer>\",\n    \"date_from\": \"<date>\",\n    \"date_to\": \"<date>\",\n    \"exclude_inactive\": \"<boolean>\",\n    \"in\": [\n      \"github.com/athenianco/athenian-webapp\",\n      \"github.com/athenianco/athenian-api\"\n    ],\n    \"timezone\": \"<integer>\",\n    \"events\": [\n      \"created\",\n      \"created\"\n    ],\n    \"stages\": [\n      \"done\",\n      \"done\"\n    ],\n    \"with\": {\n      \"author\": [\n        \"github.com/vmarkovtsev\",\n        \"github.com/dpordomingo\"\n      ],\n      \"reviewer\": [\n        \"github.com/vmarkovtsev\",\n        \"github.com/dpordomingo\"\n      ],\n      \"commit_author\": [\n        \"github.com/vmarkovtsev\",\n        \"github.com/dpordomingo\"\n      ],\n      \"commit_committer\": [\n        \"github.com/vmarkovtsev\",\n        \"github.com/dpordomingo\"\n      ],\n      \"commenter\": [\n        \"github.com/vmarkovtsev\",\n        \"github.com/dpordomingo\"\n      ],\n      \"merger\": [\n        \"github.com/vmarkovtsev\",\n        \"github.com/dpordomingo\"\n      ],\n      \"releaser\": [\n        \"github.com/vmarkovtsev\",\n        \"github.com/dpordomingo\"\n      ]\n    },\n    \"labels_include\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"labels_exclude\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"jira\": {\n      \"epics\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"labels_include\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"labels_exclude\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"issue_types\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"priorities\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"projects\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"status_categories\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"unmapped\": \"<boolean>\"\n    },\n    \"updated_from\": \"<date>\",\n    \"updated_to\": \"<date>\",\n    \"limit\": \"<integer>\",\n    \"environments\": [\n      \"<string>\"\n    ]\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Unsupported metric: pr-xxx-time\",\n  \"status\": 400,\n  \"title\": \"Bad request syntax or unsupported method.\",\n  \"type\": \"/errors/InvalidRequestError\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f0bdc16c-2d4e-4766-806c-2409d782d484",
+              "name": "One or more logical repositories miss the release settings.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "paginate",
+                    "pull_requests"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"batch\": \"<integer>\",\n  \"request\": {\n    \"account\": \"<integer>\",\n    \"date_from\": \"<date>\",\n    \"date_to\": \"<date>\",\n    \"exclude_inactive\": \"<boolean>\",\n    \"in\": [\n      \"github.com/athenianco/athenian-webapp\",\n      \"github.com/athenianco/athenian-api\"\n    ],\n    \"timezone\": \"<integer>\",\n    \"events\": [\n      \"created\",\n      \"created\"\n    ],\n    \"stages\": [\n      \"done\",\n      \"done\"\n    ],\n    \"with\": {\n      \"author\": [\n        \"github.com/vmarkovtsev\",\n        \"github.com/dpordomingo\"\n      ],\n      \"reviewer\": [\n        \"github.com/vmarkovtsev\",\n        \"github.com/dpordomingo\"\n      ],\n      \"commit_author\": [\n        \"github.com/vmarkovtsev\",\n        \"github.com/dpordomingo\"\n      ],\n      \"commit_committer\": [\n        \"github.com/vmarkovtsev\",\n        \"github.com/dpordomingo\"\n      ],\n      \"commenter\": [\n        \"github.com/vmarkovtsev\",\n        \"github.com/dpordomingo\"\n      ],\n      \"merger\": [\n        \"github.com/vmarkovtsev\",\n        \"github.com/dpordomingo\"\n      ],\n      \"releaser\": [\n        \"github.com/vmarkovtsev\",\n        \"github.com/dpordomingo\"\n      ]\n    },\n    \"labels_include\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"labels_exclude\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"jira\": {\n      \"epics\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"labels_include\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"labels_exclude\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"issue_types\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"priorities\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"projects\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"status_categories\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"unmapped\": \"<boolean>\"\n    },\n    \"updated_from\": \"<date>\",\n    \"updated_to\": \"<date>\",\n    \"limit\": \"<integer>\",\n    \"environments\": [\n      \"<string>\"\n    ]\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Failed Dependency (WebDAV) (RFC 4918)",
+              "code": 424,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Unsupported metric: pr-xxx-time\",\n  \"status\": 400,\n  \"title\": \"Bad request syntax or unsupported method.\",\n  \"type\": \"/errors/InvalidRequestError\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "{{ server_url }}/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "9ac4c967-bfbe-4b03-a4e3-773bde72b244",
+    "name": "{{ title }} align pagination API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Server version: {{ server_version }} built on {{ build_date }} @ [{{ commit }}](https://github.com/athenianco/athenian-api/commit/{{ commit }})\n\nOrigin GitHub repository: [athenianco/api-spec](https://github.com/athenianco/api-spec).\n\nAuthorization persists between sessions. Marks:\n* 🛡️ endpoint requires account admin privileges.\n* 👤 endpoint only works with JWT authentication.\n<details>\n<summary>List of common server errors.</summary>\n* __500__ endpoint crashed. We reported the incident to Sentry and will fix it soon! Please include the value of `instance` in the response if you contact the support. Repeating the request will not help, most probably.\n* __501__ some functions are missing, either because they are not implemented yet or a non-critical runtime dependency is not satisfied. Repeating the request will not help, guaranteed.\n* __502__ server crashed badly, either due to a memory access violation in native code or running out of memory. We reported this incident to Sentry and will fix it soon! Try repeating the request.\n* __503__ server has not fully launched yet, e.g. hasn't connected to the database; server is shutting down; we are experiencing a partial outage. Try repeating the request.\n* __504__ endpoint took too much time and was interrupted. We reported the incident to Sentry and will see how to improve the performance. Repeating the request will not help, most probably.\n</details>\n\nContact Support:\n Name: the administrator by email\n Email: admin@athenian.co",
+      "type": "text/plain"
+    }
+  }
+}
