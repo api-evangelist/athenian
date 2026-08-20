@@ -43,6 +43,17 @@ tags:
 - DevOps
 - Metrics
 - Git
+- Jira
+- CI/CD
+- Analytics
+tags_raw:
+- Company
+- Engineering Intelligence
+- Software Development Analytics
+- Developer Productivity
+- DevOps
+- Metrics
+- Git
 - JIRA
 - CI/CD
 - Analytics
@@ -70,7 +81,8 @@ apis:
   description: The default API from Athenian — 70 operation(s) for default.
   humanURL: https://github.com/athenianco/api-spec
   baseURL: https://api.athenian.co/v1
-  tags:
+  tags: []
+  tags_raw:
   - default
   properties:
   - type: OpenAPI
@@ -89,6 +101,8 @@ apis:
   humanURL: https://github.com/athenianco/api-spec
   baseURL: https://api.athenian.co/v1
   tags:
+  - Event
+  tags_raw:
   - events
   properties:
   - type: OpenAPI
@@ -107,6 +121,8 @@ apis:
   humanURL: https://github.com/athenianco/api-spec
   baseURL: https://api.athenian.co/v1
   tags:
+  - Filter
+  tags_raw:
   - filter
   properties:
   - type: OpenAPI
@@ -124,7 +140,8 @@ apis:
   description: The get API from Athenian — 4 operation(s) for get.
   humanURL: https://github.com/athenianco/api-spec
   baseURL: https://api.athenian.co/v1
-  tags:
+  tags: []
+  tags_raw:
   - get
   properties:
   - type: OpenAPI
@@ -143,6 +160,8 @@ apis:
   humanURL: https://github.com/athenianco/api-spec
   baseURL: https://api.athenian.co/v1
   tags:
+  - Histograms
+  tags_raw:
   - histograms
   properties:
   - type: OpenAPI
@@ -161,6 +180,8 @@ apis:
   humanURL: https://github.com/athenianco/api-spec
   baseURL: https://api.athenian.co/v1
   tags:
+  - Integration
+  tags_raw:
   - integrations
   properties:
   - type: OpenAPI
@@ -179,6 +200,8 @@ apis:
   humanURL: https://github.com/athenianco/api-spec
   baseURL: https://api.athenian.co/v1
   tags:
+  - Metrics
+  tags_raw:
   - metrics
   properties:
   - type: OpenAPI
@@ -197,6 +220,8 @@ apis:
   humanURL: https://github.com/athenianco/api-spec
   baseURL: https://api.athenian.co/v1
   tags:
+  - Pagination
+  tags_raw:
   - pagination
   properties:
   - type: OpenAPI
@@ -215,6 +240,8 @@ apis:
   humanURL: https://github.com/athenianco/api-spec
   baseURL: https://api.athenian.co/v1
   tags:
+  - Registration
+  tags_raw:
   - registration
   properties:
   - type: OpenAPI
@@ -251,6 +278,8 @@ apis:
   humanURL: https://github.com/athenianco/api-spec
   baseURL: https://api.athenian.co/v1
   tags:
+  - Security
+  tags_raw:
   - security
   properties:
   - type: OpenAPI
@@ -269,6 +298,8 @@ apis:
   humanURL: https://github.com/athenianco/api-spec
   baseURL: https://api.athenian.co/v1
   tags:
+  - Settings
+  tags_raw:
   - settings
   properties:
   - type: OpenAPI
@@ -287,6 +318,8 @@ apis:
   humanURL: https://github.com/athenianco/api-spec
   baseURL: https://api.athenian.co/v1
   tags:
+  - Team
+  tags_raw:
   - team
   properties:
   - type: OpenAPI
@@ -305,6 +338,8 @@ apis:
   humanURL: https://github.com/athenianco/api-spec
   baseURL: https://api.athenian.co/v1
   tags:
+  - User
+  tags_raw:
   - user
   properties:
   - type: OpenAPI
@@ -323,6 +358,8 @@ apis:
   humanURL: https://github.com/athenianco/api-spec
   baseURL: https://api.athenian.co/v1
   tags:
+  - Version
+  tags_raw:
   - version
   properties:
   - type: OpenAPI
