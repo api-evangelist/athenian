@@ -76,25 +76,6 @@ apis:
     url: data-model/athenian-data-model.yml
   - type: Conformance
     url: conformance/athenian-conformance.yml
-- aid: athenian:athenian-default-api
-  name: Athenian default API
-  description: The default API from Athenian — 70 operation(s) for default.
-  humanURL: https://github.com/athenianco/api-spec
-  baseURL: https://api.athenian.co/v1
-  tags: []
-  tags_raw:
-  - default
-  properties:
-  - type: OpenAPI
-    url: openapi/athenian-default-api-openapi.yml
-  - type: ErrorCatalog
-    url: errors/athenian-problem-types.yml
-  - type: Conventions
-    url: conventions/athenian-conventions.yml
-  - type: DataModel
-    url: data-model/athenian-data-model.yml
-  - type: Conformance
-    url: conformance/athenian-conformance.yml
 - aid: athenian:athenian-events-api
   name: Athenian events API
   description: The events API from Athenian — 4 operation(s) for events.
