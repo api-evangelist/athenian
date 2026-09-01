@@ -56,7 +56,7 @@ tags:
 - DevOps
 - Metrics
 - Git
-- JIRA
+- Jira
 - CI/CD
 - Analytics
 tags_raw:
@@ -115,7 +115,7 @@ apis:
   humanURL: https://github.com/athenianco/api-spec
   baseURL: https://api.athenian.co/v1
   tags:
-  - filter
+  - Filter
   tags_raw:
   - filter
   properties:
@@ -154,7 +154,7 @@ apis:
   humanURL: https://github.com/athenianco/api-spec
   baseURL: https://api.athenian.co/v1
   tags:
-  - histograms
+  - Histograms
   tags_raw:
   - histograms
   properties:
@@ -214,7 +214,7 @@ apis:
   humanURL: https://github.com/athenianco/api-spec
   baseURL: https://api.athenian.co/v1
   tags:
-  - pagination
+  - Pagination
   tags_raw:
   - pagination
   properties:
