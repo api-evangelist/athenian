@@ -1,26 +1,10 @@
 {
   "provider": "athenian",
   "sources": [
-    "athenian-align-api-openapi.yml",
-    "athenian-default-api-openapi.yml",
-    "athenian-events-api-openapi.yml",
-    "athenian-filter-api-openapi.yml",
-    "athenian-get-api-openapi.yml",
-    "athenian-histograms-api-openapi.yml",
-    "athenian-integrations-api-openapi.yml",
-    "athenian-metrics-api-openapi.yml",
-    "athenian-pagination-api-openapi.yml",
-    "athenian-registration-api-openapi.yml",
-    "athenian-reposet-api-openapi.yml",
-    "athenian-security-api-openapi.yml",
-    "athenian-settings-api-openapi.yml",
-    "athenian-team-api-openapi.yml",
-    "athenian-user-api-openapi.yml",
-    "athenian-version-api-openapi.yml"
+    "_original/athenian-openapi-original.yml"
   ],
   "outputs": [
     "athenian-align-api-openapi.yml",
-    "athenian-default-api-openapi.yml",
     "athenian-events-api-openapi.yml",
     "athenian-filter-api-openapi.yml",
     "athenian-get-api-openapi.yml",
@@ -39,6 +23,43 @@
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "athenian-openapi-original.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "athenian-openapi-original.yml: declared missing tag: align",
+    "athenian-openapi-original.yml: declared missing tag: default",
+    "athenian-openapi-original.yml: declared missing tag: events",
+    "athenian-openapi-original.yml: declared missing tag: filter",
+    "athenian-openapi-original.yml: declared missing tag: get",
+    "athenian-openapi-original.yml: declared missing tag: histograms",
+    "athenian-openapi-original.yml: declared missing tag: integrations",
+    "athenian-openapi-original.yml: declared missing tag: metrics",
+    "athenian-openapi-original.yml: declared missing tag: pagination",
+    "athenian-openapi-original.yml: declared missing tag: registration",
+    "athenian-openapi-original.yml: declared missing tag: reposet",
+    "athenian-openapi-original.yml: declared missing tag: security",
+    "athenian-openapi-original.yml: declared missing tag: settings",
+    "athenian-openapi-original.yml: declared missing tag: team",
+    "athenian-openapi-original.yml: declared missing tag: user",
+    "athenian-openapi-original.yml: declared missing tag: version",
+    "athenian-openapi-original.yml: multi-axis tagging (16 tags, 15 first tags, 2.00x duplication over 79 operations) \u2014 split on first tag, 79 operations narrowed",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "athenian-align-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "athenian-events-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "athenian-filter-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "athenian-get-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "athenian-histograms-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "athenian-integrations-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "athenian-metrics-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "athenian-pagination-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "athenian-registration-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "athenian-reposet-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "athenian-security-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "athenian-settings-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "athenian-team-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "athenian-user-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "athenian-version-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

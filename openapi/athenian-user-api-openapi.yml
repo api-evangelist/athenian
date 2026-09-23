@@ -1,44 +1,21 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
   contact:
     email: admin@athenian.co
     name: the administrator by email
-  description: 'Server version: {{ server_version }} built on {{ build_date }} @ [{{ commit }}](https://github.com/athenianco/athenian-api/commit/{{ commit }})
+  description: 'Server version: {{ server_version }} built on {{ build_date }} @ {{ commit }}
 
 
-    Origin GitHub repository: [athenianco/api-spec](https://github.com/athenianco/api-spec).
-
-
-    Authorization persists between sessions. Marks:
-
-    * 🛡️ endpoint requires account admin privileges.
-
-    * 👤 endpoint only works with JWT authentication.
-
-    <details>
-
-    <summary>List of common server errors.</summary>
-
-    * __500__ endpoint crashed. We reported the incident to Sentry and will fix it soon! Please include the value of `instance` in the response if you contact the support. Repeating the request will not help, most probably.
-
-    * __501__ some functions are missing, either because they are not implemented yet or a non-critical runtime dependency is not satisfied. Repeating the request will not help, guaranteed.
-
-    * __502__ server crashed badly, either due to a memory access violation in native code or running out of memory. We reported this incident to Sentry and will fix it soon! Try repeating the request.
-
-    * __503__ server has not fully launched yet, e.g. hasn''t connected to the database; server is shutting down; we are experiencing a partial outage. Try repeating the request.
-
-    * __504__ endpoint took too much time and was interrupted. We reported the incident to Sentry and will see how to improve the performance. Repeating the request will not help, most probably.
-
-    </details>'
+    Origin GitHub repository: athenianco/api-spec.'
   license:
     name: CC-BY-4.0
-  title: '{{ title }} align user API'
+  title: '{{ title }} User API'
   version: 2.1.86
 servers:
 - description: '{{ server_description }} - {{ server_url }}'
   url: '{{ server_url }}/v1'
 tags:
-- name: user
+- name: User
 paths:
   /account/user:
     put:
@@ -70,9 +47,9 @@ paths:
           description: The account was not found.
       security:
       - bearerAuth: []
-      summary: '🛡️👤 Change the status of an account member: regular, admin, or banished (deleted). This endpoint is allowed only for account admins.'
+      summary: '🛡️👤 Change the status of an account member: regular, admin, or banished…'
       tags:
-      - user
+      - User
       x-codegen-request-body-name: body
       x-openapi-router-controller: athenian.api.controllers.user_controller
   /account/{id}/details:
@@ -109,9 +86,9 @@ paths:
       security:
       - bearerAuth: []
       - apiKeyAuth: []
-      summary: List the calling user's account members and installed GitHub and JIRA organizations.
+      summary: List the calling user's account members and installed GitHub and JIRA…
       tags:
-      - user
+      - User
       x-codegen-request-body-name: body
       x-openapi-router-controller: athenian.api.controllers.user_controller
   /account/{id}/features:
@@ -148,9 +125,9 @@ paths:
       security:
       - bearerAuth: []
       - apiKeyAuth: []
-      summary: List the product features enabled for the account.
+      summary: List the product features enabled for the account
       tags:
-      - user
+      - User
       x-codegen-request-body-name: body
       x-openapi-router-controller: athenian.api.controllers.user_controller
   /share:
@@ -173,9 +150,9 @@ paths:
           $ref: '#/components/responses/InvalidRequestErrorResponse'
       security:
       - bearerAuth: []
-      summary: 👤 Save the state of UI views and return a reference.
+      summary: 👤 Save the state of UI views and return a reference
       tags:
-      - user
+      - User
       x-codegen-request-body-name: body
       x-openapi-router-controller: athenian.api.controllers.share_controller
   /share/{id}:
@@ -205,9 +182,9 @@ paths:
           description: Share does not exist or the user is not allowed to access.
       security:
       - bearerAuth: []
-      summary: 👤 Load the previously saved state of the UI views.
+      summary: 👤 Load the previously saved state of the UI views
       tags:
-      - user
+      - User
       x-codegen-request-body-name: body
       x-openapi-router-controller: athenian.api.controllers.share_controller
   /user:
@@ -223,13 +200,123 @@ paths:
       security:
       - bearerAuth: []
       - apiKeyAuth: []
-      summary: Show details about the calling user.
+      summary: Show details about the calling user
       tags:
-      - user
+      - User
       x-codegen-request-body-name: body
       x-openapi-router-controller: athenian.api.controllers.user_controller
 components:
   schemas:
+    Datasource:
+      description: A datasource configured for the account.
+      enum:
+      - github
+      - jira
+    ProductFeature:
+      additionalProperties: false
+      description: Client-side product feature definition.
+      example:
+        name: jira
+        parameters:
+          epics: true
+          labels: false
+      properties:
+        name:
+          type: string
+        parameters:
+          oneOf:
+          - type: number
+          - type: string
+          - type: object
+      required:
+      - name
+      - parameters
+      type: object
+    AccountUserChangeRequest:
+      additionalProperties: false
+      description: Request to change an account member's status.
+      example:
+        user: github|60340680
+        account: 1
+        status: regular
+      properties:
+        account:
+          description: Account ID.
+          type: integer
+        user:
+          description: Account member ID.
+          type: string
+        status:
+          description: Account membership role.
+          enum:
+          - regular
+          - admin
+          - banished
+          type: string
+      required:
+      - account
+      - status
+      - user
+      type: object
+    AccountStatus:
+      additionalProperties: false
+      description: Status of the user's account membership.
+      example:
+        is_admin: true
+        expired: false
+        stale: false
+        has_jira: true
+        has_ci: true
+        has_deployments: true
+      properties:
+        is_admin:
+          description: Indicates whether the user is an account administrator.
+          type: boolean
+        expired:
+          description: Indicates whether the account is disabled.
+          type: boolean
+        stale:
+          description: Indicates whether the account is temporarily not receiving data updates.
+          type: boolean
+        has_jira:
+          description: Indicates whether the account installed the integration with JIRA.
+          type: boolean
+        has_ci:
+          description: Indicates whether the account permitted the access to check suites.
+          type: boolean
+        has_deployments:
+          description: Indicates whether the account has submitted at least one deployment.
+          type: boolean
+      required:
+      - expired
+      - has_ci
+      - has_deployments
+      - has_jira
+      - is_admin
+      - stale
+      type: object
+    JIRAInstallation:
+      additionalProperties: false
+      description: Information about a link with JIRA.
+      example:
+        url: https://athenianco.atlassian.net
+        projects:
+        - DEV
+        - ENG
+      properties:
+        url:
+          description: JIRA base URL.
+          format: url
+          type: string
+        projects:
+          description: List of accessible project keys.
+          items:
+            type: string
+          type: array
+      required:
+      - projects
+      - url
+      type: object
     User:
       additionalProperties: false
       description: User details. "updated" and "accounts" are populated only for the calling user.
@@ -292,159 +379,6 @@ components:
       - login
       - native_id
       type: object
-    AccountUserChangeRequest:
-      additionalProperties: false
-      description: Request to change an account member's status.
-      example:
-        user: github|60340680
-        account: 1
-        status: regular
-      properties:
-        account:
-          description: Account ID.
-          type: integer
-        user:
-          description: Account member ID.
-          type: string
-        status:
-          description: Account membership role.
-          enum:
-          - regular
-          - admin
-          - banished
-          type: string
-      required:
-      - account
-      - status
-      - user
-      type: object
-    JIRAInstallation:
-      additionalProperties: false
-      description: Information about a link with JIRA.
-      example:
-        url: https://athenianco.atlassian.net
-        projects:
-        - DEV
-        - ENG
-      properties:
-        url:
-          description: JIRA base URL.
-          format: url
-          type: string
-        projects:
-          description: List of accessible project keys.
-          items:
-            type: string
-          type: array
-      required:
-      - projects
-      - url
-      type: object
-    ProductFeature:
-      additionalProperties: false
-      description: Client-side product feature definition.
-      example:
-        name: jira
-        parameters:
-          epics: true
-          labels: false
-      properties:
-        name:
-          type: string
-        parameters:
-          oneOf:
-          - type: number
-          - type: string
-          - type: object
-      required:
-      - name
-      - parameters
-      type: object
-    Share:
-      additionalProperties: false
-      description: Saved UI views state with metadata.
-      example:
-        author: Vadim Markovtsev
-        created: 2022-05-05 12:00:00+00:00
-        data:
-          whatever: 777
-      properties:
-        author:
-          description: User name who submitted.
-          type: string
-        created:
-          description: Submission timestamp.
-          format: date-time
-          type: string
-        data:
-          description: Saved object.
-          type: object
-      required:
-      - author
-      - created
-      - data
-      type: object
-    Datasource:
-      description: A datasource configured for the account.
-      enum:
-      - github
-      - jira
-    Organization:
-      additionalProperties: false
-      description: GitHub organization details.
-      example:
-        name: Athenian
-        login: athenianco
-        avatar_url: https://avatars3.githubusercontent.com/u/58329504?s=200&v=4
-      properties:
-        name:
-          type: string
-        avatar_url:
-          type: string
-        login:
-          type: string
-      required:
-      - avatar_url
-      - login
-      - name
-      type: object
-    AccountStatus:
-      additionalProperties: false
-      description: Status of the user's account membership.
-      example:
-        is_admin: true
-        expired: false
-        stale: false
-        has_jira: true
-        has_ci: true
-        has_deployments: true
-      properties:
-        is_admin:
-          description: Indicates whether the user is an account administrator.
-          type: boolean
-        expired:
-          description: Indicates whether the account is disabled.
-          type: boolean
-        stale:
-          description: Indicates whether the account is temporarily not receiving data updates.
-          type: boolean
-        has_jira:
-          description: Indicates whether the account installed the integration with JIRA.
-          type: boolean
-        has_ci:
-          description: Indicates whether the account permitted the access to check suites.
-          type: boolean
-        has_deployments:
-          description: Indicates whether the account has submitted at least one deployment.
-          type: boolean
-      required:
-      - expired
-      - has_ci
-      - has_deployments
-      - has_jira
-      - is_admin
-      - stale
-      type: object
     InvalidRequestError:
       allOf:
       - $ref: '#/components/schemas/GenericError'
@@ -466,6 +400,25 @@ components:
       items:
         $ref: '#/components/schemas/ProductFeature'
       type: array
+    Organization:
+      additionalProperties: false
+      description: GitHub organization details.
+      example:
+        name: Athenian
+        login: athenianco
+        avatar_url: https://avatars3.githubusercontent.com/u/58329504?s=200&v=4
+      properties:
+        name:
+          type: string
+        avatar_url:
+          type: string
+        login:
+          type: string
+      required:
+      - avatar_url
+      - login
+      - name
+      type: object
     GenericError:
       example:
         detail: 'Unsupported metric: pr-xxx-time'
@@ -572,6 +525,30 @@ components:
       - organizations
       - regulars
       - datasources
+      type: object
+    Share:
+      additionalProperties: false
+      description: Saved UI views state with metadata.
+      example:
+        author: Vadim Markovtsev
+        created: 2022-05-05 12:00:00+00:00
+        data:
+          whatever: 777
+      properties:
+        author:
+          description: User name who submitted.
+          type: string
+        created:
+          description: Submission timestamp.
+          format: date-time
+          type: string
+        data:
+          description: Saved object.
+          type: object
+      required:
+      - author
+      - created
+      - data
       type: object
   responses:
     InvalidRequestErrorResponse:

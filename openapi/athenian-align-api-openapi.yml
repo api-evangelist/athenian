@@ -1,38 +1,15 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
   contact:
     email: admin@athenian.co
     name: the administrator by email
-  description: 'Server version: {{ server_version }} built on {{ build_date }} @ [{{ commit }}](https://github.com/athenianco/athenian-api/commit/{{ commit }})
+  description: 'Server version: {{ server_version }} built on {{ build_date }} @ {{ commit }}
 
 
-    Origin GitHub repository: [athenianco/api-spec](https://github.com/athenianco/api-spec).
-
-
-    Authorization persists between sessions. Marks:
-
-    * 🛡️ endpoint requires account admin privileges.
-
-    * 👤 endpoint only works with JWT authentication.
-
-    <details>
-
-    <summary>List of common server errors.</summary>
-
-    * __500__ endpoint crashed. We reported the incident to Sentry and will fix it soon! Please include the value of `instance` in the response if you contact the support. Repeating the request will not help, most probably.
-
-    * __501__ some functions are missing, either because they are not implemented yet or a non-critical runtime dependency is not satisfied. Repeating the request will not help, guaranteed.
-
-    * __502__ server crashed badly, either due to a memory access violation in native code or running out of memory. We reported this incident to Sentry and will fix it soon! Try repeating the request.
-
-    * __503__ server has not fully launched yet, e.g. hasn''t connected to the database; server is shutting down; we are experiencing a partial outage. Try repeating the request.
-
-    * __504__ endpoint took too much time and was interrupted. We reported the incident to Sentry and will see how to improve the performance. Repeating the request will not help, most probably.
-
-    </details>'
+    Origin GitHub repository: athenianco/api-spec.'
   license:
     name: CC-BY-4.0
-  title: '{{ title }} align API'
+  title: '{{ title }} Align API'
   version: 2.1.86
 servers:
 - description: '{{ server_description }} - {{ server_url }}'
@@ -60,7 +37,7 @@ paths:
           $ref: '#/components/responses/InvalidRequestErrorResponse'
       security:
       - bearerAuth: []
-      summary: 👤 Create a goal template.
+      summary: 👤 Create a goal template
       tags:
       - align
       x-codegen-request-body-name: body
@@ -94,7 +71,7 @@ paths:
           description: The goal template was not found.
       security:
       - bearerAuth: []
-      summary: 👤 Delete a goal template.
+      summary: 👤 Delete a goal template
       tags:
       - align
       x-openapi-router-controller: athenian.api.controllers.goal_controller
@@ -112,7 +89,7 @@ paths:
       security:
       - bearerAuth: []
       - apiKeyAuth: []
-      summary: Retrieve a goal template.
+      summary: Retrieve a goal template
       tags:
       - align
       x-openapi-router-controller: athenian.api.controllers.goal_controller
@@ -133,7 +110,7 @@ paths:
           $ref: '#/components/responses/GoalTemplateNotFoundResponse'
       security:
       - bearerAuth: []
-      summary: 👤 Update a goal template.
+      summary: 👤 Update a goal template
       tags:
       - align
       x-codegen-request-body-name: body
@@ -162,26 +139,12 @@ paths:
       security:
       - bearerAuth: []
       - apiKeyAuth: []
-      summary: List the goal templates for the account.
+      summary: List the goal templates for the account
       tags:
       - align
       x-openapi-router-controller: athenian.api.controllers.goal_controller
 components:
-  parameters:
-    pathAccountID:
-      description: Numeric identifier of the account.
-      explode: false
-      in: path
-      name: id
-      required: true
-      schema:
-        type: integer
-      style: simple
   schemas:
-    TimeDuration:
-      description: Time duration value.
-      pattern: ^\d+s$
-      type: string
     RepositoryID:
       description: 'Repository name which uniquely identifies any repository in any service provider.
 
@@ -194,6 +157,117 @@ components:
         '
       example: github.com/athenianco/athenian-webapp
       type: string
+    RepositorySet:
+      description: Set of repositories. An empty list raises a bad response 400. Duplicates are automatically ignored.
+      example:
+      - github.com/athenianco/athenian-webapp
+      - github.com/athenianco/athenian-api
+      items:
+        $ref: '#/components/schemas/RepositoryID'
+      type: array
+    CreatedIdentifier:
+      additionalProperties: false
+      example:
+        id: 777
+      properties:
+        id:
+          description: Identifier of the created entity.
+          example: 777
+          type: integer
+      required:
+      - id
+      type: object
+    TimeDuration:
+      description: Time duration value.
+      pattern: ^\d+s$
+      type: string
+    GoalTemplate:
+      additionalProperties: false
+      description: A template to generate a goal.
+      example:
+        available: true
+        id: 42
+        metric: pr-release-time
+        name: Untitled Template
+        repositories:
+        - github.com/athenianco/athenian-api
+        - github.com/athenianco/api-spec
+      properties:
+        available:
+          description: Whether the templates is avaiable for use.
+          type: boolean
+        id:
+          description: Identifier of the template.
+          type: integer
+        metric:
+          oneOf:
+          - $ref: '#/components/schemas/PullRequestMetricID'
+          - $ref: '#/components/schemas/JIRAMetricID'
+          - $ref: '#/components/schemas/ReleaseMetricID'
+        metric_params:
+          $ref: '#/components/schemas/GoalMetricParams'
+        name:
+          $ref: '#/components/schemas/GoalTemplateName'
+        repositories:
+          $ref: '#/components/schemas/RepositorySet'
+      required:
+      - available
+      - id
+      - name
+      - metric
+      type: object
+    GoalTemplateUpdateRequest:
+      additionalProperties: false
+      description: Goal template update request body. A missing property means removal.
+      example:
+        name: New template name
+        metric: pr-lead-time
+      properties:
+        name:
+          $ref: '#/components/schemas/GoalTemplateName'
+        metric:
+          oneOf:
+          - $ref: '#/components/schemas/PullRequestMetricID'
+          - $ref: '#/components/schemas/JIRAMetricID'
+          - $ref: '#/components/schemas/ReleaseMetricID'
+        metric_params:
+          $ref: '#/components/schemas/GoalMetricParams'
+        repositories:
+          $ref: '#/components/schemas/RepositorySet'
+      required:
+      - name
+      - metric
+      type: object
+    GoalTemplateCreateRequest:
+      additionalProperties: false
+      description: Goal template creation request body.
+      example:
+        account: 30
+        metric: pr-review-time
+        name: My New Goal Template
+        repositories:
+        - github.com/athenianco/api-spec
+        - github.com/athenianco/athenian-webapp
+      properties:
+        account:
+          description: Account identifier. That account will own the created goal template.
+          type: integer
+        metric:
+          oneOf:
+          - $ref: '#/components/schemas/PullRequestMetricID'
+          - $ref: '#/components/schemas/JIRAMetricID'
+          - $ref: '#/components/schemas/ReleaseMetricID'
+        metric_params:
+          $ref: '#/components/schemas/GoalMetricParams'
+        name:
+          $ref: '#/components/schemas/GoalTemplateName'
+        repositories:
+          $ref: '#/components/schemas/RepositorySet'
+      required:
+      - account
+      - metric
+      - name
+      type: object
     GenericError:
       example:
         detail: 'Unsupported metric: pr-xxx-time'
@@ -225,6 +299,19 @@ components:
       - status
       - title
       - type
+      type: object
+    GoalTemplateName:
+      description: Name of the template.
+      example: Untitled Template
+      minLength: 1
+      type: string
+    GoalMetricParams:
+      description: The parameters used to compute `metric` for the goal.
+      properties:
+        threshold:
+          oneOf:
+          - type: number
+          - $ref: '#/components/schemas/TimeDuration'
       type: object
     PullRequestMetricID:
       description: 'Currently supported PR metric types.
@@ -497,22 +584,6 @@ components:
       - jira-resolution-rate
       example: jira-resolved
       type: string
-    RepositorySet:
-      description: Set of repositories. An empty list raises a bad response 400. Duplicates are automatically ignored.
-      example:
-      - github.com/athenianco/athenian-webapp
-      - github.com/athenianco/athenian-api
-      items:
-        $ref: '#/components/schemas/RepositoryID'
-      type: array
-    GoalMetricParams:
-      description: The parameters used to compute `metric` for the goal.
-      properties:
-        threshold:
-          oneOf:
-          - type: number
-          - $ref: '#/components/schemas/TimeDuration'
-      type: object
     ReleaseMetricID:
       description: 'Currently supported release metric types.
 
@@ -592,110 +663,6 @@ components:
       - release-branch-age
       - release-time-to-deploy
       type: string
-    GoalTemplateName:
-      description: Name of the template.
-      example: Untitled Template
-      minLength: 1
-      type: string
-    GoalTemplateUpdateRequest:
-      additionalProperties: false
-      description: Goal template update request body. A missing property means removal.
-      example:
-        name: New template name
-        metric: pr-lead-time
-      properties:
-        name:
-          $ref: '#/components/schemas/GoalTemplateName'
-        metric:
-          oneOf:
-          - $ref: '#/components/schemas/PullRequestMetricID'
-          - $ref: '#/components/schemas/JIRAMetricID'
-          - $ref: '#/components/schemas/ReleaseMetricID'
-        metric_params:
-          $ref: '#/components/schemas/GoalMetricParams'
-        repositories:
-          $ref: '#/components/schemas/RepositorySet'
-      required:
-      - name
-      - metric
-      type: object
-    GoalTemplateCreateRequest:
-      additionalProperties: false
-      description: Goal template creation request body.
-      example:
-        account: 30
-        metric: pr-review-time
-        name: My New Goal Template
-        repositories:
-        - github.com/athenianco/api-spec
-        - github.com/athenianco/athenian-webapp
-      properties:
-        account:
-          description: Account identifier. That account will own the created goal template.
-          type: integer
-        metric:
-          oneOf:
-          - $ref: '#/components/schemas/PullRequestMetricID'
-          - $ref: '#/components/schemas/JIRAMetricID'
-          - $ref: '#/components/schemas/ReleaseMetricID'
-        metric_params:
-          $ref: '#/components/schemas/GoalMetricParams'
-        name:
-          $ref: '#/components/schemas/GoalTemplateName'
-        repositories:
-          $ref: '#/components/schemas/RepositorySet'
-      required:
-      - account
-      - metric
-      - name
-      type: object
-    GoalTemplate:
-      additionalProperties: false
-      description: A template to generate a goal.
-      example:
-        available: true
-        id: 42
-        metric: pr-release-time
-        name: Untitled Template
-        repositories:
-        - github.com/athenianco/athenian-api
-        - github.com/athenianco/api-spec
-      properties:
-        available:
-          description: Whether the templates is avaiable for use.
-          type: boolean
-        id:
-          description: Identifier of the template.
-          type: integer
-        metric:
-          oneOf:
-          - $ref: '#/components/schemas/PullRequestMetricID'
-          - $ref: '#/components/schemas/JIRAMetricID'
-          - $ref: '#/components/schemas/ReleaseMetricID'
-        metric_params:
-          $ref: '#/components/schemas/GoalMetricParams'
-        name:
-          $ref: '#/components/schemas/GoalTemplateName'
-        repositories:
-          $ref: '#/components/schemas/RepositorySet'
-      required:
-      - available
-      - id
-      - name
-      - metric
-      type: object
-    CreatedIdentifier:
-      additionalProperties: false
-      example:
-        id: 777
-      properties:
-        id:
-          description: Identifier of the created entity.
-          example: 777
-          type: integer
-      required:
-      - id
-      type: object
     GoalTemplateList:
       description: List of goal templates.
       example:
@@ -733,6 +700,16 @@ components:
           schema:
             $ref: '#/components/schemas/InvalidRequestError'
       description: The request is invalid.
+  parameters:
+    pathAccountID:
+      description: Numeric identifier of the account.
+      explode: false
+      in: path
+      name: id
+      required: true
+      schema:
+        type: integer
+      style: simple
   securitySchemes:
     apiKeyAuth:
       description: 'Authorization by the value of `X-API-Key` header aka API token.

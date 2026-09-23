@@ -1,44 +1,21 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
   contact:
     email: admin@athenian.co
     name: the administrator by email
-  description: 'Server version: {{ server_version }} built on {{ build_date }} @ [{{ commit }}](https://github.com/athenianco/athenian-api/commit/{{ commit }})
+  description: 'Server version: {{ server_version }} built on {{ build_date }} @ {{ commit }}
 
 
-    Origin GitHub repository: [athenianco/api-spec](https://github.com/athenianco/api-spec).
-
-
-    Authorization persists between sessions. Marks:
-
-    * 🛡️ endpoint requires account admin privileges.
-
-    * 👤 endpoint only works with JWT authentication.
-
-    <details>
-
-    <summary>List of common server errors.</summary>
-
-    * __500__ endpoint crashed. We reported the incident to Sentry and will fix it soon! Please include the value of `instance` in the response if you contact the support. Repeating the request will not help, most probably.
-
-    * __501__ some functions are missing, either because they are not implemented yet or a non-critical runtime dependency is not satisfied. Repeating the request will not help, guaranteed.
-
-    * __502__ server crashed badly, either due to a memory access violation in native code or running out of memory. We reported this incident to Sentry and will fix it soon! Try repeating the request.
-
-    * __503__ server has not fully launched yet, e.g. hasn''t connected to the database; server is shutting down; we are experiencing a partial outage. Try repeating the request.
-
-    * __504__ endpoint took too much time and was interrupted. We reported the incident to Sentry and will see how to improve the performance. Repeating the request will not help, most probably.
-
-    </details>'
+    Origin GitHub repository: athenianco/api-spec.'
   license:
     name: CC-BY-4.0
-  title: '{{ title }} align team API'
+  title: '{{ title }} Team API'
   version: 2.1.86
 servers:
 - description: '{{ server_description }} - {{ server_url }}'
   url: '{{ server_url }}/v1'
 tags:
-- name: team
+- name: Team
 paths:
   /team/create:
     post:
@@ -66,9 +43,9 @@ paths:
           description: There is an existing team with the same name.
       security:
       - bearerAuth: []
-      summary: 👤 Create a team. Admin is not required.
+      summary: 👤 Create a team. Admin is not required
       tags:
-      - team
+      - Team
       x-codegen-request-body-name: body
       x-openapi-router-controller: athenian.api.controllers.team_controller
   /team/{id}:
@@ -106,9 +83,9 @@ paths:
           description: The specified team was not found.
       security:
       - bearerAuth: []
-      summary: 👤 Delete a team.
+      summary: 👤 Delete a team
       tags:
-      - team
+      - Team
       x-codegen-request-body-name: body
       x-openapi-router-controller: athenian.api.controllers.team_controller
     get:
@@ -144,9 +121,9 @@ paths:
       security:
       - bearerAuth: []
       - apiKeyAuth: []
-      summary: List the team's members. The user must belong to the account that owns the team.
+      summary: List the team's members. The user must belong to the account that owns the team
       tags:
-      - team
+      - Team
       x-codegen-request-body-name: body
       x-openapi-router-controller: athenian.api.controllers.team_controller
     put:
@@ -197,9 +174,9 @@ paths:
           description: There is an existing team with the same contents.
       security:
       - bearerAuth: []
-      summary: 👤 Update a team.
+      summary: 👤 Update a team
       tags:
-      - team
+      - Team
       x-codegen-request-body-name: body
       x-openapi-router-controller: athenian.api.controllers.team_controller
   /teams/{id}:
@@ -231,9 +208,9 @@ paths:
       security:
       - bearerAuth: []
       - apiKeyAuth: []
-      summary: 🛡️ Delete all the teams belonging to the account and then clone from GitHub. The "Bots" team will remain intact. The rest of the teams will be identical to what's on GitHub.
+      summary: 🛡️ Delete all the teams belonging to the account and then clone from GitHub.
       tags:
-      - team
+      - Team
       x-codegen-request-body-name: body
       x-openapi-router-controller: athenian.api.controllers.team_controller
     get:
@@ -256,88 +233,23 @@ paths:
       security:
       - bearerAuth: []
       - apiKeyAuth: []
-      summary: List the teams belonging to the calling user.
+      summary: List the teams belonging to the calling user
       tags:
-      - team
+      - Team
       x-codegen-request-body-name: body
       x-openapi-router-controller: athenian.api.controllers.team_controller
 components:
+  parameters:
+    pathAccountID:
+      description: Numeric identifier of the account.
+      explode: false
+      in: path
+      name: id
+      required: true
+      schema:
+        type: integer
+      style: simple
   schemas:
-    Contributors:
-      description: List of contributors.
-      example:
-      - email: bot@athenian.co
-        login: github.com/gkwillie
-        name: Groundskeeper Willie
-        picture: https://avatars0.githubusercontent.com/u/60340680?v=4
-      - email: loumarvincaraig@gmail.com
-        login: github.com/se7entyse7en
-        name: Lou Marvin Caraig
-        picture: https://avatars1.githubusercontent.com/u/5599208?v=4
-      items:
-        $ref: '#/components/schemas/Contributor'
-      type: array
-    DeveloperSet:
-      description: A set of developers. An empty list disables the filter and includes everybody. Duplicates are automatically ignored.
-      example:
-      - github.com/vmarkovtsev
-      - github.com/dpordomingo
-      items:
-        $ref: '#/components/schemas/DeveloperID'
-      type: array
-    CreatedIdentifier:
-      additionalProperties: false
-      example:
-        id: 777
-      properties:
-        id:
-          description: Identifier of the created entity.
-          example: 777
-          type: integer
-      required:
-      - id
-      type: object
-    DeveloperID:
-      description: 'User name which uniquely identifies any developer on any service provider.
-
-        The format matches the profile URL without the protocol part.
-
-        '
-      example: github.com/vmarkovtsev
-      type: string
-    TeamUpdateRequest:
-      additionalProperties: false
-      description: Team update request.
-      example:
-        name: Engineering
-        members:
-        - github.com/gkwillie
-        - github.com/se7entyse7en
-        parent: null
-      properties:
-        name:
-          description: New name of the team.
-          type: string
-        members:
-          $ref: '#/components/schemas/DeveloperSet'
-        parent:
-          description: New identifier of the higher level team.
-          nullable: true
-          type: integer
-      required:
-      - members
-      - name
-      - parent
-      type: object
-    InvalidRequestError:
-      allOf:
-      - $ref: '#/components/schemas/GenericError'
-      - properties:
-          pointer:
-            description: Path to the offending request item.
-            example: .granularity
-            type: string
-        type: object
     Contributor:
       additionalProperties: false
       description: Details about a developer who contributed to some repositories owned by the account.
@@ -364,101 +276,74 @@ components:
       required:
       - login
       type: object
-    TeamCreateRequest:
-      additionalProperties: false
-      description: Team creation request.
+    Contributors:
+      description: List of contributors.
       example:
-        account: 1
+      - email: bot@athenian.co
+        login: github.com/gkwillie
+        name: Groundskeeper Willie
+        picture: https://avatars0.githubusercontent.com/u/60340680?v=4
+      - email: loumarvincaraig@gmail.com
+        login: github.com/se7entyse7en
+        name: Lou Marvin Caraig
+        picture: https://avatars1.githubusercontent.com/u/5599208?v=4
+      items:
+        $ref: '#/components/schemas/Contributor'
+      type: array
+    DeveloperID:
+      description: 'User name which uniquely identifies any developer on any service provider.
+
+        The format matches the profile URL without the protocol part.
+
+        '
+      example: github.com/vmarkovtsev
+      type: string
+    TeamUpdateRequest:
+      additionalProperties: false
+      description: Team update request.
+      example:
         name: Engineering
         members:
         - github.com/gkwillie
         - github.com/se7entyse7en
         parent: null
       properties:
-        account:
-          description: Account identifier. That account will own the created team.
-          type: integer
         name:
-          description: Name of the team.
+          description: New name of the team.
           type: string
         members:
           $ref: '#/components/schemas/DeveloperSet'
         parent:
-          description: Identifier of the higher level team.
-          nullable: true
-          type: integer
+          description: New identifier of the higher level team.
+          type:
+          - integer
+          - 'null'
       required:
-      - account
       - members
       - name
       - parent
       type: object
-    Team:
-      description: Definition of a team of several developers.
+    CreatedIdentifier:
+      additionalProperties: false
       example:
-        id: 1
-        name: Engineering
-        parent: 3
-        members:
-        - login: github.com/gkwillie
-          name: Groundskeeper Willie
-          email: bot@athenian.co
-          picture: https://avatars0.githubusercontent.com/u/60340680?v=4
-        - login: github.com/se7entyse7en
-          name: Lou Marvin Caraig
-          email: loumarvincaraig@gmail.com
-          picture: https://avatars1.githubusercontent.com/u/5599208?v=4
+        id: 777
       properties:
         id:
-          description: Team identifier.
-          type: integer
-        name:
-          description: Name of the team.
-          type: string
-        members:
-          $ref: '#/components/schemas/Contributors'
-        parent:
-          description: Identifier of the higher level team.
-          nullable: true
+          description: Identifier of the created entity.
+          example: 777
           type: integer
       required:
       - id
-      - members
-      - name
-      - parent
       type: object
-    GenericError:
-      example:
-        detail: 'Unsupported metric: pr-xxx-time'
-        status: 400
-        title: Bad request syntax or unsupported method.
-        type: /errors/InvalidRequestError
-      properties:
-        detail:
-          description: Human-readable explanation specific to this occurrence of the problem.
-          example: 'Unsupported metric: pr-xxx-time'
-          type: string
-        instance:
-          description: URI reference that identifies the specific occurrence of the problem. It is `null` for 4xx, Sentry event ID for 5xx.
-          example: 2763c4eabd7240f59829ee1a02546293
-          type: string
-        status:
-          description: Duplicated HTTP status code.
-          example: 400
-          type: integer
-        title:
-          description: Short, human-readable summary of the problem type.
-          example: Bad request syntax or unsupported method.
-          type: string
-        type:
-          description: URI reference that identifies the problem type (RFC 7807).
-          example: /errors/InvalidRequestError
-          type: string
-      required:
-      - status
-      - title
-      - type
-      type: object
+    InvalidRequestError:
+      allOf:
+      - $ref: '#/components/schemas/GenericError'
+      - properties:
+          pointer:
+            description: Path to the offending request item.
+            example: .granularity
+            type: string
+        type: object
     TeamList:
       description: List of teams of an account.
       example:
@@ -493,16 +378,111 @@ components:
       items:
         $ref: '#/components/schemas/Team'
       type: array
-  parameters:
-    pathAccountID:
-      description: Numeric identifier of the account.
-      explode: false
-      in: path
-      name: id
-      required: true
-      schema:
-        type: integer
-      style: simple
+    TeamCreateRequest:
+      additionalProperties: false
+      description: Team creation request.
+      example:
+        account: 1
+        name: Engineering
+        members:
+        - github.com/gkwillie
+        - github.com/se7entyse7en
+        parent: null
+      properties:
+        account:
+          description: Account identifier. That account will own the created team.
+          type: integer
+        name:
+          description: Name of the team.
+          type: string
+        members:
+          $ref: '#/components/schemas/DeveloperSet'
+        parent:
+          description: Identifier of the higher level team.
+          type:
+          - integer
+          - 'null'
+      required:
+      - account
+      - members
+      - name
+      - parent
+      type: object
+    Team:
+      description: Definition of a team of several developers.
+      example:
+        id: 1
+        name: Engineering
+        parent: 3
+        members:
+        - login: github.com/gkwillie
+          name: Groundskeeper Willie
+          email: bot@athenian.co
+          picture: https://avatars0.githubusercontent.com/u/60340680?v=4
+        - login: github.com/se7entyse7en
+          name: Lou Marvin Caraig
+          email: loumarvincaraig@gmail.com
+          picture: https://avatars1.githubusercontent.com/u/5599208?v=4
+      properties:
+        id:
+          description: Team identifier.
+          type: integer
+        name:
+          description: Name of the team.
+          type: string
+        members:
+          $ref: '#/components/schemas/Contributors'
+        parent:
+          description: Identifier of the higher level team.
+          type:
+          - integer
+          - 'null'
+      required:
+      - id
+      - members
+      - name
+      - parent
+      type: object
+    DeveloperSet:
+      description: A set of developers. An empty list disables the filter and includes everybody. Duplicates are automatically ignored.
+      example:
+      - github.com/vmarkovtsev
+      - github.com/dpordomingo
+      items:
+        $ref: '#/components/schemas/DeveloperID'
+      type: array
+    GenericError:
+      example:
+        detail: 'Unsupported metric: pr-xxx-time'
+        status: 400
+        title: Bad request syntax or unsupported method.
+        type: /errors/InvalidRequestError
+      properties:
+        detail:
+          description: Human-readable explanation specific to this occurrence of the problem.
+          example: 'Unsupported metric: pr-xxx-time'
+          type: string
+        instance:
+          description: URI reference that identifies the specific occurrence of the problem. It is `null` for 4xx, Sentry event ID for 5xx.
+          example: 2763c4eabd7240f59829ee1a02546293
+          type: string
+        status:
+          description: Duplicated HTTP status code.
+          example: 400
+          type: integer
+        title:
+          description: Short, human-readable summary of the problem type.
+          example: Bad request syntax or unsupported method.
+          type: string
+        type:
+          description: URI reference that identifies the problem type (RFC 7807).
+          example: /errors/InvalidRequestError
+          type: string
+      required:
+      - status
+      - title
+      - type
+      type: object
   responses:
     InvalidRequestErrorResponse:
       content:

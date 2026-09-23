@@ -1,38 +1,15 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
   contact:
     email: admin@athenian.co
     name: the administrator by email
-  description: 'Server version: {{ server_version }} built on {{ build_date }} @ [{{ commit }}](https://github.com/athenianco/athenian-api/commit/{{ commit }})
+  description: 'Server version: {{ server_version }} built on {{ build_date }} @ {{ commit }}
 
 
-    Origin GitHub repository: [athenianco/api-spec](https://github.com/athenianco/api-spec).
-
-
-    Authorization persists between sessions. Marks:
-
-    * 🛡️ endpoint requires account admin privileges.
-
-    * 👤 endpoint only works with JWT authentication.
-
-    <details>
-
-    <summary>List of common server errors.</summary>
-
-    * __500__ endpoint crashed. We reported the incident to Sentry and will fix it soon! Please include the value of `instance` in the response if you contact the support. Repeating the request will not help, most probably.
-
-    * __501__ some functions are missing, either because they are not implemented yet or a non-critical runtime dependency is not satisfied. Repeating the request will not help, guaranteed.
-
-    * __502__ server crashed badly, either due to a memory access violation in native code or running out of memory. We reported this incident to Sentry and will fix it soon! Try repeating the request.
-
-    * __503__ server has not fully launched yet, e.g. hasn''t connected to the database; server is shutting down; we are experiencing a partial outage. Try repeating the request.
-
-    * __504__ endpoint took too much time and was interrupted. We reported the incident to Sentry and will see how to improve the performance. Repeating the request will not help, most probably.
-
-    </details>'
+    Origin GitHub repository: athenianco/api-spec.'
   license:
     name: CC-BY-4.0
-  title: '{{ title }} align pagination API'
+  title: '{{ title }} Pagination API'
   version: 2.1.86
 servers:
 - description: '{{ server_description }} - {{ server_url }}'
@@ -85,25 +62,13 @@ paths:
       security:
       - bearerAuth: []
       - apiKeyAuth: []
-      summary: Compute the balanced pagination plan for `/filter/pull_requests`.
+      summary: Compute the balanced pagination plan for `/filter/pull_requests`
       tags:
       - pagination
       x-codegen-request-body-name: body
       x-openapi-router-controller: athenian.api.controllers.pagination_controller
 components:
   schemas:
-    RepositoryID:
-      description: 'Repository name which uniquely identifies any repository in any service provider.
-
-        The format matches the repository URL without the protocol part. No ".git" should be appended.
-
-        We support a special syntax for repository sets: "{reposet id}" adds all the repositories
-
-        from the given set.
-
-        '
-      example: github.com/athenianco/athenian-webapp
-      type: string
     PaginatePullRequestsRequest:
       additionalProperties: false
       description: 'Request of `/paginate/pull_requests`. According to the target batch size,
@@ -139,142 +104,6 @@ components:
       - batch
       - request
       type: object
-    FilterPullRequestsRequest:
-      additionalProperties: false
-      description: Filters for `/filter/pull_requests`. Empty `properties` passes through all PRs matched by the other filters.
-      example:
-        account: 1
-        date_from: 2020-01-23
-        date_to: 2020-05-23
-        in:
-        - '{1}'
-        - github.com/athenianco/athenian-webapp
-        stages:
-        - wip
-        with:
-          author:
-          - github.com/vmarkovtsev
-        exclude_inactive: true
-      properties:
-        account:
-          description: Session account ID.
-          type: integer
-        date_from:
-          description: PRs must be updated later than or equal to this date.
-          format: date
-          type: string
-        date_to:
-          description: PRs must be updated earlier than or equal to this date.
-          format: date
-          type: string
-        timezone:
-          $ref: '#/components/schemas/TimeZone'
-        in:
-          $ref: '#/components/schemas/RepositorySet'
-        events:
-          description: Allowed PR events that happened between `date_from` and `date_to`.
-          items:
-            $ref: '#/components/schemas/PullRequestEvent'
-          type: array
-        stages:
-          description: Allowed PR stages that are defined at `date_to`.
-          items:
-            $ref: '#/components/schemas/PullRequestStage'
-          type: array
-        with:
-          $ref: '#/components/schemas/PullRequestWith'
-        labels_include:
-          description: At least one of these labels must be present in each returned PR.
-          items:
-            type: string
-          type: array
-        labels_exclude:
-          description: None of these labels must be present in each returned PR.
-          items:
-            type: string
-          type: array
-        exclude_inactive:
-          description: Value indicating whether PRs without events in the given time frame shall be ignored.
-          type: boolean
-        jira:
-          $ref: '#/components/schemas/JIRAFilter'
-        updated_from:
-          description: 'Paginate the response: the returned PRs are updated on GitHub no older than this timestamp, including the beginning. Note: "updated on GitHub" means that we don´t consider release or deployment timestamps. Use this field only to paginate after calling `/paginate/pull_requests`. Subject of future changes.'
-          format: date
-          type: string
-        updated_to:
-          description: 'Paginate the response: the returned PRs are updated on GitHub no later than this timestamp, not including the ending. Note: "updated on GitHub" means that we don´t consider release or deployment timestamps. Use this field only to paginate after calling `/paginate/pull_requests`. Subject of future changes.'
-          format: date
-          type: string
-        limit:
-          description: Maximum number of pull requests to return. The list is sorted by the last update timestamp. `null` means no limit.
-          minimum: 1
-          nullable: true
-          type: integer
-        environments:
-          description: Target environments for the deployment events, impacts `events` and `stages`. If omitted, we match any deployment in any environment.
-          items:
-            type: string
-          minItems: 1
-          type: array
-      required:
-      - account
-      - date_from
-      - date_to
-      - exclude_inactive
-      - in
-      type: object
-    DeveloperSet:
-      description: A set of developers. An empty list disables the filter and includes everybody. Duplicates are automatically ignored.
-      example:
-      - github.com/vmarkovtsev
-      - github.com/dpordomingo
-      items:
-        $ref: '#/components/schemas/DeveloperID'
-      type: array
-    DeveloperID:
-      description: 'User name which uniquely identifies any developer on any service provider.
-
-        The format matches the profile URL without the protocol part.
-
-        '
-      example: github.com/vmarkovtsev
-      type: string
-    PullRequestEvent:
-      description: 'PR''s modelled lifecycle events.
-
-        * `created`: The PR was opened.
-
-        * `committed`: Somebody pushed a commit to the PR.
-
-        * `review_requested`: Somebody requested a PR review.
-
-        * `reviewed`: Somebody reviewed the PR (either approved, requested changes, or commented).
-
-        * `approved`: Somebody approved the PR. Note that if there were negative reviews from other participants, an approval does *not* trigger this event.
-
-        * `changes_requested`: Somebody submitted a negative PR review.
-
-        * `merged`: Somebody merged the PR.
-
-        * `released`: The PR was released.
-
-        * `rejected`: Somebody closed the PR without merging.
-
-        * `deployed`: The PR was deployed. We respect this event only when `environment` was specified.'
-      enum:
-      - created
-      - committed
-      - review_requested
-      - reviewed
-      - approved
-      - changes_requested
-      - merged
-      - released
-      - rejected
-      - deployed
-      example: created
-      type: string
     JIRAStatusCategory:
       description: The category of a JIRA issue status.
       enum:
@@ -283,19 +112,54 @@ components:
       - Done
       - No Category
       type: string
-    RepositorySet:
-      description: Set of repositories. An empty list raises a bad response 400. Duplicates are automatically ignored.
+    PullRequestWith:
+      additionalProperties: false
+      description: 'Triage PRs by various developer participation. The aggregation is `OR` between
+
+        the participation groups and `OR` within each group. For example, if our request is
+
+        ```
+
+        {"author": ["github.com/vmarkovtsev"], "reviewer": ["github.com/gkwillie", "github.com/mcuadros"]}
+
+        ```
+
+        then the matched PRs will have **@vmarkovtsev** as the author or either
+
+        **@gkwillie** or **@mcuadros** as the reviewers.
+
+        It is possible to mention whole teams using the syntax `{id}` where `id` is a team identifier (see `/teams`).'
       example:
-      - github.com/athenianco/athenian-webapp
-      - github.com/athenianco/athenian-api
-      items:
-        $ref: '#/components/schemas/RepositoryID'
-      type: array
-    TimeZone:
-      description: Local time zone offset in minutes, used to adjust `date_from` and `date_to`.
-      maximum: 780
-      minimum: -720
-      type: integer
+        author:
+        - github.com/vmarkovtsev
+      properties:
+        author:
+          $ref: '#/components/schemas/DeveloperSet'
+        reviewer:
+          $ref: '#/components/schemas/DeveloperSet'
+        commit_author:
+          $ref: '#/components/schemas/DeveloperSet'
+        commit_committer:
+          $ref: '#/components/schemas/DeveloperSet'
+        commenter:
+          $ref: '#/components/schemas/DeveloperSet'
+        merger:
+          $ref: '#/components/schemas/DeveloperSet'
+        releaser:
+          $ref: '#/components/schemas/DeveloperSet'
+      type: object
+    RepositoryID:
+      description: 'Repository name which uniquely identifies any repository in any service provider.
+
+        The format matches the repository URL without the protocol part. No ".git" should be appended.
+
+        We support a special syntax for repository sets: "{reposet id}" adds all the repositories
+
+        from the given set.
+
+        '
+      example: github.com/athenianco/athenian-webapp
+      type: string
     JIRAFilter:
       additionalProperties: false
       description: 'Filters related to JIRA traits. The aggregation between each filter type is *AND*.
@@ -369,15 +233,112 @@ components:
           description: Select PRs that are not mapped to any JIRA issue. May not be specified with anything else.
           type: boolean
       type: object
-    InvalidRequestError:
-      allOf:
-      - $ref: '#/components/schemas/GenericError'
-      - properties:
-          pointer:
-            description: Path to the offending request item.
-            example: .granularity
+    MissingSettingsError:
+      $ref: '#/components/schemas/GenericError'
+    FilterPullRequestsRequest:
+      additionalProperties: false
+      description: Filters for `/filter/pull_requests`. Empty `properties` passes through all PRs matched by the other filters.
+      example:
+        account: 1
+        date_from: 2020-01-23
+        date_to: 2020-05-23
+        in:
+        - '{1}'
+        - github.com/athenianco/athenian-webapp
+        stages:
+        - wip
+        with:
+          author:
+          - github.com/vmarkovtsev
+        exclude_inactive: true
+      properties:
+        account:
+          description: Session account ID.
+          type: integer
+        date_from:
+          description: PRs must be updated later than or equal to this date.
+          format: date
+          type: string
+        date_to:
+          description: PRs must be updated earlier than or equal to this date.
+          format: date
+          type: string
+        timezone:
+          $ref: '#/components/schemas/TimeZone'
+        in:
+          $ref: '#/components/schemas/RepositorySet'
+        events:
+          description: Allowed PR events that happened between `date_from` and `date_to`.
+          items:
+            $ref: '#/components/schemas/PullRequestEvent'
+          type: array
+        stages:
+          description: Allowed PR stages that are defined at `date_to`.
+          items:
+            $ref: '#/components/schemas/PullRequestStage'
+          type: array
+        with:
+          $ref: '#/components/schemas/PullRequestWith'
+        labels_include:
+          description: At least one of these labels must be present in each returned PR.
+          items:
             type: string
-        type: object
+          type: array
+        labels_exclude:
+          description: None of these labels must be present in each returned PR.
+          items:
+            type: string
+          type: array
+        exclude_inactive:
+          description: Value indicating whether PRs without events in the given time frame shall be ignored.
+          type: boolean
+        jira:
+          $ref: '#/components/schemas/JIRAFilter'
+        updated_from:
+          description: 'Paginate the response: the returned PRs are updated on GitHub no older than this timestamp, including the beginning. Note: "updated on GitHub" means that we don´t consider release or deployment timestamps. Use this field only to paginate after calling `/paginate/pull_requests`. Subject of future changes.'
+          format: date
+          type: string
+        updated_to:
+          description: 'Paginate the response: the returned PRs are updated on GitHub no later than this timestamp, not including the ending. Note: "updated on GitHub" means that we don´t consider release or deployment timestamps. Use this field only to paginate after calling `/paginate/pull_requests`. Subject of future changes.'
+          format: date
+          type: string
+        limit:
+          description: Maximum number of pull requests to return. The list is sorted by the last update timestamp. `null` means no limit.
+          minimum: 1
+          type:
+          - integer
+          - 'null'
+        environments:
+          description: Target environments for the deployment events, impacts `events` and `stages`. If omitted, we match any deployment in any environment.
+          items:
+            type: string
+          minItems: 1
+          type: array
+      required:
+      - account
+      - date_from
+      - date_to
+      - exclude_inactive
+      - in
+      type: object
+    RepositorySet:
+      description: Set of repositories. An empty list raises a bad response 400. Duplicates are automatically ignored.
+      example:
+      - github.com/athenianco/athenian-webapp
+      - github.com/athenianco/athenian-api
+      items:
+        $ref: '#/components/schemas/RepositoryID'
+      type: array
+    DeveloperID:
+      description: 'User name which uniquely identifies any developer on any service provider.
+
+        The format matches the profile URL without the protocol part.
+
+        '
+      example: github.com/vmarkovtsev
+      type: string
+    NoSourceDataError:
+      $ref: '#/components/schemas/GenericError'
     PullRequestStage:
       description: 'PR''s modelled lifecycle stages.
 
@@ -407,62 +368,28 @@ components:
       - deployed
       example: done
       type: string
-    NoSourceDataError:
-      $ref: '#/components/schemas/GenericError'
-    PullRequestWith:
-      additionalProperties: false
-      description: 'Triage PRs by various developer participation. The aggregation is `OR` between
-
-        the participation groups and `OR` within each group. For example, if our request is
-
-        ```
-
-        {"author": ["github.com/vmarkovtsev"], "reviewer": ["github.com/gkwillie", "github.com/mcuadros"]}
-
-        ```
-
-        then the matched PRs will have **@vmarkovtsev** as the author or either
-
-        **@gkwillie** or **@mcuadros** as the reviewers.
-
-        It is possible to mention whole teams using the syntax `{id}` where `id` is a team identifier (see `/teams`).'
-      example:
-        author:
-        - github.com/vmarkovtsev
-      properties:
-        author:
-          $ref: '#/components/schemas/DeveloperSet'
-        reviewer:
-          $ref: '#/components/schemas/DeveloperSet'
-        commit_author:
-          $ref: '#/components/schemas/DeveloperSet'
-        commit_committer:
-          $ref: '#/components/schemas/DeveloperSet'
-        commenter:
-          $ref: '#/components/schemas/DeveloperSet'
-        merger:
-          $ref: '#/components/schemas/DeveloperSet'
-        releaser:
-          $ref: '#/components/schemas/DeveloperSet'
-      type: object
-    PullRequestPaginationPlan:
-      additionalProperties: false
-      description: Response of `/paginate/pull_requests`. Computed split of the PR updated timestamp range.
-      example:
-        updated:
-        - 2020-10-08
-        - 2020-10-07
-        - 2020-10-01
-      properties:
-        updated:
-          description: Split borders in *descending* order.
-          items:
-            format: date
+    TimeZone:
+      description: Local time zone offset in minutes, used to adjust `date_from` and `date_to`.
+      maximum: 780
+      minimum: -720
+      type: integer
+    InvalidRequestError:
+      allOf:
+      - $ref: '#/components/schemas/GenericError'
+      - properties:
+          pointer:
+            description: Path to the offending request item.
+            example: .granularity
             type: string
-          type: array
-      type: object
-    MissingSettingsError:
-      $ref: '#/components/schemas/GenericError'
+        type: object
+    DeveloperSet:
+      description: A set of developers. An empty list disables the filter and includes everybody. Duplicates are automatically ignored.
+      example:
+      - github.com/vmarkovtsev
+      - github.com/dpordomingo
+      items:
+        $ref: '#/components/schemas/DeveloperID'
+      type: array
     GenericError:
       example:
         detail: 'Unsupported metric: pr-xxx-time'
@@ -494,6 +421,57 @@ components:
       - status
       - title
       - type
+      type: object
+    PullRequestEvent:
+      description: 'PR''s modelled lifecycle events.
+
+        * `created`: The PR was opened.
+
+        * `committed`: Somebody pushed a commit to the PR.
+
+        * `review_requested`: Somebody requested a PR review.
+
+        * `reviewed`: Somebody reviewed the PR (either approved, requested changes, or commented).
+
+        * `approved`: Somebody approved the PR. Note that if there were negative reviews from other participants, an approval does *not* trigger this event.
+
+        * `changes_requested`: Somebody submitted a negative PR review.
+
+        * `merged`: Somebody merged the PR.
+
+        * `released`: The PR was released.
+
+        * `rejected`: Somebody closed the PR without merging.
+
+        * `deployed`: The PR was deployed. We respect this event only when `environment` was specified.'
+      enum:
+      - created
+      - committed
+      - review_requested
+      - reviewed
+      - approved
+      - changes_requested
+      - merged
+      - released
+      - rejected
+      - deployed
+      example: created
+      type: string
+    PullRequestPaginationPlan:
+      additionalProperties: false
+      description: Response of `/paginate/pull_requests`. Computed split of the PR updated timestamp range.
+      example:
+        updated:
+        - 2020-10-08
+        - 2020-10-07
+        - 2020-10-01
+      properties:
+        updated:
+          description: Split borders in *descending* order.
+          items:
+            format: date
+            type: string
+          type: array
       type: object
   responses:
     InvalidRequestErrorResponse:
