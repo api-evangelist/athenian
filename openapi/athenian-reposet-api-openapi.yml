@@ -210,46 +210,7 @@ paths:
       x-codegen-request-body-name: body
       x-openapi-router-controller: athenian.api.controllers.reposet_controller
 components:
-  parameters:
-    pathAccountID:
-      description: Numeric identifier of the account.
-      explode: false
-      in: path
-      name: id
-      required: true
-      schema:
-        type: integer
-      style: simple
   schemas:
-    RepositoryID:
-      description: 'Repository name which uniquely identifies any repository in any service provider.
-
-        The format matches the repository URL without the protocol part. No ".git" should be appended.
-
-        We support a special syntax for repository sets: "{reposet id}" adds all the repositories
-
-        from the given set.
-
-        '
-      example: github.com/athenianco/athenian-webapp
-      type: string
-    RepositorySetList:
-      description: List of repository sets owned by a user.
-      items:
-        $ref: '#/components/schemas/RepositorySetListItem'
-      type: array
-    CreatedIdentifier:
-      additionalProperties: false
-      example:
-        id: 777
-      properties:
-        id:
-          description: Identifier of the created entity.
-          example: 777
-          type: integer
-      required:
-      - id
-      type: object
     RepositorySetListItem:
       additionalProperties: false
       description: Element of RepositorySetList.
@@ -304,6 +265,49 @@ components:
       - items
       - name
       type: object
+    RepositoryID:
+      description: 'Repository name which uniquely identifies any repository in any service provider.
+
+        The format matches the repository URL without the protocol part. No ".git" should be appended.
+
+        We support a special syntax for repository sets: "{reposet id}" adds all the repositories
+
+        from the given set.
+
+        '
+      example: github.com/athenianco/athenian-webapp
+      type: string
+    RepositorySetWithName:
+      additionalProperties: false
+      description: A set of repositories. An empty list results an empty response in contrary to DeveloperSet. Duplicates are automatically ignored.
+      example:
+        name: all
+        items:
+        - github.com/athenianco/athenian-webapp
+        - github.com/athenianco/athenian-api
+        precomputed: true
+      properties:
+        name:
+          type: string
+        items:
+          items:
+            $ref: '#/components/schemas/RepositoryID'
+          type: array
+        precomputed:
+          type: boolean
+      type: object
+    CreatedIdentifier:
+      additionalProperties: false
+      example:
+        id: 777
+      properties:
+        id:
+          description: Identifier of the created entity.
+          example: 777
+          type: integer
+      required:
+      - id
+      type: object
     GenericError:
       example:
         detail: 'Unsupported metric: pr-xxx-time'
@@ -336,25 +340,21 @@ components:
       - title
       - type
       type: object
-    RepositorySetWithName:
-      additionalProperties: false
-      description: A set of repositories. An empty list results an empty response in contrary to DeveloperSet. Duplicates are automatically ignored.
-      example:
-        name: all
-        items:
-        - github.com/athenianco/athenian-webapp
-        - github.com/athenianco/athenian-api
-        precomputed: true
-      properties:
-        name:
-          type: string
-        items:
-          items:
-            $ref: '#/components/schemas/RepositoryID'
-          type: array
-        precomputed:
-          type: boolean
-      type: object
+    RepositorySetList:
+      description: List of repository sets owned by a user.
+      items:
+        $ref: '#/components/schemas/RepositorySetListItem'
+      type: array
+  parameters:
+    pathAccountID:
+      description: Numeric identifier of the account.
+      explode: false
+      in: path
+      name: id
+      required: true
+      schema:
+        type: integer
+      style: simple
   securitySchemes:
     apiKeyAuth:
       description: 'Authorization by the value of `X-API-Key` header aka API token.

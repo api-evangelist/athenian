@@ -249,6 +249,38 @@ paths:
       x-openapi-router-controller: athenian.api.controllers.invitation_controller
 components:
   schemas:
+    GenericError:
+      example:
+        detail: 'Unsupported metric: pr-xxx-time'
+        status: 400
+        title: Bad request syntax or unsupported method.
+        type: /errors/InvalidRequestError
+      properties:
+        detail:
+          description: Human-readable explanation specific to this occurrence of the problem.
+          example: 'Unsupported metric: pr-xxx-time'
+          type: string
+        instance:
+          description: URI reference that identifies the specific occurrence of the problem. It is `null` for 4xx, Sentry event ID for 5xx.
+          example: 2763c4eabd7240f59829ee1a02546293
+          type: string
+        status:
+          description: Duplicated HTTP status code.
+          example: 400
+          type: integer
+        title:
+          description: Short, human-readable summary of the problem type.
+          example: Bad request syntax or unsupported method.
+          type: string
+        type:
+          description: URI reference that identifies the problem type (RFC 7807).
+          example: /errors/InvalidRequestError
+          type: string
+      required:
+      - status
+      - title
+      - type
+      type: object
     InvitedUser:
       additionalProperties: false
       description: Details about the user who has accepted an invitation.
@@ -271,88 +303,6 @@ components:
       required:
       - account
       - user
-      type: object
-    InvitationCheckResult:
-      additionalProperties: false
-      example:
-        active: true
-        type: regular
-        valid: true
-      properties:
-        active:
-          description: Value indicating whether the invitation is still enabled.
-          type: boolean
-        type:
-          description: Invited user's account membership status.
-          enum:
-          - admin
-          - regular
-          type: string
-        valid:
-          description: Value indicating whether the invitation URL is correctly formed.
-          type: boolean
-      required:
-      - valid
-      type: object
-    InvitationLink:
-      additionalProperties: false
-      example:
-        url: https://app.athenian.co/i/deadf88d
-      description: Product invitation URL.
-      properties:
-        url:
-          description: Invitation URL. Users are supposed to click it and become admins or regular account members.
-          format: url
-          type: string
-      required:
-      - url
-      type: object
-    AcceptedInvitation:
-      additionalProperties: false
-      example:
-        url: https://app.athenian.co/i/deadf88d
-        email: vadim@athenian.co
-      description: Request for entering the product.
-      properties:
-        email:
-          description: Calling user's email address.
-          format: email
-          type: string
-        name:
-          description: Calling user's name.
-          type: string
-        url:
-          description: Invitation URL. Users are supposed to click it and become admins or regular account members.
-          format: url
-          type: string
-      required:
-      - url
-      type: object
-    NoSourceDataError:
-      $ref: '#/components/schemas/GenericError'
-    TableFetchingProgress:
-      additionalProperties: false
-      description: Used in InstallationProgress.tables to indicate how much data has been loaded in each DB table.
-      example:
-        fetched: 50
-        name: Commit
-        total: 100
-      properties:
-        fetched:
-          description: How many records have been stored in the DB table so far.
-          minimum: 0
-          type: integer
-        name:
-          description: DB table identifier.
-          type: string
-        total:
-          description: How many records the DB table is expected to have.
-          minimum: 1
-          type: integer
-      required:
-      - fetched
-      - name
-      - total
       type: object
     User:
       additionalProperties: false
@@ -416,46 +366,18 @@ components:
       - login
       - native_id
       type: object
-    InvalidRequestError:
-      allOf:
-      - $ref: '#/components/schemas/GenericError'
-      - properties:
-          pointer:
-            description: Path to the offending request item.
-            example: .granularity
-            type: string
-        type: object
-    GenericError:
+    InvitationLink:
+      additionalProperties: false
       example:
-        detail: 'Unsupported metric: pr-xxx-time'
-        status: 400
-        title: Bad request syntax or unsupported method.
-        type: /errors/InvalidRequestError
+        url: https://app.athenian.co/i/deadf88d
+      description: Product invitation URL.
       properties:
-        detail:
-          description: Human-readable explanation specific to this occurrence of the problem.
-          example: 'Unsupported metric: pr-xxx-time'
-          type: string
-        instance:
-          description: URI reference that identifies the specific occurrence of the problem. It is `null` for 4xx, Sentry event ID for 5xx.
-          example: 2763c4eabd7240f59829ee1a02546293
-          type: string
-        status:
-          description: Duplicated HTTP status code.
-          example: 400
-          type: integer
-        title:
-          description: Short, human-readable summary of the problem type.
-          example: Bad request syntax or unsupported method.
-          type: string
-        type:
-          description: URI reference that identifies the problem type (RFC 7807).
-          example: /errors/InvalidRequestError
+        url:
+          description: Invitation URL. Users are supposed to click it and become admins or regular account members.
+          format: url
           type: string
       required:
-      - status
-      - title
-      - type
+      - url
       type: object
     InstallationProgress:
       additionalProperties: false
@@ -547,6 +469,84 @@ components:
       - is_admin
       - stale
       type: object
+    TableFetchingProgress:
+      additionalProperties: false
+      description: Used in InstallationProgress.tables to indicate how much data has been loaded in each DB table.
+      example:
+        fetched: 50
+        name: Commit
+        total: 100
+      properties:
+        fetched:
+          description: How many records have been stored in the DB table so far.
+          minimum: 0
+          type: integer
+        name:
+          description: DB table identifier.
+          type: string
+        total:
+          description: How many records the DB table is expected to have.
+          minimum: 1
+          type: integer
+      required:
+      - fetched
+      - name
+      - total
+      type: object
+    InvalidRequestError:
+      allOf:
+      - $ref: '#/components/schemas/GenericError'
+      - properties:
+          pointer:
+            description: Path to the offending request item.
+            example: .granularity
+            type: string
+        type: object
+    InvitationCheckResult:
+      additionalProperties: false
+      example:
+        active: true
+        type: regular
+        valid: true
+      properties:
+        active:
+          description: Value indicating whether the invitation is still enabled.
+          type: boolean
+        type:
+          description: Invited user's account membership status.
+          enum:
+          - admin
+          - regular
+          type: string
+        valid:
+          description: Value indicating whether the invitation URL is correctly formed.
+          type: boolean
+      required:
+      - valid
+      type: object
+    AcceptedInvitation:
+      additionalProperties: false
+      example:
+        url: https://app.athenian.co/i/deadf88d
+        email: vadim@athenian.co
+      description: Request for entering the product.
+      properties:
+        email:
+          description: Calling user's email address.
+          format: email
+          type: string
+        name:
+          description: Calling user's name.
+          type: string
+        url:
+          description: Invitation URL. Users are supposed to click it and become admins or regular account members.
+          format: url
+          type: string
+      required:
+      - url
+      type: object
+    NoSourceDataError:
+      $ref: '#/components/schemas/GenericError'
   securitySchemes:
     apiKeyAuth:
       description: 'Authorization by the value of `X-API-Key` header aka API token.

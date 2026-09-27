@@ -239,17 +239,32 @@ paths:
       x-codegen-request-body-name: body
       x-openapi-router-controller: athenian.api.controllers.team_controller
 components:
-  parameters:
-    pathAccountID:
-      description: Numeric identifier of the account.
-      explode: false
-      in: path
-      name: id
-      required: true
-      schema:
-        type: integer
-      style: simple
   schemas:
+    TeamUpdateRequest:
+      additionalProperties: false
+      description: Team update request.
+      example:
+        name: Engineering
+        members:
+        - github.com/gkwillie
+        - github.com/se7entyse7en
+        parent: null
+      properties:
+        name:
+          description: New name of the team.
+          type: string
+        members:
+          $ref: '#/components/schemas/DeveloperSet'
+        parent:
+          description: New identifier of the higher level team.
+          type:
+          - integer
+          - 'null'
+      required:
+      - members
+      - name
+      - parent
+      type: object
     Contributor:
       additionalProperties: false
       description: Details about a developer who contributed to some repositories owned by the account.
@@ -276,19 +291,13 @@ components:
       required:
       - login
       type: object
-    Contributors:
-      description: List of contributors.
+    DeveloperSet:
+      description: A set of developers. An empty list disables the filter and includes everybody. Duplicates are automatically ignored.
       example:
-      - email: bot@athenian.co
-        login: github.com/gkwillie
-        name: Groundskeeper Willie
-        picture: https://avatars0.githubusercontent.com/u/60340680?v=4
-      - email: loumarvincaraig@gmail.com
-        login: github.com/se7entyse7en
-        name: Lou Marvin Caraig
-        picture: https://avatars1.githubusercontent.com/u/5599208?v=4
+      - github.com/vmarkovtsev
+      - github.com/dpordomingo
       items:
-        $ref: '#/components/schemas/Contributor'
+        $ref: '#/components/schemas/DeveloperID'
       type: array
     DeveloperID:
       description: 'User name which uniquely identifies any developer on any service provider.
@@ -298,31 +307,6 @@ components:
         '
       example: github.com/vmarkovtsev
       type: string
-    TeamUpdateRequest:
-      additionalProperties: false
-      description: Team update request.
-      example:
-        name: Engineering
-        members:
-        - github.com/gkwillie
-        - github.com/se7entyse7en
-        parent: null
-      properties:
-        name:
-          description: New name of the team.
-          type: string
-        members:
-          $ref: '#/components/schemas/DeveloperSet'
-        parent:
-          description: New identifier of the higher level team.
-          type:
-          - integer
-          - 'null'
-      required:
-      - members
-      - name
-      - parent
-      type: object
     CreatedIdentifier:
       additionalProperties: false
       example:
@@ -378,6 +362,20 @@ components:
       items:
         $ref: '#/components/schemas/Team'
       type: array
+    Contributors:
+      description: List of contributors.
+      example:
+      - email: bot@athenian.co
+        login: github.com/gkwillie
+        name: Groundskeeper Willie
+        picture: https://avatars0.githubusercontent.com/u/60340680?v=4
+      - email: loumarvincaraig@gmail.com
+        login: github.com/se7entyse7en
+        name: Lou Marvin Caraig
+        picture: https://avatars1.githubusercontent.com/u/5599208?v=4
+      items:
+        $ref: '#/components/schemas/Contributor'
+      type: array
     TeamCreateRequest:
       additionalProperties: false
       description: Team creation request.
@@ -407,6 +405,38 @@ components:
       - members
       - name
       - parent
+      type: object
+    GenericError:
+      example:
+        detail: 'Unsupported metric: pr-xxx-time'
+        status: 400
+        title: Bad request syntax or unsupported method.
+        type: /errors/InvalidRequestError
+      properties:
+        detail:
+          description: Human-readable explanation specific to this occurrence of the problem.
+          example: 'Unsupported metric: pr-xxx-time'
+          type: string
+        instance:
+          description: URI reference that identifies the specific occurrence of the problem. It is `null` for 4xx, Sentry event ID for 5xx.
+          example: 2763c4eabd7240f59829ee1a02546293
+          type: string
+        status:
+          description: Duplicated HTTP status code.
+          example: 400
+          type: integer
+        title:
+          description: Short, human-readable summary of the problem type.
+          example: Bad request syntax or unsupported method.
+          type: string
+        type:
+          description: URI reference that identifies the problem type (RFC 7807).
+          example: /errors/InvalidRequestError
+          type: string
+      required:
+      - status
+      - title
+      - type
       type: object
     Team:
       description: Definition of a team of several developers.
@@ -443,46 +473,6 @@ components:
       - name
       - parent
       type: object
-    DeveloperSet:
-      description: A set of developers. An empty list disables the filter and includes everybody. Duplicates are automatically ignored.
-      example:
-      - github.com/vmarkovtsev
-      - github.com/dpordomingo
-      items:
-        $ref: '#/components/schemas/DeveloperID'
-      type: array
-    GenericError:
-      example:
-        detail: 'Unsupported metric: pr-xxx-time'
-        status: 400
-        title: Bad request syntax or unsupported method.
-        type: /errors/InvalidRequestError
-      properties:
-        detail:
-          description: Human-readable explanation specific to this occurrence of the problem.
-          example: 'Unsupported metric: pr-xxx-time'
-          type: string
-        instance:
-          description: URI reference that identifies the specific occurrence of the problem. It is `null` for 4xx, Sentry event ID for 5xx.
-          example: 2763c4eabd7240f59829ee1a02546293
-          type: string
-        status:
-          description: Duplicated HTTP status code.
-          example: 400
-          type: integer
-        title:
-          description: Short, human-readable summary of the problem type.
-          example: Bad request syntax or unsupported method.
-          type: string
-        type:
-          description: URI reference that identifies the problem type (RFC 7807).
-          example: /errors/InvalidRequestError
-          type: string
-      required:
-      - status
-      - title
-      - type
-      type: object
   responses:
     InvalidRequestErrorResponse:
       content:
@@ -490,6 +480,16 @@ components:
           schema:
             $ref: '#/components/schemas/InvalidRequestError'
       description: The request is invalid.
+  parameters:
+    pathAccountID:
+      description: Numeric identifier of the account.
+      explode: false
+      in: path
+      name: id
+      required: true
+      schema:
+        type: integer
+      style: simple
   securitySchemes:
     apiKeyAuth:
       description: 'Authorization by the value of `X-API-Key` header aka API token.

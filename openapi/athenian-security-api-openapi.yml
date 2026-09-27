@@ -167,10 +167,6 @@ paths:
       x-openapi-router-controller: athenian.api.controllers.security_controller
 components:
   schemas:
-    ListedTokens:
-      items:
-        $ref: '#/components/schemas/ListedToken'
-      type: array
     CreatedToken:
       additionalProperties: false
       description: Value and ID of the generated Personal Access Token.
@@ -188,6 +184,10 @@ components:
       - id
       - token
       type: object
+    ListedTokens:
+      items:
+        $ref: '#/components/schemas/ListedToken'
+      type: array
     ListedToken:
       additionalProperties: false
       description: Details about a token - without the token itself, which is not stored.
@@ -211,15 +211,21 @@ components:
       - last_used
       - name
       type: object
-    PatchTokenRequest:
+    CreateTokenRequest:
       additionalProperties: false
-      description: Request body of `/token/{id}` PATCH. Allows changing the token name.
+      description: Request body of `/token/create` - creating a new Personal Access Token.
       example:
-        name: release-webhook
+        account: 1
+        name: Release webhook
       properties:
+        account:
+          description: Account ID.
+          type: integer
         name:
-          description: New name of the token.
           type: string
+      required:
+      - account
+      - name
       type: object
     GenericError:
       example:
@@ -253,21 +259,15 @@ components:
       - title
       - type
       type: object
-    CreateTokenRequest:
+    PatchTokenRequest:
       additionalProperties: false
-      description: Request body of `/token/create` - creating a new Personal Access Token.
+      description: Request body of `/token/{id}` PATCH. Allows changing the token name.
       example:
-        account: 1
-        name: Release webhook
+        name: release-webhook
       properties:
-        account:
-          description: Account ID.
-          type: integer
         name:
+          description: New name of the token.
           type: string
-      required:
-      - account
-      - name
       type: object
   parameters:
     pathAccountID:
