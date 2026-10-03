@@ -167,22 +167,21 @@ paths:
       x-openapi-router-controller: athenian.api.controllers.security_controller
 components:
   schemas:
-    CreatedToken:
+    CreateTokenRequest:
       additionalProperties: false
-      description: Value and ID of the generated Personal Access Token.
+      description: Request body of `/token/create` - creating a new Personal Access Token.
       example:
-        id: 1007
-        token: 99129c581b6d2950233dac583629ba591319b2c6
+        account: 1
+        name: Release webhook
       properties:
-        id:
-          description: Token identifier - can be used in `/token/{id}` DELETE.
+        account:
+          description: Account ID.
           type: integer
-        token:
-          description: Secret token - not stored server-side!
+        name:
           type: string
       required:
-      - id
-      - token
+      - account
+      - name
       type: object
     ListedTokens:
       items:
@@ -211,21 +210,32 @@ components:
       - last_used
       - name
       type: object
-    CreateTokenRequest:
+    PatchTokenRequest:
       additionalProperties: false
-      description: Request body of `/token/create` - creating a new Personal Access Token.
+      description: Request body of `/token/{id}` PATCH. Allows changing the token name.
       example:
-        account: 1
-        name: Release webhook
+        name: release-webhook
       properties:
-        account:
-          description: Account ID.
-          type: integer
         name:
+          description: New name of the token.
+          type: string
+      type: object
+    CreatedToken:
+      additionalProperties: false
+      description: Value and ID of the generated Personal Access Token.
+      example:
+        id: 1007
+        token: 99129c581b6d2950233dac583629ba591319b2c6
+      properties:
+        id:
+          description: Token identifier - can be used in `/token/{id}` DELETE.
+          type: integer
+        token:
+          description: Secret token - not stored server-side!
           type: string
       required:
-      - account
-      - name
+      - id
+      - token
       type: object
     GenericError:
       example:
@@ -258,16 +268,6 @@ components:
       - status
       - title
       - type
-      type: object
-    PatchTokenRequest:
-      additionalProperties: false
-      description: Request body of `/token/{id}` PATCH. Allows changing the token name.
-      example:
-        name: release-webhook
-      properties:
-        name:
-          description: New name of the token.
-          type: string
       type: object
   parameters:
     pathAccountID:

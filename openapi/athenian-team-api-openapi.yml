@@ -265,6 +265,62 @@ components:
       - name
       - parent
       type: object
+    TeamCreateRequest:
+      additionalProperties: false
+      description: Team creation request.
+      example:
+        account: 1
+        name: Engineering
+        members:
+        - github.com/gkwillie
+        - github.com/se7entyse7en
+        parent: null
+      properties:
+        account:
+          description: Account identifier. That account will own the created team.
+          type: integer
+        name:
+          description: Name of the team.
+          type: string
+        members:
+          $ref: '#/components/schemas/DeveloperSet'
+        parent:
+          description: Identifier of the higher level team.
+          type:
+          - integer
+          - 'null'
+      required:
+      - account
+      - members
+      - name
+      - parent
+      type: object
+    Contributors:
+      description: List of contributors.
+      example:
+      - email: bot@athenian.co
+        login: github.com/gkwillie
+        name: Groundskeeper Willie
+        picture: https://avatars0.githubusercontent.com/u/60340680?v=4
+      - email: loumarvincaraig@gmail.com
+        login: github.com/se7entyse7en
+        name: Lou Marvin Caraig
+        picture: https://avatars1.githubusercontent.com/u/5599208?v=4
+      items:
+        $ref: '#/components/schemas/Contributor'
+      type: array
+    CreatedIdentifier:
+      additionalProperties: false
+      example:
+        id: 777
+      properties:
+        id:
+          description: Identifier of the created entity.
+          example: 777
+          type: integer
+      required:
+      - id
+      type: object
     Contributor:
       additionalProperties: false
       description: Details about a developer who contributed to some repositories owned by the account.
@@ -291,14 +347,6 @@ components:
       required:
       - login
       type: object
-    DeveloperSet:
-      description: A set of developers. An empty list disables the filter and includes everybody. Duplicates are automatically ignored.
-      example:
-      - github.com/vmarkovtsev
-      - github.com/dpordomingo
-      items:
-        $ref: '#/components/schemas/DeveloperID'
-      type: array
     DeveloperID:
       description: 'User name which uniquely identifies any developer on any service provider.
 
@@ -307,27 +355,6 @@ components:
         '
       example: github.com/vmarkovtsev
       type: string
-    CreatedIdentifier:
-      additionalProperties: false
-      example:
-        id: 777
-      properties:
-        id:
-          description: Identifier of the created entity.
-          example: 777
-          type: integer
-      required:
-      - id
-      type: object
-    InvalidRequestError:
-      allOf:
-      - $ref: '#/components/schemas/GenericError'
-      - properties:
-          pointer:
-            description: Path to the offending request item.
-            example: .granularity
-            type: string
-        type: object
     TeamList:
       description: List of teams of an account.
       example:
@@ -362,50 +389,14 @@ components:
       items:
         $ref: '#/components/schemas/Team'
       type: array
-    Contributors:
-      description: List of contributors.
+    DeveloperSet:
+      description: A set of developers. An empty list disables the filter and includes everybody. Duplicates are automatically ignored.
       example:
-      - email: bot@athenian.co
-        login: github.com/gkwillie
-        name: Groundskeeper Willie
-        picture: https://avatars0.githubusercontent.com/u/60340680?v=4
-      - email: loumarvincaraig@gmail.com
-        login: github.com/se7entyse7en
-        name: Lou Marvin Caraig
-        picture: https://avatars1.githubusercontent.com/u/5599208?v=4
+      - github.com/vmarkovtsev
+      - github.com/dpordomingo
       items:
-        $ref: '#/components/schemas/Contributor'
+        $ref: '#/components/schemas/DeveloperID'
       type: array
-    TeamCreateRequest:
-      additionalProperties: false
-      description: Team creation request.
-      example:
-        account: 1
-        name: Engineering
-        members:
-        - github.com/gkwillie
-        - github.com/se7entyse7en
-        parent: null
-      properties:
-        account:
-          description: Account identifier. That account will own the created team.
-          type: integer
-        name:
-          description: Name of the team.
-          type: string
-        members:
-          $ref: '#/components/schemas/DeveloperSet'
-        parent:
-          description: Identifier of the higher level team.
-          type:
-          - integer
-          - 'null'
-      required:
-      - account
-      - members
-      - name
-      - parent
-      type: object
     GenericError:
       example:
         detail: 'Unsupported metric: pr-xxx-time'
@@ -473,6 +464,15 @@ components:
       - name
       - parent
       type: object
+    InvalidRequestError:
+      allOf:
+      - $ref: '#/components/schemas/GenericError'
+      - properties:
+          pointer:
+            description: Path to the offending request item.
+            example: .granularity
+            type: string
+        type: object
   responses:
     InvalidRequestErrorResponse:
       content:

@@ -145,10 +145,72 @@ paths:
       x-openapi-router-controller: athenian.api.controllers.goal_controller
 components:
   schemas:
-    GoalTemplateName:
-      description: Name of the template.
-      example: Untitled Template
-      minLength: 1
+    TimeDuration:
+      description: Time duration value.
+      pattern: ^\d+s$
+      type: string
+    GoalTemplateList:
+      description: List of goal templates.
+      example:
+      - available: false
+        id: 42
+        metric: pr-release-time
+        name: Untitled Template 0
+      - available: true
+        id: 43
+        metric: jira-raised
+        name: Untitled Template 1
+        repositories:
+        - github.com/athenianco/athenian-webapp
+      items:
+        $ref: '#/components/schemas/GoalTemplate'
+      type: array
+    JIRAMetricID:
+      description: 'Currently supported JIRA activity metrics.
+
+        * `jira-open` - number of issues active by the end of the time interval.
+
+        * `jira-resolved` - number of issues closed in the given time range.
+
+        * `jira-raised` - number of issues reported in the given time range.
+
+        * `jira-acknowledged` - number of issues that are "In Progress" or "Resolved". This number matches the issues considered to calculate `jira-acknowledge-time` before applying the quantiles.
+
+        * `jira-acknowledged-q` - number of issues that are "In Progress" or "Resolved". This number matches the issues considered to calculate `jira-acknowledge-time` after applying the quantiles.
+
+        * `jira-life-time` - Mean Life Time - the time between min(issue creation, work began) and max(issue resolution, fixes released).
+
+        * `jira-life-time-below-threshold-ratio` - ratio of issues with a `jira-life-time` below the threshold, disregarding the quantiles. The default threshold is 5 days.
+
+        * `jira-lead-time` - Mean Lead Time - the time between when the work began and max(issue resolution, fixes released).
+
+        * `jira-lead-time-below-threshold-ratio` - ratio of issues with a `jira-lead-time` below the threshold, disregarding the quantiles. The default threshold is 5 days.
+
+        * `jira-acknowledge-time` - Mean Acknowledge Time - the time between when the issue was created and the work began = `min(transitioned to "In Progress", PR created)`. It equals to 0 for retrofitted issues with PRs before their creation times.
+
+        * `jira-acknowledge-time-below-threshold-ratio` - ratio of issues with a `jira-acknowledge-time` below the threshold, disregarding the quantiles. The default threshold is 3 days.
+
+        * `jira-pr-lag-time` - the time between when the issue transitioned to "In Progress" and the first PR was created. It equals to 0 if the difference is negative or no PRs are mapped to the issue.
+
+        * `jira-backlog-time` - the time between when the issue was created and transitioned to "In Progress".
+
+        * `jira-resolution-rate` - ratio between the number of resolved issues to the number of raised issues.'
+      enum:
+      - jira-open
+      - jira-resolved
+      - jira-raised
+      - jira-acknowledged
+      - jira-acknowledged-q
+      - jira-life-time
+      - jira-life-time-below-threshold-ratio
+      - jira-lead-time
+      - jira-lead-time-below-threshold-ratio
+      - jira-acknowledge-time
+      - jira-acknowledge-time-below-threshold-ratio
+      - jira-pr-lag-time
+      - jira-backlog-time
+      - jira-resolution-rate
+      example: jira-resolved
       type: string
     GenericError:
       example:
@@ -182,6 +244,85 @@ components:
       - title
       - type
       type: object
+    ReleaseMetricID:
+      description: 'Currently supported release metric types.
+
+        * `release-count` - number of all releases in the time interval.
+
+        * `release-tag-count` - number of releases by tag in the time interval.
+
+        * `release-branch-count` - number of releases by branch merge in the time interval.
+
+        * `release-prs` - number of PRs released in the time interval.
+
+        * `release-tag-prs` - number of PRs released by tag in the time interval.
+
+        * `release-branch-prs` - number of PRs released by branch merge in the time interval.
+
+        * `release-commits` - number of commits which were released in the time interval.
+
+        * `release-tag-commits` - number of commits which were released by tag in the time interval.
+
+        * `release-branch-commits` - number of commits which were released by branch merge in the time interval.
+
+        * `release-lines` - sum of the changed (added or removed) diff lines of the commits released in the time interval.
+
+        * `release-tag-lines` - sum of the changed (added or removed) diff lines of the commits released by tag in the time interval.
+
+        * `release-branch-lines` - sum of the changed (added or removed) diff lines of the commits released by branch merge in the time interval.
+
+        * `release-avg-prs` - average (by release) number of PRs released in the time interval. Quantiles are applied.
+
+        * `release-tag-avg-prs` - average (by release) number of PRs released by tag in the time interval. Quantiles are applied.
+
+        * `release-branch-avg-prs` - average number of PRs released by branch merge in the time interval. Quantiles are applied.
+
+        * `release-avg-commits` - average (by release) number of commits released in the time interval. Quantiles are applied.
+
+        * `release-tag-avg-commits` - average (by release) number of commits released by tag in the time interval. Quantiles are applied.
+
+        * `release-branch-avg-commits` - average (by release) number of commits released by branch merge in the time interval. Quantiles are applied.
+
+        * `release-avg-lines` - average (by release) number of changed (added + removed) diff lines of the commits released in the time interval. Quantiles are applied.
+
+        * `release-tag-avg-lines` - average (by release) number of changed (added + removed) diff lines of the commits released by tag in the time interval. Quantiles are applied.
+
+        * `release-branch-avg-lines` - average (by release) number of changed (added + removed) diff lines of the commits released by branch merge in the time interval. Quantiles are applied.
+
+        * `release-age` - average timedelta between releases of the same alignment (as determined by the commit DAG). Quantiles are applied.
+
+        * `release-tag-age` - average timedelta between releases by tag of the same alignment (as determined by the commit DAG). Quantiles are applied.
+
+        * `release-branch-age` - average timedelta between releases by branch of the same alignment (as determined by the commit DAG). Quantiles are applied.
+
+        * `release-time-to-deploy` - average time passed since release happened until deployed.'
+      enum:
+      - release-count
+      - release-tag-count
+      - release-branch-count
+      - release-prs
+      - release-tag-prs
+      - release-branch-prs
+      - release-commits
+      - release-tag-commits
+      - release-branch-commits
+      - release-lines
+      - release-tag-lines
+      - release-branch-lines
+      - release-avg-prs
+      - release-tag-avg-prs
+      - release-branch-avg-prs
+      - release-avg-commits
+      - release-tag-avg-commits
+      - release-branch-avg-commits
+      - release-avg-lines
+      - release-tag-avg-lines
+      - release-branch-avg-lines
+      - release-age
+      - release-tag-age
+      - release-branch-age
+      - release-time-to-deploy
+      type: string
     RepositorySet:
       description: Set of repositories. An empty list raises a bad response 400. Duplicates are automatically ignored.
       example:
@@ -190,26 +331,6 @@ components:
       items:
         $ref: '#/components/schemas/RepositoryID'
       type: array
-    RepositoryID:
-      description: 'Repository name which uniquely identifies any repository in any service provider.
-
-        The format matches the repository URL without the protocol part. No ".git" should be appended.
-
-        We support a special syntax for repository sets: "{reposet id}" adds all the repositories
-
-        from the given set.
-
-        '
-      example: github.com/athenianco/athenian-webapp
-      type: string
-    GoalMetricParams:
-      description: The parameters used to compute `metric` for the goal.
-      properties:
-        threshold:
-          oneOf:
-          - type: number
-          - $ref: '#/components/schemas/TimeDuration'
-      type: object
     GoalTemplate:
       additionalProperties: false
       description: A template to generate a goal.
@@ -245,47 +366,13 @@ components:
       - name
       - metric
       type: object
-    GoalTemplateCreateRequest:
-      additionalProperties: false
-      description: Goal template creation request body.
-      example:
-        account: 30
-        metric: pr-review-time
-        name: My New Goal Template
-        repositories:
-        - github.com/athenianco/api-spec
-        - github.com/athenianco/athenian-webapp
+    GoalMetricParams:
+      description: The parameters used to compute `metric` for the goal.
       properties:
-        account:
-          description: Account identifier. That account will own the created goal template.
-          type: integer
-        metric:
+        threshold:
           oneOf:
-          - $ref: '#/components/schemas/PullRequestMetricID'
-          - $ref: '#/components/schemas/JIRAMetricID'
-          - $ref: '#/components/schemas/ReleaseMetricID'
-        metric_params:
-          $ref: '#/components/schemas/GoalMetricParams'
-        name:
-          $ref: '#/components/schemas/GoalTemplateName'
-        repositories:
-          $ref: '#/components/schemas/RepositorySet'
-      required:
-      - account
-      - metric
-      - name
-      type: object
-    CreatedIdentifier:
-      additionalProperties: false
-      example:
-        id: 777
-      properties:
-        id:
-          description: Identifier of the created entity.
-          example: 777
-          type: integer
-      required:
-      - id
+          - type: number
+          - $ref: '#/components/schemas/TimeDuration'
       type: object
     GoalTemplateUpdateRequest:
       additionalProperties: false
@@ -309,9 +396,17 @@ components:
       - name
       - metric
       type: object
-    TimeDuration:
-      description: Time duration value.
-      pattern: ^\d+s$
+    RepositoryID:
+      description: 'Repository name which uniquely identifies any repository in any service provider.
+
+        The format matches the repository URL without the protocol part. No ".git" should be appended.
+
+        We support a special syntax for repository sets: "{reposet id}" adds all the repositories
+
+        from the given set.
+
+        '
+      example: github.com/athenianco/athenian-webapp
       type: string
     PullRequestMetricID:
       description: 'Currently supported PR metric types.
@@ -528,6 +623,53 @@ components:
       - pr-comments-per
       example: pr-lead-time
       type: string
+    CreatedIdentifier:
+      additionalProperties: false
+      example:
+        id: 777
+      properties:
+        id:
+          description: Identifier of the created entity.
+          example: 777
+          type: integer
+      required:
+      - id
+      type: object
+    GoalTemplateName:
+      description: Name of the template.
+      example: Untitled Template
+      minLength: 1
+      type: string
+    GoalTemplateCreateRequest:
+      additionalProperties: false
+      description: Goal template creation request body.
+      example:
+        account: 30
+        metric: pr-review-time
+        name: My New Goal Template
+        repositories:
+        - github.com/athenianco/api-spec
+        - github.com/athenianco/athenian-webapp
+      properties:
+        account:
+          description: Account identifier. That account will own the created goal template.
+          type: integer
+        metric:
+          oneOf:
+          - $ref: '#/components/schemas/PullRequestMetricID'
+          - $ref: '#/components/schemas/JIRAMetricID'
+          - $ref: '#/components/schemas/ReleaseMetricID'
+        metric_params:
+          $ref: '#/components/schemas/GoalMetricParams'
+        name:
+          $ref: '#/components/schemas/GoalTemplateName'
+        repositories:
+          $ref: '#/components/schemas/RepositorySet'
+      required:
+      - account
+      - metric
+      - name
+      type: object
     InvalidRequestError:
       allOf:
       - $ref: '#/components/schemas/GenericError'
@@ -537,148 +679,6 @@ components:
             example: .granularity
             type: string
         type: object
-    GoalTemplateList:
-      description: List of goal templates.
-      example:
-      - available: false
-        id: 42
-        metric: pr-release-time
-        name: Untitled Template 0
-      - available: true
-        id: 43
-        metric: jira-raised
-        name: Untitled Template 1
-        repositories:
-        - github.com/athenianco/athenian-webapp
-      items:
-        $ref: '#/components/schemas/GoalTemplate'
-      type: array
-    ReleaseMetricID:
-      description: 'Currently supported release metric types.
-
-        * `release-count` - number of all releases in the time interval.
-
-        * `release-tag-count` - number of releases by tag in the time interval.
-
-        * `release-branch-count` - number of releases by branch merge in the time interval.
-
-        * `release-prs` - number of PRs released in the time interval.
-
-        * `release-tag-prs` - number of PRs released by tag in the time interval.
-
-        * `release-branch-prs` - number of PRs released by branch merge in the time interval.
-
-        * `release-commits` - number of commits which were released in the time interval.
-
-        * `release-tag-commits` - number of commits which were released by tag in the time interval.
-
-        * `release-branch-commits` - number of commits which were released by branch merge in the time interval.
-
-        * `release-lines` - sum of the changed (added or removed) diff lines of the commits released in the time interval.
-
-        * `release-tag-lines` - sum of the changed (added or removed) diff lines of the commits released by tag in the time interval.
-
-        * `release-branch-lines` - sum of the changed (added or removed) diff lines of the commits released by branch merge in the time interval.
-
-        * `release-avg-prs` - average (by release) number of PRs released in the time interval. Quantiles are applied.
-
-        * `release-tag-avg-prs` - average (by release) number of PRs released by tag in the time interval. Quantiles are applied.
-
-        * `release-branch-avg-prs` - average number of PRs released by branch merge in the time interval. Quantiles are applied.
-
-        * `release-avg-commits` - average (by release) number of commits released in the time interval. Quantiles are applied.
-
-        * `release-tag-avg-commits` - average (by release) number of commits released by tag in the time interval. Quantiles are applied.
-
-        * `release-branch-avg-commits` - average (by release) number of commits released by branch merge in the time interval. Quantiles are applied.
-
-        * `release-avg-lines` - average (by release) number of changed (added + removed) diff lines of the commits released in the time interval. Quantiles are applied.
-
-        * `release-tag-avg-lines` - average (by release) number of changed (added + removed) diff lines of the commits released by tag in the time interval. Quantiles are applied.
-
-        * `release-branch-avg-lines` - average (by release) number of changed (added + removed) diff lines of the commits released by branch merge in the time interval. Quantiles are applied.
-
-        * `release-age` - average timedelta between releases of the same alignment (as determined by the commit DAG). Quantiles are applied.
-
-        * `release-tag-age` - average timedelta between releases by tag of the same alignment (as determined by the commit DAG). Quantiles are applied.
-
-        * `release-branch-age` - average timedelta between releases by branch of the same alignment (as determined by the commit DAG). Quantiles are applied.
-
-        * `release-time-to-deploy` - average time passed since release happened until deployed.'
-      enum:
-      - release-count
-      - release-tag-count
-      - release-branch-count
-      - release-prs
-      - release-tag-prs
-      - release-branch-prs
-      - release-commits
-      - release-tag-commits
-      - release-branch-commits
-      - release-lines
-      - release-tag-lines
-      - release-branch-lines
-      - release-avg-prs
-      - release-tag-avg-prs
-      - release-branch-avg-prs
-      - release-avg-commits
-      - release-tag-avg-commits
-      - release-branch-avg-commits
-      - release-avg-lines
-      - release-tag-avg-lines
-      - release-branch-avg-lines
-      - release-age
-      - release-tag-age
-      - release-branch-age
-      - release-time-to-deploy
-      type: string
-    JIRAMetricID:
-      description: 'Currently supported JIRA activity metrics.
-
-        * `jira-open` - number of issues active by the end of the time interval.
-
-        * `jira-resolved` - number of issues closed in the given time range.
-
-        * `jira-raised` - number of issues reported in the given time range.
-
-        * `jira-acknowledged` - number of issues that are "In Progress" or "Resolved". This number matches the issues considered to calculate `jira-acknowledge-time` before applying the quantiles.
-
-        * `jira-acknowledged-q` - number of issues that are "In Progress" or "Resolved". This number matches the issues considered to calculate `jira-acknowledge-time` after applying the quantiles.
-
-        * `jira-life-time` - Mean Life Time - the time between min(issue creation, work began) and max(issue resolution, fixes released).
-
-        * `jira-life-time-below-threshold-ratio` - ratio of issues with a `jira-life-time` below the threshold, disregarding the quantiles. The default threshold is 5 days.
-
-        * `jira-lead-time` - Mean Lead Time - the time between when the work began and max(issue resolution, fixes released).
-
-        * `jira-lead-time-below-threshold-ratio` - ratio of issues with a `jira-lead-time` below the threshold, disregarding the quantiles. The default threshold is 5 days.
-
-        * `jira-acknowledge-time` - Mean Acknowledge Time - the time between when the issue was created and the work began = `min(transitioned to "In Progress", PR created)`. It equals to 0 for retrofitted issues with PRs before their creation times.
-
-        * `jira-acknowledge-time-below-threshold-ratio` - ratio of issues with a `jira-acknowledge-time` below the threshold, disregarding the quantiles. The default threshold is 3 days.
-
-        * `jira-pr-lag-time` - the time between when the issue transitioned to "In Progress" and the first PR was created. It equals to 0 if the difference is negative or no PRs are mapped to the issue.
-
-        * `jira-backlog-time` - the time between when the issue was created and transitioned to "In Progress".
-
-        * `jira-resolution-rate` - ratio between the number of resolved issues to the number of raised issues.'
-      enum:
-      - jira-open
-      - jira-resolved
-      - jira-raised
-      - jira-acknowledged
-      - jira-acknowledged-q
-      - jira-life-time
-      - jira-life-time-below-threshold-ratio
-      - jira-lead-time
-      - jira-lead-time-below-threshold-ratio
-      - jira-acknowledge-time
-      - jira-acknowledge-time-below-threshold-ratio
-      - jira-pr-lag-time
-      - jira-backlog-time
-      - jira-resolution-rate
-      example: jira-resolved
-      type: string
   responses:
     InvalidRequestErrorResponse:
       content:
@@ -686,6 +686,12 @@ components:
           schema:
             $ref: '#/components/schemas/InvalidRequestError'
       description: The request is invalid.
+    GoalTemplateNotFoundResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GenericError'
+      description: The goal template was not found.
     EmptySuccessfulResponse:
       content:
         application/json:
@@ -694,12 +700,6 @@ components:
             - {}
             type: object
       description: Empty object indicates a successful operation.
-    GoalTemplateNotFoundResponse:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/GenericError'
-      description: The goal template was not found.
   parameters:
     pathAccountID:
       description: Numeric identifier of the account.

@@ -211,6 +211,48 @@ paths:
       x-openapi-router-controller: athenian.api.controllers.reposet_controller
 components:
   schemas:
+    CreatedIdentifier:
+      additionalProperties: false
+      example:
+        id: 777
+      properties:
+        id:
+          description: Identifier of the created entity.
+          example: 777
+          type: integer
+      required:
+      - id
+      type: object
+    RepositorySetCreateRequest:
+      additionalProperties: false
+      description: Repository set creation request.
+      example:
+        account: 1
+        items:
+        - github.com/athenianco/athenian-webapp
+        - github.com/athenianco/athenian-api
+        name: users
+      properties:
+        account:
+          description: Account identifier. That account will own the created repository set. The user must be an admin of the account.
+          type: integer
+        items:
+          items:
+            $ref: '#/components/schemas/RepositoryID'
+          type: array
+        name:
+          description: Unique editable identifier of the repository set.
+          type: string
+      required:
+      - account
+      - items
+      - name
+      type: object
+    RepositorySetList:
+      description: List of repository sets owned by a user.
+      items:
+        $ref: '#/components/schemas/RepositorySetListItem'
+      type: array
     RepositorySetListItem:
       additionalProperties: false
       description: Element of RepositorySetList.
@@ -239,74 +281,6 @@ components:
           description: Number of repositories in the set.
           minimum: 1
           type: integer
-      type: object
-    RepositorySetCreateRequest:
-      additionalProperties: false
-      description: Repository set creation request.
-      example:
-        account: 1
-        items:
-        - github.com/athenianco/athenian-webapp
-        - github.com/athenianco/athenian-api
-        name: users
-      properties:
-        account:
-          description: Account identifier. That account will own the created repository set. The user must be an admin of the account.
-          type: integer
-        items:
-          items:
-            $ref: '#/components/schemas/RepositoryID'
-          type: array
-        name:
-          description: Unique editable identifier of the repository set.
-          type: string
-      required:
-      - account
-      - items
-      - name
-      type: object
-    RepositoryID:
-      description: 'Repository name which uniquely identifies any repository in any service provider.
-
-        The format matches the repository URL without the protocol part. No ".git" should be appended.
-
-        We support a special syntax for repository sets: "{reposet id}" adds all the repositories
-
-        from the given set.
-
-        '
-      example: github.com/athenianco/athenian-webapp
-      type: string
-    RepositorySetWithName:
-      additionalProperties: false
-      description: A set of repositories. An empty list results an empty response in contrary to DeveloperSet. Duplicates are automatically ignored.
-      example:
-        name: all
-        items:
-        - github.com/athenianco/athenian-webapp
-        - github.com/athenianco/athenian-api
-        precomputed: true
-      properties:
-        name:
-          type: string
-        items:
-          items:
-            $ref: '#/components/schemas/RepositoryID'
-          type: array
-        precomputed:
-          type: boolean
-      type: object
-    CreatedIdentifier:
-      additionalProperties: false
-      example:
-        id: 777
-      properties:
-        id:
-          description: Identifier of the created entity.
-          example: 777
-          type: integer
-      required:
-      - id
       type: object
     GenericError:
       example:
@@ -340,11 +314,37 @@ components:
       - title
       - type
       type: object
-    RepositorySetList:
-      description: List of repository sets owned by a user.
-      items:
-        $ref: '#/components/schemas/RepositorySetListItem'
-      type: array
+    RepositorySetWithName:
+      additionalProperties: false
+      description: A set of repositories. An empty list results an empty response in contrary to DeveloperSet. Duplicates are automatically ignored.
+      example:
+        name: all
+        items:
+        - github.com/athenianco/athenian-webapp
+        - github.com/athenianco/athenian-api
+        precomputed: true
+      properties:
+        name:
+          type: string
+        items:
+          items:
+            $ref: '#/components/schemas/RepositoryID'
+          type: array
+        precomputed:
+          type: boolean
+      type: object
+    RepositoryID:
+      description: 'Repository name which uniquely identifies any repository in any service provider.
+
+        The format matches the repository URL without the protocol part. No ".git" should be appended.
+
+        We support a special syntax for repository sets: "{reposet id}" adds all the repositories
+
+        from the given set.
+
+        '
+      example: github.com/athenianco/athenian-webapp
+      type: string
   parameters:
     pathAccountID:
       description: Numeric identifier of the account.

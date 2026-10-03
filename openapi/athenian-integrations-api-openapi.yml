@@ -119,22 +119,8 @@ paths:
       x-openapi-router-controller: athenian.api.controllers.integrations_controller
 components:
   schemas:
-    MatchedIdentities:
-      description: Response from `/match/identities` - mapping from supplied identities to GitHub organization members. The order matches the order of `MatchIdentitiesRequest.identities`.
-      example:
-      - from:
-          emails:
-          - gkwillie@athenian.co
-        to: null
-        confidence: 0.5
-      - from:
-          names:
-          - Vadim Markovtsev
-        to: github.com/vmarkovtsev
-        confidence: 1
-      items:
-        $ref: '#/components/schemas/MatchedIdentity'
-      type: array
+    NoSourceDataError:
+      $ref: '#/components/schemas/GenericError'
     MatchIdentitiesRequest:
       additionalProperties: false
       description: Request body of `/match/identities`.
@@ -158,48 +144,24 @@ components:
       - account
       - identities
       type: object
-    ContributorIdentity:
-      additionalProperties: false
-      description: Information about a contributor that may be utilized to match identities.
+    MatchedIdentities:
+      description: Response from `/match/identities` - mapping from supplied identities to GitHub organization members. The order matches the order of `MatchIdentitiesRequest.identities`.
       example:
-        emails:
-        - vadim@athenian.co
-        names:
-        - Vadim Markovtsev
-        - vmarkovtsev
-        - Vadim
-      properties:
-        emails:
-          description: Email addresses belonging to the person.
-          items:
-            format: email
-            type: string
-          type: array
-        names:
-          description: The person is known as each of these full names. The format is arbitrary.
-          items:
-            type: string
-          type: array
-      type: object
+      - from:
+          emails:
+          - gkwillie@athenian.co
+        to: null
+        confidence: 0.5
+      - from:
+          names:
+          - Vadim Markovtsev
+        to: github.com/vmarkovtsev
+        confidence: 1
+      items:
+        $ref: '#/components/schemas/MatchedIdentity'
+      type: array
     MissingSettingsError:
       $ref: '#/components/schemas/GenericError'
-    DeveloperID:
-      description: 'User name which uniquely identifies any developer on any service provider.
-
-        The format matches the profile URL without the protocol part.
-
-        '
-      example: github.com/vmarkovtsev
-      type: string
-    InvalidRequestError:
-      allOf:
-      - $ref: '#/components/schemas/GenericError'
-      - properties:
-          pointer:
-            description: Path to the offending request item.
-            example: .granularity
-            type: string
-        type: object
     MatchedIdentity:
       description: Identity mapping of a specific contributor.
       example:
@@ -227,6 +189,37 @@ components:
       - confidence
       - from
       - to
+      type: object
+    DeveloperID:
+      description: 'User name which uniquely identifies any developer on any service provider.
+
+        The format matches the profile URL without the protocol part.
+
+        '
+      example: github.com/vmarkovtsev
+      type: string
+    ContributorIdentity:
+      additionalProperties: false
+      description: Information about a contributor that may be utilized to match identities.
+      example:
+        emails:
+        - vadim@athenian.co
+        names:
+        - Vadim Markovtsev
+        - vmarkovtsev
+        - Vadim
+      properties:
+        emails:
+          description: Email addresses belonging to the person.
+          items:
+            format: email
+            type: string
+          type: array
+        names:
+          description: The person is known as each of these full names. The format is arbitrary.
+          items:
+            type: string
+          type: array
       type: object
     GenericError:
       example:
@@ -260,8 +253,15 @@ components:
       - title
       - type
       type: object
-    NoSourceDataError:
-      $ref: '#/components/schemas/GenericError'
+    InvalidRequestError:
+      allOf:
+      - $ref: '#/components/schemas/GenericError'
+      - properties:
+          pointer:
+            description: Path to the offending request item.
+            example: .granularity
+            type: string
+        type: object
   responses:
     InvalidRequestErrorResponse:
       content:

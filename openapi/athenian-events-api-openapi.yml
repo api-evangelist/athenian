@@ -203,27 +203,54 @@ paths:
       x-codegen-request-body-name: body
       x-openapi-router-controller: athenian.api.controllers.events_controller
 components:
+  responses:
+    InvalidRequestErrorResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InvalidRequestError'
+      description: The request is invalid.
+    DeploymentNotFoundResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GenericError'
+      description: A deployment with the given name was not found.
+    DeploymentLabelsResponse:
+      content:
+        application/json:
+          schema:
+            additionalProperties: false
+            properties:
+              labels:
+                $ref: '#/components/schemas/DeploymentLabels'
+            required:
+            - labels
+            type: object
+      description: The labels now associated with the deployment.
   schemas:
-    DeploymentLabels:
-      description: Arbitrary key-value metadata that associates with the deployment.
-      type: object
-    CommitHash:
-      description: Commit hash, either short (7 chars) or long (40 chars) form.
-      maxLength: 40
-      minLength: 7
-      type: string
-    NotifyDeploymentsRequest:
+    NotifiedDeployments:
+      description: The list of notified deployments.
+      example:
+      - name: prod-1984-05-01-ABCDEFGH
+        resolved: true
       items:
-        $ref: '#/components/schemas/DeploymentNotification'
-      type: array
-    NotifyReleasesResponse:
-      description: 'Response from `/events/releases`. The status of each release notification
+        additionalProperties: false
+        properties:
+          name:
+            description: Name of the deployment.
+            type: string
+          resolved:
+            description: 'Value indicating whether we resolved the received Git reference on the spot.
 
-        in the order of `NotifyReleasesRequest`.
+              `false` is probably still OK for new references that we haven''t synchronized yet.
 
-        '
-      items:
-        $ref: '#/components/schemas/ReleaseNotificationStatus'
+              '
+            type: boolean
+        required:
+        - name
+        - resolved
+        type: object
       type: array
     GenericError:
       example:
@@ -257,6 +284,175 @@ components:
       - title
       - type
       type: object
+    NotifyDeploymentsRequest:
+      items:
+        $ref: '#/components/schemas/DeploymentNotification'
+      type: array
+    DeployedComponent:
+      additionalProperties: false
+      description: Definition of the deployed software unit.
+      example:
+        repository: github.com/athenianco/athenian-api
+        reference: v0.10.34
+      properties:
+        repository:
+          $ref: '#/components/schemas/RepositoryID'
+        reference:
+          description: 'We accept three ways to define a Git reference:
+
+            1. Tag name.
+
+            2. Full commit hash (40 characters).
+
+            3. Short commit hash (7 characters).
+
+
+            We ignore the reference while we cannot find it in our database. There can be
+
+            two reasons:
+
+            - There is a mistake or a typo in the provided data.
+
+            - We are temporarily unable to synchronize with GitHub.
+
+            '
+          minLength: 1
+          type: string
+      required:
+      - reference
+      - repository
+      type: object
+    DeleteEventsCacheRequest:
+      additionalProperties: false
+      description: Definition of the cache reset operation.
+      example:
+        account: 1
+        repositories:
+        - github.com/athenianco/athenian-api
+        targets:
+        - release
+      properties:
+        account:
+          description: Account ID.
+          type: integer
+        repositories:
+          $ref: '#/components/schemas/RepositorySet'
+        targets:
+          description: Parts of the precomputed cache to reset.
+          items:
+            enum:
+            - release
+            - deployment
+            type: string
+          type: array
+      required:
+      - account
+      - repositories
+      - targets
+      type: object
+    RepositorySet:
+      description: Set of repositories. An empty list raises a bad response 400. Duplicates are automatically ignored.
+      example:
+      - github.com/athenianco/athenian-webapp
+      - github.com/athenianco/athenian-api
+      items:
+        $ref: '#/components/schemas/RepositoryID'
+      type: array
+    NotifyReleasesResponse:
+      description: 'Response from `/events/releases`. The status of each release notification
+
+        in the order of `NotifyReleasesRequest`.
+
+        '
+      items:
+        $ref: '#/components/schemas/ReleaseNotificationStatus'
+      type: array
+    RepositoryID:
+      description: 'Repository name which uniquely identifies any repository in any service provider.
+
+        The format matches the repository URL without the protocol part. No ".git" should be appended.
+
+        We support a special syntax for repository sets: "{reposet id}" adds all the repositories
+
+        from the given set.
+
+        '
+      example: github.com/athenianco/athenian-webapp
+      type: string
+    NotifyReleasesRequest:
+      description: 'Request body of `/events/releases`: list of release notifications.
+
+        '
+      items:
+        $ref: '#/components/schemas/ReleaseNotification'
+      type: array
+    DeploymentLabels:
+      description: Arbitrary key-value metadata that associates with the deployment.
+      type: object
+    DeploymentModifyLabelsRequest:
+      additionalProperties: false
+      description: 'Request to modify the labels associated with the deployment.
+
+        Each property in this object represents a command to execute.
+
+        '
+      example: {}
+      properties:
+        delete:
+          description: Delete the labels with the given keys.  Unexisting labels are ignored.
+          items:
+            type: string
+          type: array
+        upsert:
+          allOf:
+          - description: Set the given labels, overwriting values for already associated labels.
+          - $ref: '#/components/schemas/DeploymentLabels'
+      type: object
+    CommitHash:
+      description: Commit hash, either short (7 chars) or long (40 chars) form.
+      maxLength: 40
+      minLength: 7
+      type: string
+    ReleaseNotification:
+      additionalProperties: false
+      description: Push message about a custom release event.
+      example:
+        author: Vadim Markovtsev
+        commit: c3f4d3a
+        name: 0.8.66
+        repository: github.com/athenianco/athenian-api
+        published_at: 2021-02-23 15:16:07+00:00
+        url: https://github.com/athenianco/athenian-api/releases/tag/v0.8.66
+      properties:
+        repository:
+          $ref: '#/components/schemas/RepositoryID'
+        commit:
+          $ref: '#/components/schemas/CommitHash'
+        name:
+          description: 'Release name.
+
+            The value may not contain \n - new line character, and '' - single quote.
+
+            '
+          pattern: ^([^'\s]| ){1,100}$
+          type:
+          - string
+          - 'null'
+        author:
+          description: Release author.
+          type: string
+        url:
+          description: Release URL.
+          format: url
+          type: string
+        published_at:
+          description: When the release was created. If missing, set to `now()`.
+          format: date-time
+          type: string
+      required:
+      - commit
+      - repository
+      type: object
     ReleaseNotificationStatus:
       description: 'What happened to the notification:
 
@@ -272,6 +468,17 @@ components:
       - accepted-pending
       - ignored-duplicate
       type: string
+    DeploymentConclusion:
+      description: State of the completed deployment. Case-insensitive.
+      enum:
+      - SUCCESS
+      - FAILURE
+      - CANCELLED
+      type: string
+    NoSourceDataError:
+      $ref: '#/components/schemas/GenericError'
+    MissingSettingsError:
+      $ref: '#/components/schemas/GenericError'
     DeploymentNotification:
       description: 'Push message about a deployment. We remove unresolved components after 24h.
 
@@ -330,179 +537,6 @@ components:
       - date_started
       - environment
       type: object
-    RepositorySet:
-      description: Set of repositories. An empty list raises a bad response 400. Duplicates are automatically ignored.
-      example:
-      - github.com/athenianco/athenian-webapp
-      - github.com/athenianco/athenian-api
-      items:
-        $ref: '#/components/schemas/RepositoryID'
-      type: array
-    RepositoryID:
-      description: 'Repository name which uniquely identifies any repository in any service provider.
-
-        The format matches the repository URL without the protocol part. No ".git" should be appended.
-
-        We support a special syntax for repository sets: "{reposet id}" adds all the repositories
-
-        from the given set.
-
-        '
-      example: github.com/athenianco/athenian-webapp
-      type: string
-    DeployedComponent:
-      additionalProperties: false
-      description: Definition of the deployed software unit.
-      example:
-        repository: github.com/athenianco/athenian-api
-        reference: v0.10.34
-      properties:
-        repository:
-          $ref: '#/components/schemas/RepositoryID'
-        reference:
-          description: 'We accept three ways to define a Git reference:
-
-            1. Tag name.
-
-            2. Full commit hash (40 characters).
-
-            3. Short commit hash (7 characters).
-
-
-            We ignore the reference while we cannot find it in our database. There can be
-
-            two reasons:
-
-            - There is a mistake or a typo in the provided data.
-
-            - We are temporarily unable to synchronize with GitHub.
-
-            '
-          minLength: 1
-          type: string
-      required:
-      - reference
-      - repository
-      type: object
-    ReleaseNotification:
-      additionalProperties: false
-      description: Push message about a custom release event.
-      example:
-        author: Vadim Markovtsev
-        commit: c3f4d3a
-        name: 0.8.66
-        repository: github.com/athenianco/athenian-api
-        published_at: 2021-02-23 15:16:07+00:00
-        url: https://github.com/athenianco/athenian-api/releases/tag/v0.8.66
-      properties:
-        repository:
-          $ref: '#/components/schemas/RepositoryID'
-        commit:
-          $ref: '#/components/schemas/CommitHash'
-        name:
-          description: 'Release name.
-
-            The value may not contain \n - new line character, and '' - single quote.
-
-            '
-          pattern: ^([^'\s]| ){1,100}$
-          type:
-          - string
-          - 'null'
-        author:
-          description: Release author.
-          type: string
-        url:
-          description: Release URL.
-          format: url
-          type: string
-        published_at:
-          description: When the release was created. If missing, set to `now()`.
-          format: date-time
-          type: string
-      required:
-      - commit
-      - repository
-      type: object
-    DeleteEventsCacheRequest:
-      additionalProperties: false
-      description: Definition of the cache reset operation.
-      example:
-        account: 1
-        repositories:
-        - github.com/athenianco/athenian-api
-        targets:
-        - release
-      properties:
-        account:
-          description: Account ID.
-          type: integer
-        repositories:
-          $ref: '#/components/schemas/RepositorySet'
-        targets:
-          description: Parts of the precomputed cache to reset.
-          items:
-            enum:
-            - release
-            - deployment
-            type: string
-          type: array
-      required:
-      - account
-      - repositories
-      - targets
-      type: object
-    DeploymentConclusion:
-      description: State of the completed deployment. Case-insensitive.
-      enum:
-      - SUCCESS
-      - FAILURE
-      - CANCELLED
-      type: string
-    MissingSettingsError:
-      $ref: '#/components/schemas/GenericError'
-    DeploymentModifyLabelsRequest:
-      additionalProperties: false
-      description: 'Request to modify the labels associated with the deployment.
-
-        Each property in this object represents a command to execute.
-
-        '
-      example: {}
-      properties:
-        delete:
-          description: Delete the labels with the given keys.  Unexisting labels are ignored.
-          items:
-            type: string
-          type: array
-        upsert:
-          allOf:
-          - description: Set the given labels, overwriting values for already associated labels.
-          - $ref: '#/components/schemas/DeploymentLabels'
-      type: object
-    NotifiedDeployments:
-      description: The list of notified deployments.
-      example:
-      - name: prod-1984-05-01-ABCDEFGH
-        resolved: true
-      items:
-        additionalProperties: false
-        properties:
-          name:
-            description: Name of the deployment.
-            type: string
-          resolved:
-            description: 'Value indicating whether we resolved the received Git reference on the spot.
-
-              `false` is probably still OK for new references that we haven''t synchronized yet.
-
-              '
-            type: boolean
-        required:
-        - name
-        - resolved
-        type: object
-      type: array
     InvalidRequestError:
       allOf:
       - $ref: '#/components/schemas/GenericError'
@@ -512,40 +546,6 @@ components:
             example: .granularity
             type: string
         type: object
-    NotifyReleasesRequest:
-      description: 'Request body of `/events/releases`: list of release notifications.
-
-        '
-      items:
-        $ref: '#/components/schemas/ReleaseNotification'
-      type: array
-    NoSourceDataError:
-      $ref: '#/components/schemas/GenericError'
-  responses:
-    InvalidRequestErrorResponse:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/InvalidRequestError'
-      description: The request is invalid.
-    DeploymentLabelsResponse:
-      content:
-        application/json:
-          schema:
-            additionalProperties: false
-            properties:
-              labels:
-                $ref: '#/components/schemas/DeploymentLabels'
-            required:
-            - labels
-            type: object
-      description: The labels now associated with the deployment.
-    DeploymentNotFoundResponse:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/GenericError'
-      description: A deployment with the given name was not found.
   securitySchemes:
     apiKeyAuth:
       description: 'Authorization by the value of `X-API-Key` header aka API token.

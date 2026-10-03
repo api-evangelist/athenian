@@ -515,75 +515,115 @@ paths:
       x-openapi-router-controller: athenian.api.controllers.settings_controller
 components:
   schemas:
-    LogicalRepository:
+    ReleaseMatchSetting:
       additionalProperties: false
-      description: 'Set of rules to match PRs, releases, and deployments that has a name and
-
-        pretends to be a regular GitHub repository everywhere in UI and API requests.
-
-        Release settings are also visible in `/settings/release_match`.
-
-        '
+      description: Release matching setting for a specific repository.
       example:
-        prs:
-          title: .*[Cc]omponent [Aa]lpha
-          labels_include:
-          - alpha
-          - webapp
-        parent: github.com/athenianco/athenian-monorepo
-        deployments: {}
-        name: Webapp
-        releases:
-          branches: '{{ "{{default}}" }}'
-          tags: webapp-.*
-          match: tag
+        branches: '{{ "{{default}}" }}'
+        default_branch: master
+        tags: .*
+        match: tag_or_branch
       properties:
-        name:
-          description: 'The logical part of the repository name.
+        branches:
+          description: 'Regular expression to match branch names.
 
-            Compared to GitHub repository name requirements, we additionally allow /
+            The match starts from the beginning of the string.
 
-            to express the hierarchy further.
+            Special value `{{ "{{default}}" }}` matches to the default branch name - usually, `main` or `master`.
+
+            Reference: https://www.postgresql.org/docs/current/functions-matching.html#FUNCTIONS-SIMILARTO-REGEXP
 
             '
-          maxLength: 100
-          pattern: ^([a-zA-Z0-9-_]+/?)*[a-zA-Z0-9-_]+$
+          example: .*-production
           type: string
-        parent:
-          $ref: '#/components/schemas/RepositoryID'
-        prs:
-          $ref: '#/components/schemas/LogicalPRRules'
-        releases:
-          $ref: '#/components/schemas/ReleaseMatchSetting'
-        deployments:
-          $ref: '#/components/schemas/LogicalDeploymentRules'
+        tags:
+          description: 'Regular expression to match tag names.
+
+            The match starts from the beginning of the string.
+
+            Reference: https://www.postgresql.org/docs/current/functions-matching.html#FUNCTIONS-SIMILARTO-REGEXP
+
+            '
+          example: .*
+          type: string
+        events:
+          description: 'Regular expression to match event releases (submitted by the user via `/events/releases`).
+
+            The match starts from the beginning of the string.
+
+            Reference: https://www.postgresql.org/docs/current/functions-matching.html#FUNCTIONS-SIMILARTO-REGEXP
+
+            '
+          type: string
+        match:
+          $ref: '#/components/schemas/ReleaseMatchStrategy'
+        default_branch:
+          description: 'Name of the default branch of this repository.
+
+            Returned in responses and ignored in requests.
+
+            '
+          type: string
       required:
-      - name
-      - parent
-      - prs
-      - releases
+      - branches
+      - match
+      - tags
       type: object
-    JIRAProjectsRequest:
-      additionalProperties: false
-      description: Enable or disable a JIRA project.
+    JIRAProjects:
+      description: List of JIRA project activity settings.
+      items:
+        $ref: '#/components/schemas/JIRAProject'
+      type: array
+    DeveloperID:
+      description: 'User name which uniquely identifies any developer on any service provider.
+
+        The format matches the profile URL without the protocol part.
+
+        '
+      example: github.com/vmarkovtsev
+      type: string
+    ReleaseMatchStrategy:
+      description: 'Release workflow choice: how we should detect releases.
+
+        * `branch`: merges to certain branches are considered releases and nothing else.
+
+        * `event`: releases are manually registered with `POST /events/releases`.
+
+        * `tag`: tags with certain name patterns are considered releases and nothing else.
+
+        * `tag_or_branch`: follow "tag"; if the repository does not have tags, fallback to "branch".'
+      enum:
+      - branch
+      - event
+      - tag
+      - tag_or_branch
+      type: string
+    WorkTypeRule:
+      description: 'Specific rule details: name and parameters.'
       example:
-        account: 1
-        projects:
-          ENG: false
-          DEV: true
+        name: pull_request/label_include
+        body:
+          crazy_args:
+          - javascript
+          - really
+          sucks: true
       properties:
-        account:
-          description: Account ID.
-          type: integer
-        projects:
-          additionalProperties:
-            type: boolean
-          description: Map from project keys to their enabled/disabled flags.
+        name:
+          description: Rule name - must be unique within the parent work type.
+          minLength: 1
+          type: string
+        body:
+          description: Freeform parameters of the rule.
           type: object
       required:
-      - account
-      - projects
+      - body
+      - name
       type: object
+    LogicalRepositories:
+      description: List of configured logical repositories.
+      items:
+        $ref: '#/components/schemas/LogicalRepository'
+      type: array
     GenericError:
       example:
         detail: 'Unsupported metric: pr-xxx-time'
@@ -616,34 +656,27 @@ components:
       - title
       - type
       type: object
-    LogicalRepositoryGetRequest:
+    JIRAProjectsRequest:
       additionalProperties: false
-      description: Pointer to a logical repository.
+      description: Enable or disable a JIRA project.
       example:
         account: 1
-        name: github.com/athenianco/athenian-api/alpha
+        projects:
+          ENG: false
+          DEV: true
       properties:
         account:
           description: Account ID.
           type: integer
-        name:
-          $ref: '#/components/schemas/RepositoryID'
+        projects:
+          additionalProperties:
+            type: boolean
+          description: Map from project keys to their enabled/disabled flags.
+          type: object
       required:
       - account
-      - name
+      - projects
       type: object
-    WorkTypeName:
-      description: Work type name. It is unique within the account scope.
-      minLength: 1
-      type: string
-    RepositorySet:
-      description: Set of repositories. An empty list raises a bad response 400. Duplicates are automatically ignored.
-      example:
-      - github.com/athenianco/athenian-webapp
-      - github.com/athenianco/athenian-api
-      items:
-        $ref: '#/components/schemas/RepositoryID'
-      type: array
     MappedJIRAIdentity:
       additionalProperties: false
       description: GitHub user (developer) mapped to a JIRA user.
@@ -679,114 +712,18 @@ components:
       - developer_name
       - jira_name
       type: object
-    WorkTypeRule:
-      description: 'Specific rule details: name and parameters.'
+    RepositorySet:
+      description: Set of repositories. An empty list raises a bad response 400. Duplicates are automatically ignored.
       example:
-        name: pull_request/label_include
-        body:
-          crazy_args:
-          - javascript
-          - really
-          sucks: true
-      properties:
-        name:
-          description: Rule name - must be unique within the parent work type.
-          minLength: 1
-          type: string
-        body:
-          description: Freeform parameters of the rule.
-          type: object
-      required:
-      - body
-      - name
-      type: object
-    RepositoryID:
-      description: 'Repository name which uniquely identifies any repository in any service provider.
-
-        The format matches the repository URL without the protocol part. No ".git" should be appended.
-
-        We support a special syntax for repository sets: "{reposet id}" adds all the repositories
-
-        from the given set.
-
-        '
-      example: github.com/athenianco/athenian-webapp
-      type: string
+      - github.com/athenianco/athenian-webapp
+      - github.com/athenianco/athenian-api
+      items:
+        $ref: '#/components/schemas/RepositoryID'
+      type: array
     Color:
       description: RGB 24-bit color in hex.
       pattern: ^[0-9a-fA-F]{6}$
       type: string
-    MappedJIRAIdentities:
-      description: 'List of currently mapped GitHub<>JIRA users.
-
-        Additionally, we include unmapped JIRA users to provide a complete list of them.'
-      items:
-        $ref: '#/components/schemas/MappedJIRAIdentity'
-      type: array
-    WorkTypeGetRequest:
-      description: Identifier of a work type - a set of rules to group PRs, releases, etc. together.
-      example:
-        account: 1
-        name: Bug Fixing
-      properties:
-        account:
-          description: User's account ID.
-          type: integer
-        name:
-          $ref: '#/components/schemas/WorkTypeName'
-      required:
-      - account
-      - name
-      type: object
-    LogicalPRRules:
-      additionalProperties: false
-      description: Rules to match PRs to logical repository.
-      example:
-        title: .*[Cc]omponent [Aa]lpha
-        labels_include:
-        - alpha
-        - webapp
-      properties:
-        title:
-          description: 'Regular expression to match the PR title. It must be a match starting from
-
-            the start of the string.
-
-            '
-          example: .*[Cc]omponent [Aa]lpha
-          type: string
-        labels_include:
-          description: Any matching label puts the PR into the logical repository.
-          items:
-            type: string
-          type: array
-      type: object
-    WorkType:
-      description: Definition of a work type - a set of rules to group PRs, releases, etc. together.
-      example:
-        name: Bug Fixing
-        color: FF0000
-        rules:
-        - name: pull_request/label_include
-          body:
-            crazy_args:
-            - javascript
-            - really
-            sucks: true
-      properties:
-        name:
-          $ref: '#/components/schemas/WorkTypeName'
-        color:
-          $ref: '#/components/schemas/Color'
-        rules:
-          items:
-            $ref: '#/components/schemas/WorkTypeRule'
-          type: array
-      required:
-      - color
-      - name
-      - rules
-      type: object
     ReleaseMatchRequest:
       additionalProperties: false
       description: Release matching rule update.
@@ -842,59 +779,92 @@ components:
       - match
       - repositories
       type: object
-    ReleaseMatchSetting:
-      additionalProperties: false
-      description: Release matching setting for a specific repository.
+    RepositoryID:
+      description: 'Repository name which uniquely identifies any repository in any service provider.
+
+        The format matches the repository URL without the protocol part. No ".git" should be appended.
+
+        We support a special syntax for repository sets: "{reposet id}" adds all the repositories
+
+        from the given set.
+
+        '
+      example: github.com/athenianco/athenian-webapp
+      type: string
+    MappedJIRAIdentities:
+      description: 'List of currently mapped GitHub<>JIRA users.
+
+        Additionally, we include unmapped JIRA users to provide a complete list of them.'
+      items:
+        $ref: '#/components/schemas/MappedJIRAIdentity'
+      type: array
+    WorkTypePutRequest:
+      description: Request body of `PUT /settings/work_type`.
       example:
-        branches: '{{ "{{default}}" }}'
-        default_branch: master
-        tags: .*
-        match: tag_or_branch
+        work_type:
+          name: Bug Fixing
+          color: FF0000
+          rules:
+          - name: pull_request/label_include
+            body:
+              crazy_args:
+              - javascript
+              - really
+              sucks: true
+        account: 1
       properties:
-        branches:
-          description: 'Regular expression to match branch names.
-
-            The match starts from the beginning of the string.
-
-            Special value `{{ "{{default}}" }}` matches to the default branch name - usually, `main` or `master`.
-
-            Reference: https://www.postgresql.org/docs/current/functions-matching.html#FUNCTIONS-SIMILARTO-REGEXP
-
-            '
-          example: .*-production
-          type: string
-        tags:
-          description: 'Regular expression to match tag names.
-
-            The match starts from the beginning of the string.
-
-            Reference: https://www.postgresql.org/docs/current/functions-matching.html#FUNCTIONS-SIMILARTO-REGEXP
-
-            '
-          example: .*
-          type: string
-        events:
-          description: 'Regular expression to match event releases (submitted by the user via `/events/releases`).
-
-            The match starts from the beginning of the string.
-
-            Reference: https://www.postgresql.org/docs/current/functions-matching.html#FUNCTIONS-SIMILARTO-REGEXP
-
-            '
-          type: string
-        match:
-          $ref: '#/components/schemas/ReleaseMatchStrategy'
-        default_branch:
-          description: 'Name of the default branch of this repository.
-
-            Returned in responses and ignored in requests.
-
-            '
-          type: string
+        account:
+          description: Account ID.
+          type: integer
+        work_type:
+          $ref: '#/components/schemas/WorkType'
       required:
-      - branches
-      - match
-      - tags
+      - account
+      - work_type
+      type: object
+    WorkType:
+      description: Definition of a work type - a set of rules to group PRs, releases, etc. together.
+      example:
+        name: Bug Fixing
+        color: FF0000
+        rules:
+        - name: pull_request/label_include
+          body:
+            crazy_args:
+            - javascript
+            - really
+            sucks: true
+      properties:
+        name:
+          $ref: '#/components/schemas/WorkTypeName'
+        color:
+          $ref: '#/components/schemas/Color'
+        rules:
+          items:
+            $ref: '#/components/schemas/WorkTypeRule'
+          type: array
+      required:
+      - color
+      - name
+      - rules
+      type: object
+    MappedJIRAIdentityChange:
+      additionalProperties: false
+      description: Individual GitHub<>JIRA user mapping change.
+      example:
+        developer_id: github.com/vmarkovtsev
+        jira_name: Vadim Markovtsev
+      properties:
+        developer_id:
+          $ref: '#/components/schemas/DeveloperID'
+        jira_name:
+          description: Full name of the mapped JIRA user. `null` means the removal.
+          type:
+          - string
+          - 'null'
+      required:
+      - developer_id
+      - jira_name
       type: object
     LogicalRepositoryRequest:
       additionalProperties: false
@@ -949,60 +919,144 @@ components:
       - prs
       - releases
       type: object
-    DeveloperID:
-      description: 'User name which uniquely identifies any developer on any service provider.
-
-        The format matches the profile URL without the protocol part.
-
-        '
-      example: github.com/vmarkovtsev
-      type: string
-    LogicalDeploymentRules:
+    LogicalPRRules:
       additionalProperties: false
-      description: Rules to match deployments to logical repository.
+      description: Rules to match PRs to logical repository.
       example:
-        title: .*[Aa]lpha
+        title: .*[Cc]omponent [Aa]lpha
         labels_include:
-          repositories:
-          - alpha
+        - alpha
+        - webapp
       properties:
         title:
-          description: 'Regular expression to match the deployment name. It must be a match starting from
+          description: 'Regular expression to match the PR title. It must be a match starting from
 
             the start of the string.
 
             '
-          example: .*[Aa]lpha
+          example: .*[Cc]omponent [Aa]lpha
           type: string
         labels_include:
-          additionalProperties:
-            items:
-              type: string
-            minItems: 1
-            type: array
-          description: 'Match deployments labeled by any key and having at least one value in the list.
+          description: Any matching label puts the PR into the logical repository.
+          items:
+            type: string
+          type: array
+      type: object
+    WorkTypeGetRequest:
+      description: Identifier of a work type - a set of rules to group PRs, releases, etc. together.
+      example:
+        account: 1
+        name: Bug Fixing
+      properties:
+        account:
+          description: User's account ID.
+          type: integer
+        name:
+          $ref: '#/components/schemas/WorkTypeName'
+      required:
+      - account
+      - name
+      type: object
+    LogicalRepository:
+      additionalProperties: false
+      description: 'Set of rules to match PRs, releases, and deployments that has a name and
+
+        pretends to be a regular GitHub repository everywhere in UI and API requests.
+
+        Release settings are also visible in `/settings/release_match`.
+
+        '
+      example:
+        prs:
+          title: .*[Cc]omponent [Aa]lpha
+          labels_include:
+          - alpha
+          - webapp
+        parent: github.com/athenianco/athenian-monorepo
+        deployments: {}
+        name: Webapp
+        releases:
+          branches: '{{ "{{default}}" }}'
+          tags: webapp-.*
+          match: tag
+      properties:
+        name:
+          description: 'The logical part of the repository name.
+
+            Compared to GitHub repository name requirements, we additionally allow /
+
+            to express the hierarchy further.
 
             '
-          type: object
-      type: object
-    MappedJIRAIdentityChange:
-      additionalProperties: false
-      description: Individual GitHub<>JIRA user mapping change.
-      example:
-        developer_id: github.com/vmarkovtsev
-        jira_name: Vadim Markovtsev
-      properties:
-        developer_id:
-          $ref: '#/components/schemas/DeveloperID'
-        jira_name:
-          description: Full name of the mapped JIRA user. `null` means the removal.
-          type:
-          - string
-          - 'null'
+          maxLength: 100
+          pattern: ^([a-zA-Z0-9-_]+/?)*[a-zA-Z0-9-_]+$
+          type: string
+        parent:
+          $ref: '#/components/schemas/RepositoryID'
+        prs:
+          $ref: '#/components/schemas/LogicalPRRules'
+        releases:
+          $ref: '#/components/schemas/ReleaseMatchSetting'
+        deployments:
+          $ref: '#/components/schemas/LogicalDeploymentRules'
       required:
-      - developer_id
-      - jira_name
+      - name
+      - parent
+      - prs
+      - releases
       type: object
+    LogicalRepositoryGetRequest:
+      additionalProperties: false
+      description: Pointer to a logical repository.
+      example:
+        account: 1
+        name: github.com/athenianco/athenian-api/alpha
+      properties:
+        account:
+          description: Account ID.
+          type: integer
+        name:
+          $ref: '#/components/schemas/RepositoryID'
+      required:
+      - account
+      - name
+      type: object
+    NoSourceDataError:
+      $ref: '#/components/schemas/GenericError'
+    SetMappedJIRAIdentitiesRequest:
+      additionalProperties: false
+      description: Request body of `/settings/jira/identities`. Describes a patch to the GitHub<>JIRA identity mapping.
+      example:
+        account: 123
+        changes:
+        - developer_id: github.com/vmarkovtsev
+          jira_name: Vadim Markovtsev
+        - developer_id: github.com/warenlg
+          jira_name: null
+      properties:
+        account:
+          description: Account ID.
+          type: integer
+        changes:
+          description: Individual GitHub<>JIRA user mapping change.
+          items:
+            $ref: '#/components/schemas/MappedJIRAIdentityChange'
+          type: array
+      required:
+      - account
+      - changes
+      type: object
+    WorkTypeName:
+      description: Work type name. It is unique within the account scope.
+      minLength: 1
+      type: string
+    WorkTypes:
+      description: 'List of work types. Response from `/settings/work_types/{account}`.
+
+        '
+      items:
+        $ref: '#/components/schemas/WorkType'
+      type: array
     ReleaseMatchSettings:
       additionalProperties:
         $ref: '#/components/schemas/ReleaseMatchSetting'
@@ -1062,52 +1116,6 @@ components:
       - last_update
       - name
       type: object
-    WorkTypes:
-      description: 'List of work types. Response from `/settings/work_types/{account}`.
-
-        '
-      items:
-        $ref: '#/components/schemas/WorkType'
-      type: array
-    ReleaseMatchStrategy:
-      description: 'Release workflow choice: how we should detect releases.
-
-        * `branch`: merges to certain branches are considered releases and nothing else.
-
-        * `event`: releases are manually registered with `POST /events/releases`.
-
-        * `tag`: tags with certain name patterns are considered releases and nothing else.
-
-        * `tag_or_branch`: follow "tag"; if the repository does not have tags, fallback to "branch".'
-      enum:
-      - branch
-      - event
-      - tag
-      - tag_or_branch
-      type: string
-    SetMappedJIRAIdentitiesRequest:
-      additionalProperties: false
-      description: Request body of `/settings/jira/identities`. Describes a patch to the GitHub<>JIRA identity mapping.
-      example:
-        account: 123
-        changes:
-        - developer_id: github.com/vmarkovtsev
-          jira_name: Vadim Markovtsev
-        - developer_id: github.com/warenlg
-          jira_name: null
-      properties:
-        account:
-          description: Account ID.
-          type: integer
-        changes:
-          description: Individual GitHub<>JIRA user mapping change.
-          items:
-            $ref: '#/components/schemas/MappedJIRAIdentityChange'
-          type: array
-      required:
-      - account
-      - changes
-      type: object
     InvalidRequestError:
       allOf:
       - $ref: '#/components/schemas/GenericError'
@@ -1117,42 +1125,34 @@ components:
             example: .granularity
             type: string
         type: object
-    WorkTypePutRequest:
-      description: Request body of `PUT /settings/work_type`.
+    LogicalDeploymentRules:
+      additionalProperties: false
+      description: Rules to match deployments to logical repository.
       example:
-        work_type:
-          name: Bug Fixing
-          color: FF0000
-          rules:
-          - name: pull_request/label_include
-            body:
-              crazy_args:
-              - javascript
-              - really
-              sucks: true
-        account: 1
+        title: .*[Aa]lpha
+        labels_include:
+          repositories:
+          - alpha
       properties:
-        account:
-          description: Account ID.
-          type: integer
-        work_type:
-          $ref: '#/components/schemas/WorkType'
-      required:
-      - account
-      - work_type
+        title:
+          description: 'Regular expression to match the deployment name. It must be a match starting from
+
+            the start of the string.
+
+            '
+          example: .*[Aa]lpha
+          type: string
+        labels_include:
+          additionalProperties:
+            items:
+              type: string
+            minItems: 1
+            type: array
+          description: 'Match deployments labeled by any key and having at least one value in the list.
+
+            '
+          type: object
       type: object
-    LogicalRepositories:
-      description: List of configured logical repositories.
-      items:
-        $ref: '#/components/schemas/LogicalRepository'
-      type: array
-    JIRAProjects:
-      description: List of JIRA project activity settings.
-      items:
-        $ref: '#/components/schemas/JIRAProject'
-      type: array
-    NoSourceDataError:
-      $ref: '#/components/schemas/GenericError'
   parameters:
     pathAccountID:
       description: Numeric identifier of the account.
