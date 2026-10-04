@@ -167,49 +167,6 @@ paths:
       x-openapi-router-controller: athenian.api.controllers.security_controller
 components:
   schemas:
-    CreateTokenRequest:
-      additionalProperties: false
-      description: Request body of `/token/create` - creating a new Personal Access Token.
-      example:
-        account: 1
-        name: Release webhook
-      properties:
-        account:
-          description: Account ID.
-          type: integer
-        name:
-          type: string
-      required:
-      - account
-      - name
-      type: object
-    ListedTokens:
-      items:
-        $ref: '#/components/schemas/ListedToken'
-      type: array
-    ListedToken:
-      additionalProperties: false
-      description: Details about a token - without the token itself, which is not stored.
-      example:
-        last_used: 2020-06-23 04:56:07+00:00
-        name: webhook
-        id: 1008
-      properties:
-        id:
-          description: Token identifier - can be used in `/token/{id}` DELETE.
-          type: integer
-        name:
-          description: Name of the token (see `/token/create`).
-          type: string
-        last_used:
-          description: When this token was used last time.
-          format: date-time
-          type: string
-      required:
-      - id
-      - last_used
-      - name
-      type: object
     PatchTokenRequest:
       additionalProperties: false
       description: Request body of `/token/{id}` PATCH. Allows changing the token name.
@@ -269,6 +226,49 @@ components:
       - title
       - type
       type: object
+    CreateTokenRequest:
+      additionalProperties: false
+      description: Request body of `/token/create` - creating a new Personal Access Token.
+      example:
+        account: 1
+        name: Release webhook
+      properties:
+        account:
+          description: Account ID.
+          type: integer
+        name:
+          type: string
+      required:
+      - account
+      - name
+      type: object
+    ListedToken:
+      additionalProperties: false
+      description: Details about a token - without the token itself, which is not stored.
+      example:
+        last_used: 2020-06-23 04:56:07+00:00
+        name: webhook
+        id: 1008
+      properties:
+        id:
+          description: Token identifier - can be used in `/token/{id}` DELETE.
+          type: integer
+        name:
+          description: Name of the token (see `/token/create`).
+          type: string
+        last_used:
+          description: When this token was used last time.
+          format: date-time
+          type: string
+      required:
+      - id
+      - last_used
+      - name
+      type: object
+    ListedTokens:
+      items:
+        $ref: '#/components/schemas/ListedToken'
+      type: array
   parameters:
     pathAccountID:
       description: Numeric identifier of the account.

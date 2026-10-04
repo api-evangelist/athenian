@@ -149,6 +149,32 @@ components:
       description: Time duration value.
       pattern: ^\d+s$
       type: string
+    CreatedIdentifier:
+      additionalProperties: false
+      example:
+        id: 777
+      properties:
+        id:
+          description: Identifier of the created entity.
+          example: 777
+          type: integer
+      required:
+      - id
+      type: object
+    GoalTemplateName:
+      description: Name of the template.
+      example: Untitled Template
+      minLength: 1
+      type: string
+    InvalidRequestError:
+      allOf:
+      - $ref: '#/components/schemas/GenericError'
+      - properties:
+          pointer:
+            description: Path to the offending request item.
+            example: .granularity
+            type: string
+        type: object
     GoalTemplateList:
       description: List of goal templates.
       example:
@@ -165,84 +191,47 @@ components:
       items:
         $ref: '#/components/schemas/GoalTemplate'
       type: array
-    JIRAMetricID:
-      description: 'Currently supported JIRA activity metrics.
+    RepositoryID:
+      description: 'Repository name which uniquely identifies any repository in any service provider.
 
-        * `jira-open` - number of issues active by the end of the time interval.
+        The format matches the repository URL without the protocol part. No ".git" should be appended.
 
-        * `jira-resolved` - number of issues closed in the given time range.
+        We support a special syntax for repository sets: "{reposet id}" adds all the repositories
 
-        * `jira-raised` - number of issues reported in the given time range.
+        from the given set.
 
-        * `jira-acknowledged` - number of issues that are "In Progress" or "Resolved". This number matches the issues considered to calculate `jira-acknowledge-time` before applying the quantiles.
-
-        * `jira-acknowledged-q` - number of issues that are "In Progress" or "Resolved". This number matches the issues considered to calculate `jira-acknowledge-time` after applying the quantiles.
-
-        * `jira-life-time` - Mean Life Time - the time between min(issue creation, work began) and max(issue resolution, fixes released).
-
-        * `jira-life-time-below-threshold-ratio` - ratio of issues with a `jira-life-time` below the threshold, disregarding the quantiles. The default threshold is 5 days.
-
-        * `jira-lead-time` - Mean Lead Time - the time between when the work began and max(issue resolution, fixes released).
-
-        * `jira-lead-time-below-threshold-ratio` - ratio of issues with a `jira-lead-time` below the threshold, disregarding the quantiles. The default threshold is 5 days.
-
-        * `jira-acknowledge-time` - Mean Acknowledge Time - the time between when the issue was created and the work began = `min(transitioned to "In Progress", PR created)`. It equals to 0 for retrofitted issues with PRs before their creation times.
-
-        * `jira-acknowledge-time-below-threshold-ratio` - ratio of issues with a `jira-acknowledge-time` below the threshold, disregarding the quantiles. The default threshold is 3 days.
-
-        * `jira-pr-lag-time` - the time between when the issue transitioned to "In Progress" and the first PR was created. It equals to 0 if the difference is negative or no PRs are mapped to the issue.
-
-        * `jira-backlog-time` - the time between when the issue was created and transitioned to "In Progress".
-
-        * `jira-resolution-rate` - ratio between the number of resolved issues to the number of raised issues.'
-      enum:
-      - jira-open
-      - jira-resolved
-      - jira-raised
-      - jira-acknowledged
-      - jira-acknowledged-q
-      - jira-life-time
-      - jira-life-time-below-threshold-ratio
-      - jira-lead-time
-      - jira-lead-time-below-threshold-ratio
-      - jira-acknowledge-time
-      - jira-acknowledge-time-below-threshold-ratio
-      - jira-pr-lag-time
-      - jira-backlog-time
-      - jira-resolution-rate
-      example: jira-resolved
+        '
+      example: github.com/athenianco/athenian-webapp
       type: string
-    GenericError:
+    GoalTemplateCreateRequest:
+      additionalProperties: false
+      description: Goal template creation request body.
       example:
-        detail: 'Unsupported metric: pr-xxx-time'
-        status: 400
-        title: Bad request syntax or unsupported method.
-        type: /errors/InvalidRequestError
+        account: 30
+        metric: pr-review-time
+        name: My New Goal Template
+        repositories:
+        - github.com/athenianco/api-spec
+        - github.com/athenianco/athenian-webapp
       properties:
-        detail:
-          description: Human-readable explanation specific to this occurrence of the problem.
-          example: 'Unsupported metric: pr-xxx-time'
-          type: string
-        instance:
-          description: URI reference that identifies the specific occurrence of the problem. It is `null` for 4xx, Sentry event ID for 5xx.
-          example: 2763c4eabd7240f59829ee1a02546293
-          type: string
-        status:
-          description: Duplicated HTTP status code.
-          example: 400
+        account:
+          description: Account identifier. That account will own the created goal template.
           type: integer
-        title:
-          description: Short, human-readable summary of the problem type.
-          example: Bad request syntax or unsupported method.
-          type: string
-        type:
-          description: URI reference that identifies the problem type (RFC 7807).
-          example: /errors/InvalidRequestError
-          type: string
+        metric:
+          oneOf:
+          - $ref: '#/components/schemas/PullRequestMetricID'
+          - $ref: '#/components/schemas/JIRAMetricID'
+          - $ref: '#/components/schemas/ReleaseMetricID'
+        metric_params:
+          $ref: '#/components/schemas/GoalMetricParams'
+        name:
+          $ref: '#/components/schemas/GoalTemplateName'
+        repositories:
+          $ref: '#/components/schemas/RepositorySet'
       required:
-      - status
-      - title
-      - type
+      - account
+      - metric
+      - name
       type: object
     ReleaseMetricID:
       description: 'Currently supported release metric types.
@@ -323,90 +312,84 @@ components:
       - release-branch-age
       - release-time-to-deploy
       type: string
-    RepositorySet:
-      description: Set of repositories. An empty list raises a bad response 400. Duplicates are automatically ignored.
+    GenericError:
       example:
-      - github.com/athenianco/athenian-webapp
-      - github.com/athenianco/athenian-api
-      items:
-        $ref: '#/components/schemas/RepositoryID'
-      type: array
-    GoalTemplate:
-      additionalProperties: false
-      description: A template to generate a goal.
-      example:
-        available: true
-        id: 42
-        metric: pr-release-time
-        name: Untitled Template
-        repositories:
-        - github.com/athenianco/athenian-api
-        - github.com/athenianco/api-spec
+        detail: 'Unsupported metric: pr-xxx-time'
+        status: 400
+        title: Bad request syntax or unsupported method.
+        type: /errors/InvalidRequestError
       properties:
-        available:
-          description: Whether the templates is avaiable for use.
-          type: boolean
-        id:
-          description: Identifier of the template.
+        detail:
+          description: Human-readable explanation specific to this occurrence of the problem.
+          example: 'Unsupported metric: pr-xxx-time'
+          type: string
+        instance:
+          description: URI reference that identifies the specific occurrence of the problem. It is `null` for 4xx, Sentry event ID for 5xx.
+          example: 2763c4eabd7240f59829ee1a02546293
+          type: string
+        status:
+          description: Duplicated HTTP status code.
+          example: 400
           type: integer
-        metric:
-          oneOf:
-          - $ref: '#/components/schemas/PullRequestMetricID'
-          - $ref: '#/components/schemas/JIRAMetricID'
-          - $ref: '#/components/schemas/ReleaseMetricID'
-        metric_params:
-          $ref: '#/components/schemas/GoalMetricParams'
-        name:
-          $ref: '#/components/schemas/GoalTemplateName'
-        repositories:
-          $ref: '#/components/schemas/RepositorySet'
+        title:
+          description: Short, human-readable summary of the problem type.
+          example: Bad request syntax or unsupported method.
+          type: string
+        type:
+          description: URI reference that identifies the problem type (RFC 7807).
+          example: /errors/InvalidRequestError
+          type: string
       required:
-      - available
-      - id
-      - name
-      - metric
+      - status
+      - title
+      - type
       type: object
-    GoalMetricParams:
-      description: The parameters used to compute `metric` for the goal.
-      properties:
-        threshold:
-          oneOf:
-          - type: number
-          - $ref: '#/components/schemas/TimeDuration'
-      type: object
-    GoalTemplateUpdateRequest:
-      additionalProperties: false
-      description: Goal template update request body. A missing property means removal.
-      example:
-        name: New template name
-        metric: pr-lead-time
-      properties:
-        name:
-          $ref: '#/components/schemas/GoalTemplateName'
-        metric:
-          oneOf:
-          - $ref: '#/components/schemas/PullRequestMetricID'
-          - $ref: '#/components/schemas/JIRAMetricID'
-          - $ref: '#/components/schemas/ReleaseMetricID'
-        metric_params:
-          $ref: '#/components/schemas/GoalMetricParams'
-        repositories:
-          $ref: '#/components/schemas/RepositorySet'
-      required:
-      - name
-      - metric
-      type: object
-    RepositoryID:
-      description: 'Repository name which uniquely identifies any repository in any service provider.
+    JIRAMetricID:
+      description: 'Currently supported JIRA activity metrics.
 
-        The format matches the repository URL without the protocol part. No ".git" should be appended.
+        * `jira-open` - number of issues active by the end of the time interval.
 
-        We support a special syntax for repository sets: "{reposet id}" adds all the repositories
+        * `jira-resolved` - number of issues closed in the given time range.
 
-        from the given set.
+        * `jira-raised` - number of issues reported in the given time range.
 
-        '
-      example: github.com/athenianco/athenian-webapp
+        * `jira-acknowledged` - number of issues that are "In Progress" or "Resolved". This number matches the issues considered to calculate `jira-acknowledge-time` before applying the quantiles.
+
+        * `jira-acknowledged-q` - number of issues that are "In Progress" or "Resolved". This number matches the issues considered to calculate `jira-acknowledge-time` after applying the quantiles.
+
+        * `jira-life-time` - Mean Life Time - the time between min(issue creation, work began) and max(issue resolution, fixes released).
+
+        * `jira-life-time-below-threshold-ratio` - ratio of issues with a `jira-life-time` below the threshold, disregarding the quantiles. The default threshold is 5 days.
+
+        * `jira-lead-time` - Mean Lead Time - the time between when the work began and max(issue resolution, fixes released).
+
+        * `jira-lead-time-below-threshold-ratio` - ratio of issues with a `jira-lead-time` below the threshold, disregarding the quantiles. The default threshold is 5 days.
+
+        * `jira-acknowledge-time` - Mean Acknowledge Time - the time between when the issue was created and the work began = `min(transitioned to "In Progress", PR created)`. It equals to 0 for retrofitted issues with PRs before their creation times.
+
+        * `jira-acknowledge-time-below-threshold-ratio` - ratio of issues with a `jira-acknowledge-time` below the threshold, disregarding the quantiles. The default threshold is 3 days.
+
+        * `jira-pr-lag-time` - the time between when the issue transitioned to "In Progress" and the first PR was created. It equals to 0 if the difference is negative or no PRs are mapped to the issue.
+
+        * `jira-backlog-time` - the time between when the issue was created and transitioned to "In Progress".
+
+        * `jira-resolution-rate` - ratio between the number of resolved issues to the number of raised issues.'
+      enum:
+      - jira-open
+      - jira-resolved
+      - jira-raised
+      - jira-acknowledged
+      - jira-acknowledged-q
+      - jira-life-time
+      - jira-life-time-below-threshold-ratio
+      - jira-lead-time
+      - jira-lead-time-below-threshold-ratio
+      - jira-acknowledge-time
+      - jira-acknowledge-time-below-threshold-ratio
+      - jira-pr-lag-time
+      - jira-backlog-time
+      - jira-resolution-rate
+      example: jira-resolved
       type: string
     PullRequestMetricID:
       description: 'Currently supported PR metric types.
@@ -623,36 +606,53 @@ components:
       - pr-comments-per
       example: pr-lead-time
       type: string
-    CreatedIdentifier:
-      additionalProperties: false
+    RepositorySet:
+      description: Set of repositories. An empty list raises a bad response 400. Duplicates are automatically ignored.
       example:
-        id: 777
+      - github.com/athenianco/athenian-webapp
+      - github.com/athenianco/athenian-api
+      items:
+        $ref: '#/components/schemas/RepositoryID'
+      type: array
+    GoalTemplateUpdateRequest:
+      additionalProperties: false
+      description: Goal template update request body. A missing property means removal.
+      example:
+        name: New template name
+        metric: pr-lead-time
       properties:
-        id:
-          description: Identifier of the created entity.
-          example: 777
-          type: integer
-      required:
-      - id
-      type: object
-    GoalTemplateName:
-      description: Name of the template.
-      example: Untitled Template
-      minLength: 1
-      type: string
-    GoalTemplateCreateRequest:
-      additionalProperties: false
-      description: Goal template creation request body.
-      example:
-        account: 30
-        metric: pr-review-time
-        name: My New Goal Template
+        name:
+          $ref: '#/components/schemas/GoalTemplateName'
+        metric:
+          oneOf:
+          - $ref: '#/components/schemas/PullRequestMetricID'
+          - $ref: '#/components/schemas/JIRAMetricID'
+          - $ref: '#/components/schemas/ReleaseMetricID'
+        metric_params:
+          $ref: '#/components/schemas/GoalMetricParams'
         repositories:
+          $ref: '#/components/schemas/RepositorySet'
+      required:
+      - name
+      - metric
+      type: object
+    GoalTemplate:
+      additionalProperties: false
+      description: A template to generate a goal.
+      example:
+        available: true
+        id: 42
+        metric: pr-release-time
+        name: Untitled Template
+        repositories:
+        - github.com/athenianco/athenian-api
         - github.com/athenianco/api-spec
-        - github.com/athenianco/athenian-webapp
       properties:
-        account:
-          description: Account identifier. That account will own the created goal template.
+        available:
+          description: Whether the templates is avaiable for use.
+          type: boolean
+        id:
+          description: Identifier of the template.
           type: integer
         metric:
           oneOf:
@@ -666,26 +666,20 @@ components:
         repositories:
           $ref: '#/components/schemas/RepositorySet'
       required:
-      - account
-      - metric
+      - available
+      - id
       - name
+      - metric
       type: object
-    InvalidRequestError:
-      allOf:
-      - $ref: '#/components/schemas/GenericError'
-      - properties:
-          pointer:
-            description: Path to the offending request item.
-            example: .granularity
-            type: string
-        type: object
+    GoalMetricParams:
+      description: The parameters used to compute `metric` for the goal.
+      properties:
+        threshold:
+          oneOf:
+          - type: number
+          - $ref: '#/components/schemas/TimeDuration'
+      type: object
   responses:
-    InvalidRequestErrorResponse:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/InvalidRequestError'
-      description: The request is invalid.
     GoalTemplateNotFoundResponse:
       content:
         application/json:
@@ -700,6 +694,12 @@ components:
             - {}
             type: object
       description: Empty object indicates a successful operation.
+    InvalidRequestErrorResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InvalidRequestError'
+      description: The request is invalid.
   parameters:
     pathAccountID:
       description: Numeric identifier of the account.

@@ -211,18 +211,18 @@ paths:
       x-openapi-router-controller: athenian.api.controllers.reposet_controller
 components:
   schemas:
-    CreatedIdentifier:
-      additionalProperties: false
-      example:
-        id: 777
-      properties:
-        id:
-          description: Identifier of the created entity.
-          example: 777
-          type: integer
-      required:
-      - id
-      type: object
+    RepositoryID:
+      description: 'Repository name which uniquely identifies any repository in any service provider.
+
+        The format matches the repository URL without the protocol part. No ".git" should be appended.
+
+        We support a special syntax for repository sets: "{reposet id}" adds all the repositories
+
+        from the given set.
+
+        '
+      example: github.com/athenianco/athenian-webapp
+      type: string
     RepositorySetCreateRequest:
       additionalProperties: false
       description: Repository set creation request.
@@ -247,40 +247,6 @@ components:
       - account
       - items
       - name
-      type: object
-    RepositorySetList:
-      description: List of repository sets owned by a user.
-      items:
-        $ref: '#/components/schemas/RepositorySetListItem'
-      type: array
-    RepositorySetListItem:
-      additionalProperties: false
-      description: Element of RepositorySetList.
-      example:
-        items_count: 6
-        created: 2020-01-23 04:56:07+00:00
-        id: 1
-        name: all
-        updated: 2020-01-23 04:56:07+00:00
-      properties:
-        id:
-          description: Repository set identifier.
-          type: integer
-        name:
-          description: Repository set name.
-          type: string
-        created:
-          description: Date and time of creation of the repository set.
-          format: date-time
-          type: string
-        updated:
-          description: Date and time of the last change of the repository set.
-          format: date-time
-          type: string
-        items_count:
-          description: Number of repositories in the set.
-          minimum: 1
-          type: integer
       type: object
     GenericError:
       example:
@@ -333,18 +299,52 @@ components:
         precomputed:
           type: boolean
       type: object
-    RepositoryID:
-      description: 'Repository name which uniquely identifies any repository in any service provider.
-
-        The format matches the repository URL without the protocol part. No ".git" should be appended.
-
-        We support a special syntax for repository sets: "{reposet id}" adds all the repositories
-
-        from the given set.
-
-        '
-      example: github.com/athenianco/athenian-webapp
-      type: string
+    RepositorySetList:
+      description: List of repository sets owned by a user.
+      items:
+        $ref: '#/components/schemas/RepositorySetListItem'
+      type: array
+    CreatedIdentifier:
+      additionalProperties: false
+      example:
+        id: 777
+      properties:
+        id:
+          description: Identifier of the created entity.
+          example: 777
+          type: integer
+      required:
+      - id
+      type: object
+    RepositorySetListItem:
+      additionalProperties: false
+      description: Element of RepositorySetList.
+      example:
+        items_count: 6
+        created: 2020-01-23 04:56:07+00:00
+        id: 1
+        name: all
+        updated: 2020-01-23 04:56:07+00:00
+      properties:
+        id:
+          description: Repository set identifier.
+          type: integer
+        name:
+          description: Repository set name.
+          type: string
+        created:
+          description: Date and time of creation of the repository set.
+          format: date-time
+          type: string
+        updated:
+          description: Date and time of the last change of the repository set.
+          format: date-time
+          type: string
+        items_count:
+          description: Number of repositories in the set.
+          minimum: 1
+          type: integer
+      type: object
   parameters:
     pathAccountID:
       description: Numeric identifier of the account.
