@@ -1,0 +1,44 @@
+slug: athenian
+provider: Athenian
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Software & Technology
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 3
+edges:
+- tag: Metrics
+  spec_file: athenian-metrics-api-openapi.yml
+  capability_id: BC-4200.70
+  capability_id_l1: BC-4200
+  capability_name: Engineering Productivity Management
+  confidence: 0.8
+  evidence: POST /metrics/pull_requests  calc_metrics_prs  Calculate linear metrics over PRs
+  reason: Computes delivery metrics over PRs, CI runs, deployments and developer activity — explicitly
+    engineering performance measurement that lifts delivery throughput.
+- tag: Filter
+  spec_file: athenian-filter-api-openapi.yml
+  capability_id: BC-4200.70
+  capability_id_l1: BC-4200
+  capability_name: Engineering Productivity Management
+  confidence: 0.7
+  evidence: POST /filter/pull_requests  filter_prs  List pull requests that satisfy the query
+  reason: Queries PRs, commits, contributors, deployments and JIRA entities across the delivery pipeline
+    — the analytical surface of an engineering delivery analytics product, i.e. engineering performance
+    measurement.
+- tag: histograms
+  spec_file: athenian-histograms-api-openapi.yml
+  capability_id: BC-4200.70
+  capability_id_l1: BC-4200
+  capability_name: Engineering Productivity Management
+  confidence: 0.7
+  evidence: POST /histograms/code_checks — 'Calculate histograms on continuous integration runs, such
+    as GitHub Actions'; POST /histograms/pull_requests — 'Calculate histograms over PR distributions'
+  reason: Computes distributions of CI runs and pull-request cycle data — engineering delivery performance
+    measurement, the core of engineering productivity management.
