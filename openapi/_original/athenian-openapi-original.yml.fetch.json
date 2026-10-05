@@ -1,0 +1,12 @@
+{
+ "url": "https://raw.githubusercontent.com/athenianco/api-spec/HEAD/openapi.yaml",
+ "requested_url": "https://raw.githubusercontent.com/athenianco/api-spec/HEAD/openapi.yaml",
+ "status": 200,
+ "content_type": "text/plain; charset=utf-8",
+ "bytes": 377580,
+ "sha256": "110c9f7cffddb9fc998d6727b3b186f25ef369a8740d5b41147f0fc9d7c7667b",
+ "fetched_at": "2026-10-04",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "byte-identical",
+ "note": "Re-fetched from the provider by verify-openapi-sources.py; the archived file is byte-identical to what the provider serves."
+}
