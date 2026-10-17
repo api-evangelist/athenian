@@ -207,6 +207,93 @@ paths:
       x-openapi-router-controller: athenian.api.controllers.user_controller
 components:
   schemas:
+    Datasource:
+      description: A datasource configured for the account.
+      enum:
+      - github
+      - jira
+    Share:
+      additionalProperties: false
+      description: Saved UI views state with metadata.
+      example:
+        author: Vadim Markovtsev
+        created: 2022-05-05 12:00:00+00:00
+        data:
+          whatever: 777
+      properties:
+        author:
+          description: User name who submitted.
+          type: string
+        created:
+          description: Submission timestamp.
+          format: date-time
+          type: string
+        data:
+          description: Saved object.
+          type: object
+      required:
+      - author
+      - created
+      - data
+      type: object
+    GenericError:
+      example:
+        detail: 'Unsupported metric: pr-xxx-time'
+        status: 400
+        title: Bad request syntax or unsupported method.
+        type: /errors/InvalidRequestError
+      properties:
+        detail:
+          description: Human-readable explanation specific to this occurrence of the problem.
+          example: 'Unsupported metric: pr-xxx-time'
+          type: string
+        instance:
+          description: URI reference that identifies the specific occurrence of the problem. It is `null` for 4xx, Sentry event ID for 5xx.
+          example: 2763c4eabd7240f59829ee1a02546293
+          type: string
+        status:
+          description: Duplicated HTTP status code.
+          example: 400
+          type: integer
+        title:
+          description: Short, human-readable summary of the problem type.
+          example: Bad request syntax or unsupported method.
+          type: string
+        type:
+          description: URI reference that identifies the problem type (RFC 7807).
+          example: /errors/InvalidRequestError
+          type: string
+      required:
+      - status
+      - title
+      - type
+      type: object
+    AccountUserChangeRequest:
+      additionalProperties: false
+      description: Request to change an account member's status.
+      example:
+        user: github|60340680
+        account: 1
+        status: regular
+      properties:
+        account:
+          description: Account ID.
+          type: integer
+        user:
+          description: Account member ID.
+          type: string
+        status:
+          description: Account membership role.
+          enum:
+          - regular
+          - admin
+          - banished
+          type: string
+      required:
+      - account
+      - status
+      - user
+      type: object
     Account:
       additionalProperties: false
       description: Account members ("updated" and "accounts" are not populated) and installed GitHub organizations.
@@ -282,102 +369,6 @@ components:
       - regulars
       - datasources
       type: object
-    Datasource:
-      description: A datasource configured for the account.
-      enum:
-      - github
-      - jira
-    GenericError:
-      example:
-        detail: 'Unsupported metric: pr-xxx-time'
-        status: 400
-        title: Bad request syntax or unsupported method.
-        type: /errors/InvalidRequestError
-      properties:
-        detail:
-          description: Human-readable explanation specific to this occurrence of the problem.
-          example: 'Unsupported metric: pr-xxx-time'
-          type: string
-        instance:
-          description: URI reference that identifies the specific occurrence of the problem. It is `null` for 4xx, Sentry event ID for 5xx.
-          example: 2763c4eabd7240f59829ee1a02546293
-          type: string
-        status:
-          description: Duplicated HTTP status code.
-          example: 400
-          type: integer
-        title:
-          description: Short, human-readable summary of the problem type.
-          example: Bad request syntax or unsupported method.
-          type: string
-        type:
-          description: URI reference that identifies the problem type (RFC 7807).
-          example: /errors/InvalidRequestError
-          type: string
-      required:
-      - status
-      - title
-      - type
-      type: object
-    AccountUserChangeRequest:
-      additionalProperties: false
-      description: Request to change an account member's status.
-      example:
-        user: github|60340680
-        account: 1
-        status: regular
-      properties:
-        account:
-          description: Account ID.
-          type: integer
-        user:
-          description: Account member ID.
-          type: string
-        status:
-          description: Account membership role.
-          enum:
-          - regular
-          - admin
-          - banished
-          type: string
-      required:
-      - account
-      - status
-      - user
-      type: object
-    Share:
-      additionalProperties: false
-      description: Saved UI views state with metadata.
-      example:
-        author: Vadim Markovtsev
-        created: 2022-05-05 12:00:00+00:00
-        data:
-          whatever: 777
-      properties:
-        author:
-          description: User name who submitted.
-          type: string
-        created:
-          description: Submission timestamp.
-          format: date-time
-          type: string
-        data:
-          description: Saved object.
-          type: object
-      required:
-      - author
-      - created
-      - data
-      type: object
-    InvalidRequestError:
-      allOf:
-      - $ref: '#/components/schemas/GenericError'
-      - properties:
-          pointer:
-            description: Path to the offending request item.
-            example: .granularity
-            type: string
-        type: object
     JIRAInstallation:
       additionalProperties: false
       description: Information about a link with JIRA.
@@ -399,26 +390,6 @@ components:
       required:
       - projects
       - url
-      type: object
-    ProductFeature:
-      additionalProperties: false
-      description: Client-side product feature definition.
-      example:
-        name: jira
-        parameters:
-          epics: true
-          labels: false
-      properties:
-        name:
-          type: string
-        parameters:
-          oneOf:
-          - type: number
-          - type: string
-          - type: object
-      required:
-      - name
-      - parameters
       type: object
     User:
       additionalProperties: false
@@ -482,37 +453,6 @@ components:
       - login
       - native_id
       type: object
-    ProductFeatures:
-      description: Enabled client-side product features.
-      example:
-      - name: expires_at
-        parameters: '2030-01-01T00:00:00Z'
-      - name: jira
-        parameters:
-          epics: true
-          labels: false
-      items:
-        $ref: '#/components/schemas/ProductFeature'
-      type: array
-    Organization:
-      additionalProperties: false
-      description: GitHub organization details.
-      example:
-        name: Athenian
-        login: athenianco
-        avatar_url: https://avatars3.githubusercontent.com/u/58329504?s=200&v=4
-      properties:
-        name:
-          type: string
-        avatar_url:
-          type: string
-        login:
-          type: string
-      required:
-      - avatar_url
-      - login
-      - name
-      type: object
     AccountStatus:
       additionalProperties: false
       description: Status of the user's account membership.
@@ -550,6 +490,66 @@ components:
       - is_admin
       - stale
       type: object
+    ProductFeatures:
+      description: Enabled client-side product features.
+      example:
+      - name: expires_at
+        parameters: '2030-01-01T00:00:00Z'
+      - name: jira
+        parameters:
+          epics: true
+          labels: false
+      items:
+        $ref: '#/components/schemas/ProductFeature'
+      type: array
+    ProductFeature:
+      additionalProperties: false
+      description: Client-side product feature definition.
+      example:
+        name: jira
+        parameters:
+          epics: true
+          labels: false
+      properties:
+        name:
+          type: string
+        parameters:
+          oneOf:
+          - type: number
+          - type: string
+          - type: object
+      required:
+      - name
+      - parameters
+      type: object
+    Organization:
+      additionalProperties: false
+      description: GitHub organization details.
+      example:
+        name: Athenian
+        login: athenianco
+        avatar_url: https://avatars3.githubusercontent.com/u/58329504?s=200&v=4
+      properties:
+        name:
+          type: string
+        avatar_url:
+          type: string
+        login:
+          type: string
+      required:
+      - avatar_url
+      - login
+      - name
+      type: object
+    InvalidRequestError:
+      allOf:
+      - $ref: '#/components/schemas/GenericError'
+      - properties:
+          pointer:
+            description: Path to the offending request item.
+            example: .granularity
+            type: string
+        type: object
   responses:
     InvalidRequestErrorResponse:
       content:

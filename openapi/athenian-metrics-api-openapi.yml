@@ -365,206 +365,6 @@ paths:
       x-openapi-router-controller: athenian.api.controllers.metrics_controller
 components:
   schemas:
-    JIRAStatusCategory:
-      description: The category of a JIRA issue status.
-      enum:
-      - To Do
-      - In Progress
-      - Done
-      - No Category
-      type: string
-    CalculatedCodeCheckMetricsItem:
-      additionalProperties: false
-      description: Series of calculated metrics for a specific set of repositories and commit authors.
-      example:
-        values:
-        - date: 2020-01-23
-          values:
-          - 200
-        for:
-          repositories:
-          - github.com/athenianco/athenian-webapp
-          - github.com/athenianco/athenian-api
-          pushers:
-          - github.com/vmarkovtsev
-          - github.com/dpordomingo
-        granularity: all
-      properties:
-        for:
-          $ref: '#/components/schemas/ForSetCodeChecks'
-        granularity:
-          $ref: '#/components/schemas/Granularity'
-        check_runs:
-          description: We calculated metrics for check suites with this number of runs. Not null only if the user specified `split_by_check_runs = true`.
-          type: integer
-        suites_ratio:
-          description: Number of check suites with `check_runs` number of check runs divided by the overall number of check suites. Not null only if the user specified `split_by_check_runs = true`.
-          format: float
-          maximum: 1
-          minimum: 0
-          type: number
-        values:
-          description: The sequence steps from `date_from` till `date_to` by `granularity`.
-          items:
-            $ref: '#/components/schemas/CalculatedLinearMetricValues'
-          type: array
-      required:
-      - for
-      - values
-      type: object
-    ForSetCodeChecks:
-      additionalProperties: false
-      description: 'Filters for `/metrics/code_checks` and `/histograms/code_checks`.
-
-        Achieve the best performance by packing all your filters in a single `ForSetCodeChecks`
-
-        instead of sending multiple `ForSetCodeChecks`-s. For example, use `repogroups` and `pushers`
-
-        to request separate metrics for several repository sets and teams.
-
-        '
-      example:
-        repositories:
-        - github.com/athenianco/athenian-webapp
-        - github.com/athenianco/athenian-api
-        pushers:
-        - github.com/vmarkovtsev
-        - github.com/dpordomingo
-        jira:
-          labels_include:
-          - bug
-      properties:
-        repositories:
-          $ref: '#/components/schemas/RepositorySet'
-        repogroups:
-          $ref: '#/components/schemas/IndexedGroups'
-        pushers:
-          $ref: '#/components/schemas/CommitPushers'
-        pusher_groups:
-          description: 'Check runs must be triggered by commits authored by these people.
-
-            We aggregate by each group so that you can request metrics of several teams at once.
-
-            We treat `pushers` as another group, if specified.'
-          items:
-            $ref: '#/components/schemas/CommitPushers'
-          type: array
-        labels_include:
-          description: At least one of these labels must be present in the checked PRs.
-          items:
-            type: string
-          type: array
-        labels_exclude:
-          description: None of these labels must be present in each checked PR.
-          items:
-            type: string
-          type: array
-        jira:
-          allOf:
-          - description: Analyze only those check runs that belong to PRs mapped to JIRA issues that satisfy this filter.
-          - $ref: '#/components/schemas/JIRAFilter'
-        lines:
-          description: Split by changed number of lines (inserted + removed) in pull requests.
-          items:
-            minimum: 0
-            type: integer
-          minItems: 2
-          type: array
-      required:
-      - repositories
-      type: object
-    ReleaseMetricsRequest:
-      additionalProperties: false
-      description: Request of `/metrics/releases` to calculate metrics on releases.
-      example:
-        for:
-        - - athenianco/athenian-api
-          - athenianco/athenian-webapp
-        with:
-        - pr_author:
-          - github.com/se7entyse7en
-          releaser:
-          - github.com/gkwillie
-        metrics:
-        - release-count
-        granularities:
-        - day
-        date_from: 2020-01-01
-        date_to: 2020-10-01
-        account: 1
-      not:
-        $ref: '#/components/schemas/WithBothJiraAndJiragroups'
-      properties:
-        for:
-          description: 'List of repository groups for which to calculate the metrics.
-
-            An empty repository (empty array) group will match nothing.
-
-            Use `null` as repository group to match every repository.
-
-            '
-          items:
-            oneOf:
-            - $ref: '#/components/schemas/RepositorySet'
-            - enum:
-              - null
-              type:
-              - string
-              - 'null'
-          type: array
-        with:
-          description: List of developer groups for which to calculate the metrics.
-          items:
-            $ref: '#/components/schemas/ReleaseWith'
-          type: array
-        labels_include:
-          description: At least one of these labels must be present in at least one released PR.
-          items:
-            type: string
-          type: array
-        labels_exclude:
-          description: None of these labels must be present in each released PR.
-          items:
-            type: string
-          type: array
-        jira:
-          $ref: '#/components/schemas/JIRAFilter'
-        jiragroups:
-          $ref: '#/components/schemas/JIRAGroups'
-        metrics:
-          description: List of desired release metrics.
-          items:
-            $ref: '#/components/schemas/ReleaseMetricID'
-          type: array
-        date_from:
-          description: Date from when to start measuring the metrics.
-          format: date
-          type: string
-        date_to:
-          description: Date until which to measure the metrics.
-          format: date
-          type: string
-        timezone:
-          $ref: '#/components/schemas/TimeZone'
-        granularities:
-          $ref: '#/components/schemas/Granularities'
-        quantiles:
-          $ref: '#/components/schemas/Quantiles'
-        account:
-          description: Session account ID.
-          type: integer
-      required:
-      - account
-      - date_from
-      - date_to
-      - for
-      - granularities
-      - metrics
-      type: object
-    TimeDuration:
-      description: Time duration value.
-      pattern: ^\d+s$
-      type: string
     CommitPushers:
       description: 'Check runs must be triggered by commits pushed by these people.
 
@@ -581,319 +381,74 @@ components:
       items:
         $ref: '#/components/schemas/DeveloperID'
       type: array
-    CalculatedJIRAMetricValues:
-      additionalProperties: false
-      description: Calculated JIRA metrics for a specific granularity.
-      example:
-        granularity: 2 week
-        values:
-        - date: 2020-01-23
-          values:
-          - 0.8008282
-          - 0.8008282
-          confidence_mins:
-          - 0.5
-          - 0.5
-          confidence_maxs:
-          - 1.0
-          - 1.0
-          confidence_scores:
-          - 75
-          - 75
-        - date: 2020-01-23
-          values:
-          - 0.8008282
-          - 0.8008282
-          confidence_mins:
-          - 0.5
-          - 0.5
-          confidence_maxs:
-          - 1.0
-          - 1.0
-          confidence_scores:
-          - 75
-          - 75
-      properties:
-        granularity:
-          $ref: '#/components/schemas/Granularity'
-        for:
-          $ref: '#/components/schemas/JIRAFilter'
-        jira_label:
-          description: Title of the assigned JIRA label, if `group_by_jira_label` was previously set to `true`. If is missing and `group_by_jira_label` was set to `true` then the metrics are calculated for issues without labels.
-          type: string
-        with:
-          $ref: '#/components/schemas/JIRAFilterWith'
-        values:
-          description: The sequence steps from `date_from` till `date_to` by `granularity`.
-          items:
-            $ref: '#/components/schemas/CalculatedLinearMetricValues'
-          type: array
-      required:
-      - granularity
-      - values
-      type: object
-    DeploymentWith:
-      additionalProperties: false
-      description: 'Deployment contribution roles. The aggregation is `OR` everywhere.
+    RepositoryID:
+      description: 'Repository name which uniquely identifies any repository in any service provider.
 
-        It is possible to mention whole teams using the syntax `{id}` where `id` is a team identifier (see `/teams`).
+        The format matches the repository URL without the protocol part. No ".git" should be appended.
+
+        We support a special syntax for repository sets: "{reposet id}" adds all the repositories
+
+        from the given set.
 
         '
-      example:
-        pr_author:
-        - github.com/se7entyse7en
-      properties:
-        pr_author:
-          allOf:
-          - $ref: '#/components/schemas/DeveloperSet'
-          - description: Authors of deployed pull requests.
-        commit_author:
-          allOf:
-          - $ref: '#/components/schemas/DeveloperSet'
-          - description: Authors of deployed commits.
-        releaser:
-          allOf:
-          - $ref: '#/components/schemas/DeveloperSet'
-          - description: Deployed release publishers.
-      type: object
-    InvalidRequestError:
-      allOf:
-      - $ref: '#/components/schemas/GenericError'
-      - properties:
-          pointer:
-            description: Path to the offending request item.
-            example: .granularity
-            type: string
-        type: object
-    CalculatedDeploymentMetrics:
-      description: 'Response from `/metrics/deployments`, metrics calculated for each
-
-        selected deployments group.
-
-        The order of the items is *not* guaranteed to match any expectations.
-
-        '
-      items:
-        $ref: '#/components/schemas/CalculatedDeploymentMetric'
-      type: array
-    DeploymentMetricID:
-      description: 'Supported deployment metrics.
-
-        * `dep-count` - number of deployments in the time period.
-
-        * `dep-duration-all` - average deployment procedure time - the difference between `date_finished` and `date_started` of `DeploymentNotification`.
-
-        * `dep-duration-successful` - average successful deployment procedure time - the difference between `date_finished` and `date_started` of `DeploymentNotification` with `conclusion = ''SUCCESS''`.
-
-        * `dep-duration-failed` - average failed deployment procedure time - the difference between `date_finished` and `date_started` of `DeploymentNotification` with `conclusion = ''FAILURE''`.
-
-        * `dep-success-count` - number of successful deployments in the time period.
-
-        * `dep-failure-count` - number of failed deployments in the time period.
-
-        * `dep-success-ratio` - ratio between successful and all deployments.
-
-        * `dep-change-failure-count` - number of successful deployments introducing a failure in the system. This pertains deployments effects so is different from `dep-failure-count` which is about deployments execution.  A deployment can be marked as introducing a failure by associating it with the `failure` label, with any value.
-
-        * `dep-change-failure-ratio` - ratio between `dep-change-failure-count` and `dep-success-count`.
-
-        * `dep-size-prs` - average number of deployed pull requests.
-
-        * `dep-size-releases` - average number of deployed releases.
-
-        * `dep-size-lines` - average number of deployed lines of code (changed = insertions + removals).
-
-        * `dep-size-commits` - average number of deployed commits.
-
-        * `dep-prs-count` - number of pull requests deployed in the time period.
-
-        * `dep-releases-count` - number of releases deployed in the time period.
-
-        * `dep-lines-count` - number of deployed lines of code (changed = insertions + removals).
-
-        * `dep-commits-count` - number of deployed commits.
-
-        * `dep-jira-issues-count` - number of JIRA issues mapped to deployed pull requests.
-
-        * `dep-jira-bug-fixes-count` - number of deployed bug fixes.
-
-        '
-      enum:
-      - dep-count
-      - dep-duration-all
-      - dep-duration-successful
-      - dep-duration-failed
-      - dep-success-count
-      - dep-failure-count
-      - dep-success-ratio
-      - dep-change-failure-count
-      - dep-change-failure-ratio
-      - dep-size-prs
-      - dep-size-releases
-      - dep-size-lines
-      - dep-size-commits
-      - dep-prs-count
-      - dep-releases-count
-      - dep-lines-count
-      - dep-commits-count
-      - dep-jira-issues-count
-      - dep-jira-bug-fixes-count
+      example: github.com/athenianco/athenian-webapp
       type: string
-    JIRAMetricsRequest:
+    DeveloperID:
+      description: 'User name which uniquely identifies any developer on any service provider.
+
+        The format matches the profile URL without the protocol part.
+
+        '
+      example: github.com/vmarkovtsev
+      type: string
+    ForSetDevelopers:
       additionalProperties: false
-      description: Request body of `/metrics/jira`.
+      description: 'Filter for `/metrics/developers`.
+
+        Achieve the best performance by packing all your filters in a single `ForSetDevelopers`
+
+        instead of sending multiple `ForSetDevelopers`-s. For example, use `repogroups`
+
+        to request separate metrics for several repository sets.
+
+        '
       example:
-        account: 1
-        date_from: 2020-10-01
-        date_to: 2020-10-30
-        priorities:
-        - High
-        types:
-        - Bug
-        metrics:
-        - jira-open
-        - jira-resolved
-        - jira-raised
-        granularities:
-        - all
-        exclude_inactive: true
+        repositories:
+        - github.com/athenianco/athenian-webapp
+        - github.com/athenianco/athenian-api
+        developers:
+        - github.com/vmarkovtsev
+        - github.com/dpordomingo
       properties:
-        account:
-          description: Session account ID.
-          type: integer
-        date_from:
-          description: Issues must be resolved after this date.
-          format: date
-          type: string
-        date_to:
-          description: Issues must be created before this date.
-          format: date
-          type: string
-        for:
-          description: "Calculate metrics separately for each JIRA Filter in the list.\nNot compatible with other jira filters in the request:\n  `priorities`, `types`, `labels_include`, `labels_exclude`, `epics`, `projects`.\n"
-          items:
-            $ref: '#/components/schemas/JIRAFilter'
-          type: array
-        timezone:
-          $ref: '#/components/schemas/TimeZone'
-        priorities:
-          description: Selected issue priorities.
-          items:
-            type: string
-          type: array
-        types:
-          description: Selected issue types.
-          items:
-            type: string
-          type: array
+        repositories:
+          $ref: '#/components/schemas/RepositorySet'
+        developers:
+          allOf:
+          - description: List of developers. Must contain at least one item. Duplicates are not ignored.
+          - $ref: '#/components/schemas/DeveloperSet'
+        repogroups:
+          allOf:
+          - description: Split metrics per defined repository groups.
+          - $ref: '#/components/schemas/IndexedGroups'
+        aggregate_devgroups:
+          allOf:
+          - description: Aggregate metrics for each defined developer group.
+          - $ref: '#/components/schemas/IndexedGroups'
         labels_include:
-          description: JIRA issues must contain at least one label from the list. Several labels may be concatenated by a comma `,` so that all of them are required.
+          description: PRs must be labeled with at least one name from this list so that the related metrics include them.
           items:
             type: string
           type: array
         labels_exclude:
-          description: JIRA issues may not contain labels from this list.
+          description: PRs must not be labeled with any name from this list so that the related metrics exclude them.
           items:
             type: string
           type: array
-        exclude_inactive:
-          description: Value indicating whether issues with the last update older than `date_from` should be ignored. If `date_from` and `date_to` are `null`, does nothing.
-          type: boolean
-        epics:
-          description: JIRA issues must be attached to any of the epic IDs from this list.
-          items:
-            type: string
-          type: array
-        with:
-          description: Groups of issue participants. The metrics will be calculated for each group.
-          items:
-            $ref: '#/components/schemas/JIRAFilterWith'
-          type: array
-        projects:
-          description: Issues must belong to these JIRA projects.
-          items:
-            example: DEV
-            type: string
-          type: array
-        metrics:
-          description: List of measured metrics.
-          items:
-            $ref: '#/components/schemas/JIRAMetricID'
-          type: array
-        quantiles:
-          $ref: '#/components/schemas/Quantiles'
-        granularities:
-          $ref: '#/components/schemas/Granularities'
-        group_by_jira_label:
-          description: Value indicating whether the metrics should be grouped by assigned JIRA issue label.
-          type: boolean
+        jira:
+          $ref: '#/components/schemas/JIRAFilter'
       required:
-      - account
-      - date_from
-      - date_to
-      - exclude_inactive
-      - granularities
-      - metrics
-      type: object
-    CalculatedJIRAMetrics:
-      description: 'Response from `/metrics/jira`.
-
-        The order of the items is *not* guaranteed to match any expectations.
-
-        '
-      items:
-        $ref: '#/components/schemas/CalculatedJIRAMetricValues'
-      type: array
-    CodeFilter:
-      additionalProperties: false
-      description: Filter for revealing code bypassing PRs.
-      example:
-        account: 1
-        date_from: 2020-01-01
-        date_to: 2020-03-01
-        granularity: day
-        in:
-        - '{1}'
-        - github.com/athenianco/athenian-webapp
-        with_author:
-        - github.com/vmarkovtsev
-      properties:
-        account:
-          description: Session account ID.
-          type: integer
-        date_from:
-          description: Commits must be made later than or equal to this date.
-          format: date
-          type: string
-        date_to:
-          description: Commits must be made earlier than or equal to this date.
-          format: date
-          type: string
-        timezone:
-          $ref: '#/components/schemas/TimeZone'
-        in:
-          $ref: '#/components/schemas/RepositorySet'
-        with_author:
-          $ref: '#/components/schemas/DeveloperSet'
-        with_committer:
-          $ref: '#/components/schemas/DeveloperSet'
-        granularity:
-          $ref: '#/components/schemas/Granularity'
-        only_default_branch:
-          description: 'Consider only commits that are accessible from the head of the default branch.
-
-            For example, if your workflow includes PR-ing feature branches, you rebase and merge
-
-            them and don''t delete afterward, `bypassing_prs` will report the commits in those
-
-            feature branches unless you set `only_default_branch` to `true`.'
-          type: boolean
-      required:
-      - account
-      - date_from
-      - date_to
-      - granularity
-      - in
+      - developers
+      - repositories
       type: object
     ReleaseWith:
       additionalProperties: false
@@ -1046,205 +601,183 @@ components:
       - granularities
       - metrics
       type: object
-    JIRAFilter:
+    MeasuredCodeBypassingPRs:
+      description: Statistics about code pushed outside of pull requests.
+      example:
+      - date: 2020-01-23
+        bypassed_commits: 1
+        bypassed_lines: 20
+        total_commits: 2
+        total_lines: 50
+      - date: 2020-01-24
+        bypassed_commits: 2
+        bypassed_lines: 30
+        total_commits: 3
+        total_lines: 60
+      items:
+        $ref: '#/components/schemas/CodeBypassingPRsMeasurement'
+      type: array
+    ForSetDeployments:
       additionalProperties: false
-      description: 'Filters related to JIRA traits. The aggregation between each filter type is *AND*.
+      description: 'Filters for `/metrics/deployments`. Nothing is strictly required.
+
+        Achieve the best performance by packing all your filters in a single `ForSetDeployments`
+
+        instead of sending multiple `ForSetDeployments`-s. For example, use `repogroups` and `withgroups`
+
+        to request separate metrics for several repository sets and teams.
 
         '
       example:
-        epics:
-        - DEV-167
-        - DEV-230
-        labels_include:
-        - api,performance
-        - metadata
-        labels_exclude:
-        - feature
-        issue_types:
-        - Bug
-        - Task
-        priorities:
-        - high
-        - low
-        projects:
-        - DEV
-        - ENG
-        status_categories:
-        - In Progress
+        repositories:
+        - github.com/athenianco/athenian-webapp
+        - github.com/athenianco/athenian-api
+        withgroups:
+        - pr_author:
+          - github.com/se7entyse7en
+          - github.com/vmarkovtsev
+        jira:
+          labels_include:
+          - bug
+        environments:
+        - production
       properties:
-        epics:
-          description: JIRA issues must be included in the epics from the list.
+        repositories:
+          $ref: '#/components/schemas/RepositorySet'
+        repogroups:
+          $ref: '#/components/schemas/IndexedGroups'
+        with:
+          $ref: '#/components/schemas/DeploymentWith'
+        withgroups:
+          description: Alternative to `with` - calculate metrics for distinct filters separately.
+          items:
+            $ref: '#/components/schemas/DeploymentWith'
+          type: array
+        pr_labels_include:
+          description: At least one of these labels must be present in at least one deployed PR.
           items:
             type: string
           type: array
-        labels_include:
-          description: 'Only issues having at least one label from the list will be included
+        pr_labels_exclude:
+          description: None of these labels must be present in each deployed PR.
+          items:
+            type: string
+          type: array
+        jira:
+          $ref: '#/components/schemas/JIRAFilter'
+        with_labels:
+          description: Deployments should contain at least one of the specified label values. `null` matches any label value and effectively checks the label existence.
+          type: object
+        without_labels:
+          description: Deployments may not contain the specified label values. `null` matches any label value and effectively ensures that the label does not exist.
+          type: object
+        environments:
+          description: 'List of environments for which to calculate the metrics.
 
-            Several labels may be concatenated by a comma `,` so that all of them
-
-            are required.
+            We calculate the metrics for each environment independently.
 
             '
           items:
             type: string
           type: array
-        labels_exclude:
-          description: Issues having one label from the list will be excluded.
-          items:
-            type: string
-          type: array
-        issue_types:
-          description: 'Issues must have one of the given types, e.g. Bug, Task, Design Document, etc.
+        envgroups:
+          description: 'List of environment groups for which to calculate the metrics.
 
             '
           items:
-            type: string
+            items:
+              type: string
+            type: array
           type: array
-        priorities:
-          description: Issues must have a priority from the given list.
-          items:
-            type: string
-          type: array
-        projects:
-          description: Issues must be contained in a project in the given project keys list.
-          items:
-            type: string
-          type: array
-        status_categories:
-          description: The JIRA issues must have a status belonging to one of these categories.
-          items:
-            $ref: '#/components/schemas/JIRAStatusCategory'
-          type: array
-        unmapped:
-          description: Select PRs that are not mapped to any JIRA issue. May not be specified with anything else.
-          type: boolean
       type: object
-    MissingSettingsError:
-      $ref: '#/components/schemas/GenericError'
-    DeveloperMetricsRequest:
+    InvalidRequestError:
+      allOf:
+      - $ref: '#/components/schemas/GenericError'
+      - properties:
+          pointer:
+            description: Path to the offending request item.
+            example: .granularity
+            type: string
+        type: object
+    TimeZone:
+      description: Local time zone offset in minutes, used to adjust `date_from` and `date_to`.
+      maximum: 780
+      minimum: -720
+      type: integer
+    CalculatedJIRAMetricValues:
       additionalProperties: false
-      description: Request for calculating metrics on top of developer activities.
+      description: Calculated JIRA metrics for a specific granularity.
       example:
-        for:
-        - repositories:
-          - github.com/athenianco/athenian-webapp
-          - github.com/athenianco/athenian-api
-          developers:
-          - github.com/vmarkovtsev
-          - github.com/dpordomingo
-        - repositories:
-          - github.com/athenianco/athenian-webapp
-          - github.com/athenianco/athenian-api
-          developers:
-          - github.com/vmarkovtsev
-          - github.com/dpordomingo
-        metrics:
-        - dev-reviews
-        - dev-prs-created
-        - dev-pr-comments
-        date_from: 2019-10-23
-        date_to: 2020-05-23
-        granularities:
-        - all
-        account: 1
+        granularity: 2 week
+        values:
+        - date: 2020-01-23
+          values:
+          - 0.8008282
+          - 0.8008282
+          confidence_mins:
+          - 0.5
+          - 0.5
+          confidence_maxs:
+          - 1.0
+          - 1.0
+          confidence_scores:
+          - 75
+          - 75
+        - date: 2020-01-23
+          values:
+          - 0.8008282
+          - 0.8008282
+          confidence_mins:
+          - 0.5
+          - 0.5
+          confidence_maxs:
+          - 1.0
+          - 1.0
+          confidence_scores:
+          - 75
+          - 75
       properties:
+        granularity:
+          $ref: '#/components/schemas/Granularity'
         for:
-          description: Sets of developers and repositories to calculate the metrics for.
-          items:
-            $ref: '#/components/schemas/ForSetDevelopers'
-          type: array
-        metrics:
-          description: Requested metric identifiers.
-          items:
-            $ref: '#/components/schemas/DeveloperMetricID'
-          type: array
-        date_from:
-          description: Date from when to start measuring the metrics.
-          format: date
+          $ref: '#/components/schemas/JIRAFilter'
+        jira_label:
+          description: Title of the assigned JIRA label, if `group_by_jira_label` was previously set to `true`. If is missing and `group_by_jira_label` was set to `true` then the metrics are calculated for issues without labels.
           type: string
-        date_to:
-          description: Date until which to measure the metrics.
-          format: date
-          type: string
-        timezone:
-          $ref: '#/components/schemas/TimeZone'
-        account:
-          description: Session account ID.
-          type: integer
-        granularities:
-          $ref: '#/components/schemas/Granularities'
+        with:
+          $ref: '#/components/schemas/JIRAFilterWith'
+        values:
+          description: The sequence steps from `date_from` till `date_to` by `granularity`.
+          items:
+            $ref: '#/components/schemas/CalculatedLinearMetricValues'
+          type: array
       required:
-      - account
-      - date_from
-      - date_to
-      - for
-      - granularities
-      - metrics
+      - granularity
+      - values
       type: object
-    CalculatedDeveloperMetrics:
+    DeploymentWith:
       additionalProperties: false
-      description: 'Response of `/metrics/developers`. The dates start from `date_from`
+      description: 'Deployment contribution roles. The aggregation is `OR` everywhere.
 
-        and end earlier or equal to `date_to`.
-
-        The order of the items is *not* guaranteed to match any expectations.
+        It is possible to mention whole teams using the syntax `{id}` where `id` is a team identifier (see `/teams`).
 
         '
       example:
-        date_from: 2020-01-23
-        date_to: 2020-01-24
-        granularities:
-        - all
-        metrics:
-        - dev-prs-created
-        - dev-reviews
-        calculated:
-        - values:
-          - - date: 2020-01-23
-              values:
-              - 5
-              - 10
-          - - date: 2020-01-23
-              values:
-              - 20
-              - 100
-          for:
-            repositories:
-            - github.com/athenianco/athenian-webapp
-            - github.com/athenianco/athenian-api
-            developers:
-            - github.com/vmarkovtsev
-            - github.com/dpordomingo
-          granularity: all
+        pr_author:
+        - github.com/se7entyse7en
       properties:
-        calculated:
-          description: Values of the requested metrics by developer through time.
-          items:
-            $ref: '#/components/schemas/CalculatedDeveloperMetricsItem'
-          type: array
-        metrics:
-          description: Repeats `DeveloperMetricsRequest.metrics`.
-          items:
-            $ref: '#/components/schemas/DeveloperMetricID'
-          type: array
-        date_from:
-          description: Repeats `DeveloperMetricsRequest.date_from`.
-          format: date
-          type: string
-        date_to:
-          description: Repeats `DeveloperMetricsRequest.date_to`.
-          format: date
-          type: string
-        timezone:
-          $ref: '#/components/schemas/TimeZone'
-        granularities:
-          $ref: '#/components/schemas/Granularities'
-      required:
-      - calculated
-      - date_from
-      - date_to
-      - granularities
-      - metrics
+        pr_author:
+          allOf:
+          - $ref: '#/components/schemas/DeveloperSet'
+          - description: Authors of deployed pull requests.
+        commit_author:
+          allOf:
+          - $ref: '#/components/schemas/DeveloperSet'
+          - description: Authors of deployed commits.
+        releaser:
+          allOf:
+          - $ref: '#/components/schemas/DeveloperSet'
+          - description: Deployed release publishers.
       type: object
     CalculatedCodeCheckMetrics:
       additionalProperties: false
@@ -1310,99 +843,95 @@ components:
       - granularities
       - metrics
       type: object
-    CalculatedReleaseMetric:
-      additionalProperties: false
-      description: Calculated release metric values.
+    Granularity:
+      description: 'How often the metrics are reported. The value must satisfy the
+
+        following regular expression: /^all|(([1-9]\d* )?(aligned )?(day|week|month|year))$/.
+
+        "all" produces a single interval [`date_from`, `date_to`].
+
+        "aligned week/month/year" produces intervals cut by calendar week/month/year borders,
+
+        for example, when `date_from` is `2020-01-15` and `date_to` is `2020-03-10`,
+
+        the intervals will be `2020-01-15` - `2020-02-01` - `2020-03-01` - `2020-03-10`.'
+      example: 2 week
+      type: string
+    GenericError:
       example:
-        for:
-        - athenianco/athenian-api
-        - athenianco/athenian-webapp
-        metrics:
-        - release-count
-        granularity: day
-        matches:
-          athenianco/athenian-api: branch
-          athenianco/athenian-webapp: event
+        detail: 'Unsupported metric: pr-xxx-time'
+        status: 400
+        title: Bad request syntax or unsupported method.
+        type: /errors/InvalidRequestError
+      properties:
+        detail:
+          description: Human-readable explanation specific to this occurrence of the problem.
+          example: 'Unsupported metric: pr-xxx-time'
+          type: string
+        instance:
+          description: URI reference that identifies the specific occurrence of the problem. It is `null` for 4xx, Sentry event ID for 5xx.
+          example: 2763c4eabd7240f59829ee1a02546293
+          type: string
+        status:
+          description: Duplicated HTTP status code.
+          example: 400
+          type: integer
+        title:
+          description: Short, human-readable summary of the problem type.
+          example: Bad request syntax or unsupported method.
+          type: string
+        type:
+          description: URI reference that identifies the problem type (RFC 7807).
+          example: /errors/InvalidRequestError
+          type: string
+      required:
+      - status
+      - title
+      - type
+      type: object
+    CalculatedPullRequestMetricsItem:
+      additionalProperties: false
+      description: Series of calculated metrics for a specific set of repositories and developers.
+      example:
         values:
-        - confidence_maxs:
-          - 1.0
-          - 1.0
-          confidence_mins:
-          - 0.5
-          - 0.5
-          confidence_scores:
-          - 75
-          - 75
-          date: 2020-01-23
+        - date: 2020-01-23
           values:
           - 0.8008282
           - 0.8008282
-      properties:
-        for:
-          $ref: '#/components/schemas/RepositorySet'
-        with:
-          $ref: '#/components/schemas/ReleaseWith'
-        jira:
-          $ref: '#/components/schemas/JIRAFilter'
-        matches:
-          additionalProperties:
-            $ref: '#/components/schemas/ReleaseMatchStrategy'
-          description: Applied release matching strategies for the repositories in `for`.
-          type: object
-        metrics:
-          items:
-            $ref: '#/components/schemas/ReleaseMetricID'
-          type: array
-        granularity:
-          $ref: '#/components/schemas/Granularity'
-        values:
-          description: The sequence steps from `date_from` till `date_to` by `granularity`.
-          items:
-            $ref: '#/components/schemas/CalculatedLinearMetricValues'
-          type: array
-      required:
-      - granularity
-      - matches
-      - metrics
-      - values
-      type: object
-    CalculatedDeploymentMetric:
-      additionalProperties: false
-      description: Calculated metrics for a deployments group.
-      example:
+          confidence_mins:
+          - 0.5
+          - 0.5
+          confidence_maxs:
+          - 1.0
+          - 1.0
+          confidence_scores:
+          - 75
+          - 75
+        - date: 2020-01-24
+          values:
+          - 0.8008282
+          - 0.8008282
+          confidence_mins:
+          - 0.5
+          - 0.5
+          confidence_maxs:
+          - 1.0
+          - 1.0
+          confidence_scores:
+          - 75
+          - 75
         for:
           repositories:
           - github.com/athenianco/athenian-webapp
           - github.com/athenianco/athenian-api
           with:
-            pr_author:
-            - github.com/se7entyse7en
+            author:
             - github.com/vmarkovtsev
-        metrics:
-        - dep-duration-successful
-        - dep-success-ratio
-        granularity: all
-        values:
-        - date: 2020-07-20
-          values:
-          - 600s
-          - 0.91
-          confidence_mins:
-          - 550s
-          - null
-          confidence_maxs:
-          - 630s
-          - null
-          confidence_scores:
-          - 84
-          - null
+            - github.com/dpordomingo
+        granularity: day
       properties:
         for:
-          $ref: '#/components/schemas/ForSetDeployments'
-        metrics:
-          items:
-            $ref: '#/components/schemas/DeploymentMetricID'
-          type: array
+          $ref: '#/components/schemas/ForSetPullRequests'
         granularity:
           $ref: '#/components/schemas/Granularity'
         values:
@@ -1412,26 +941,385 @@ components:
           type: array
       required:
       - for
-      - granularity
-      - metrics
       - values
       type: object
-    MeasuredCodeBypassingPRs:
-      description: Statistics about code pushed outside of pull requests.
+    PullRequestMetricsRequest:
+      additionalProperties: false
+      description: Request for calculating metrics on top of pull requests data.
       example:
-      - date: 2020-01-23
-        bypassed_commits: 1
-        bypassed_lines: 20
-        total_commits: 2
-        total_lines: 50
-      - date: 2020-01-24
-        bypassed_commits: 2
-        bypassed_lines: 30
-        total_commits: 3
-        total_lines: 60
+        for:
+        - repositories:
+          - github.com/athenianco/athenian-webapp
+          - github.com/athenianco/athenian-api
+          with:
+            author:
+            - github.com/vmarkovtsev
+            - github.com/dpordomingo
+        - repositories:
+          - github.com/athenianco/metadata
+          - github.com/athenianco/athenian-api
+          with:
+            author:
+            - github.com/vmarkovtsev
+            - github.com/se7entyse7en
+        metrics:
+        - pr-lead-time
+        - pr-wip-time
+        date_from: 2020-01-23
+        date_to: 2020-01-24
+        granularities:
+        - day
+        account: 1
+        exclude_inactive: true
+      properties:
+        for:
+          description: 'Sets of developers and repositories for which to calculate the metrics.
+
+            The aggregation is `AND` between repositories and developers.
+
+            The aggregation is `OR` inside both repositories and developers.'
+          items:
+            $ref: '#/components/schemas/ForSetPullRequests'
+          type: array
+        metrics:
+          description: Requested metric identifiers.
+          items:
+            $ref: '#/components/schemas/PullRequestMetricID'
+          type: array
+        date_from:
+          description: Date from when to start measuring the metrics.
+          format: date
+          type: string
+        date_to:
+          description: Date until which to measure the metrics.
+          format: date
+          type: string
+        timezone:
+          $ref: '#/components/schemas/TimeZone'
+        granularities:
+          $ref: '#/components/schemas/Granularities'
+        quantiles:
+          $ref: '#/components/schemas/Quantiles'
+        exclude_inactive:
+          description: Value indicating whether PRs without events in the given time frame shall be ignored.
+          type: boolean
+        account:
+          description: Session account ID.
+          type: integer
+        fresh:
+          description: Force metrics calculation on the most up to date data.
+          type: boolean
+      required:
+      - account
+      - date_from
+      - date_to
+      - exclude_inactive
+      - for
+      - granularities
+      - metrics
+      type: object
+    JIRAMetricsRequest:
+      additionalProperties: false
+      description: Request body of `/metrics/jira`.
+      example:
+        account: 1
+        date_from: 2020-10-01
+        date_to: 2020-10-30
+        priorities:
+        - High
+        types:
+        - Bug
+        metrics:
+        - jira-open
+        - jira-resolved
+        - jira-raised
+        granularities:
+        - all
+        exclude_inactive: true
+      properties:
+        account:
+          description: Session account ID.
+          type: integer
+        date_from:
+          description: Issues must be resolved after this date.
+          format: date
+          type: string
+        date_to:
+          description: Issues must be created before this date.
+          format: date
+          type: string
+        for:
+          description: "Calculate metrics separately for each JIRA Filter in the list.\nNot compatible with other jira filters in the request:\n  `priorities`, `types`, `labels_include`, `labels_exclude`, `epics`, `projects`.\n"
+          items:
+            $ref: '#/components/schemas/JIRAFilter'
+          type: array
+        timezone:
+          $ref: '#/components/schemas/TimeZone'
+        priorities:
+          description: Selected issue priorities.
+          items:
+            type: string
+          type: array
+        types:
+          description: Selected issue types.
+          items:
+            type: string
+          type: array
+        labels_include:
+          description: JIRA issues must contain at least one label from the list. Several labels may be concatenated by a comma `,` so that all of them are required.
+          items:
+            type: string
+          type: array
+        labels_exclude:
+          description: JIRA issues may not contain labels from this list.
+          items:
+            type: string
+          type: array
+        exclude_inactive:
+          description: Value indicating whether issues with the last update older than `date_from` should be ignored. If `date_from` and `date_to` are `null`, does nothing.
+          type: boolean
+        epics:
+          description: JIRA issues must be attached to any of the epic IDs from this list.
+          items:
+            type: string
+          type: array
+        with:
+          description: Groups of issue participants. The metrics will be calculated for each group.
+          items:
+            $ref: '#/components/schemas/JIRAFilterWith'
+          type: array
+        projects:
+          description: Issues must belong to these JIRA projects.
+          items:
+            example: DEV
+            type: string
+          type: array
+        metrics:
+          description: List of measured metrics.
+          items:
+            $ref: '#/components/schemas/JIRAMetricID'
+          type: array
+        quantiles:
+          $ref: '#/components/schemas/Quantiles'
+        granularities:
+          $ref: '#/components/schemas/Granularities'
+        group_by_jira_label:
+          description: Value indicating whether the metrics should be grouped by assigned JIRA issue label.
+          type: boolean
+      required:
+      - account
+      - date_from
+      - date_to
+      - exclude_inactive
+      - granularities
+      - metrics
+      type: object
+    DeveloperMetricID:
+      description: 'Currently supported developer metric types.
+
+        * `dev-commits-pushed`: how many commits were pushed.
+
+        * `dev-lines-changed`: how many lines were either inserted or removed in the pushed commits.
+
+        * `dev-prs-created`: how many PRs were created.
+
+        * `dev-prs-reviewed`: how many *distinct* PRs were reviewed (approved, rejected or neutral).
+
+        * `dev-prs-merged`: how many PRs were merged by this developer. This is *not* how many authored PRs were merged!
+
+        * `dev-releases`: how many releases were authored by this developer.
+
+        * `dev-reviews`: how many reviews were submitted. One PR may have several reviews by the same developer! This value equals to the sum of `dev-review-approvals`, `dev-review-rejections` and `dev-review-neutrals`.
+
+        * `dev-review-approvals`: how many approvals this developer submitted. One PR may have several approvals by the same developer!
+
+        * `dev-review-rejections`: how many rejections this developer submitted. One PR may have several rejections by the same developer!
+
+        * `dev-review-neutrals`: how many neutral ("comment") reviews this developer submitted. One PR may have several neutral reviews by the same developer!
+
+        * `dev-pr-comments`: how many comments (both regular and review) this developer posted.
+
+        * `dev-regular-pr-comments`: how many regular comments (not review suggestions!) this developer posted.
+
+        * `dev-review-pr-comments`: how many review suggestions (summaries are not considered!) this developer posted.
+
+        * `dev-active`: indicates whether this developer has made commits on more than X days during T days. `X / T = 0.2` at the moment.
+
+        * `dev-active0`: indicates whether this developer has made at least one commit.
+
+        * `dev-worked`: indicates whether this developer has shown any activity.'
+      enum:
+      - dev-commits-pushed
+      - dev-lines-changed
+      - dev-prs-created
+      - dev-prs-reviewed
+      - dev-prs-merged
+      - dev-releases
+      - dev-reviews
+      - dev-review-approvals
+      - dev-review-rejections
+      - dev-review-neutrals
+      - dev-pr-comments
+      - dev-regular-pr-comments
+      - dev-review-pr-comments
+      - dev-active
+      - dev-active0
+      - dev-worked
+      example: dev-prs-created
+      type: string
+    NoSourceDataError:
+      $ref: '#/components/schemas/GenericError'
+    DeveloperSet:
+      description: A set of developers. An empty list disables the filter and includes everybody. Duplicates are automatically ignored.
+      example:
+      - github.com/vmarkovtsev
+      - github.com/dpordomingo
       items:
-        $ref: '#/components/schemas/CodeBypassingPRsMeasurement'
+        $ref: '#/components/schemas/DeveloperID'
       type: array
+    DeploymentMetricsRequest:
+      additionalProperties: false
+      description: Request body of `/metrics/deployments`, the deployments selector.
+      example:
+        for:
+        - repositories:
+          - github.com/athenianco/athenian-webapp
+          - github.com/athenianco/athenian-api
+          withgroups:
+          - pr_author:
+            - github.com/se7entyse7en
+            - github.com/vmarkovtsev
+          jira:
+            labels_include:
+            - bug
+        metrics:
+        - dep-duration-successful
+        - dep-success-ratio
+        date_from: 2021-07-20
+        date_to: 2021-10-07
+        granularities:
+        - all
+        - 2 week
+        account: 1
+      properties:
+        for:
+          description: 'Sets of filters for which to calculate the metrics.
+
+            The aggregation is `AND` between individual properties like `repositories` or `with`.
+
+            The aggregation is `OR` inside each property.'
+          items:
+            $ref: '#/components/schemas/ForSetDeployments'
+          type: array
+        metrics:
+          description: Requested metric identifiers.
+          items:
+            $ref: '#/components/schemas/DeploymentMetricID'
+          type: array
+        date_from:
+          description: Date from when to start measuring the metrics.
+          format: date
+          type: string
+        date_to:
+          description: Date until which to measure the metrics.
+          format: date
+          type: string
+        timezone:
+          $ref: '#/components/schemas/TimeZone'
+        granularities:
+          $ref: '#/components/schemas/Granularities'
+        quantiles:
+          $ref: '#/components/schemas/Quantiles'
+        account:
+          description: Session account ID.
+          type: integer
+      required:
+      - account
+      - date_from
+      - date_to
+      - for
+      - granularities
+      - metrics
+      type: object
+    Quantiles:
+      description: 'Cut the distributions at certain quantiles.
+
+        The default values are [0, 1] which means no cutting.'
+      example:
+      - 0
+      - 0.95
+      items:
+        maximum: 1
+        minimum: 0
+        type: number
+      maxItems: 2
+      minItems: 2
+      type: array
+    CalculatedDeveloperMetrics:
+      additionalProperties: false
+      description: 'Response of `/metrics/developers`. The dates start from `date_from`
+
+        and end earlier or equal to `date_to`.
+
+        The order of the items is *not* guaranteed to match any expectations.
+
+        '
+      example:
+        date_from: 2020-01-23
+        date_to: 2020-01-24
+        granularities:
+        - all
+        metrics:
+        - dev-prs-created
+        - dev-reviews
+        calculated:
+        - values:
+          - - date: 2020-01-23
+              values:
+              - 5
+              - 10
+          - - date: 2020-01-23
+              values:
+              - 20
+              - 100
+          for:
+            repositories:
+            - github.com/athenianco/athenian-webapp
+            - github.com/athenianco/athenian-api
+            developers:
+            - github.com/vmarkovtsev
+            - github.com/dpordomingo
+          granularity: all
+      properties:
+        calculated:
+          description: Values of the requested metrics by developer through time.
+          items:
+            $ref: '#/components/schemas/CalculatedDeveloperMetricsItem'
+          type: array
+        metrics:
+          description: Repeats `DeveloperMetricsRequest.metrics`.
+          items:
+            $ref: '#/components/schemas/DeveloperMetricID'
+          type: array
+        date_from:
+          description: Repeats `DeveloperMetricsRequest.date_from`.
+          format: date
+          type: string
+        date_to:
+          description: Repeats `DeveloperMetricsRequest.date_to`.
+          format: date
+          type: string
+        timezone:
+          $ref: '#/components/schemas/TimeZone'
+        granularities:
+          $ref: '#/components/schemas/Granularities'
+      required:
+      - calculated
+      - date_from
+      - date_to
+      - granularities
+      - metrics
+      type: object
     CalculatedLinearMetricValues:
       additionalProperties: false
       example:
@@ -1490,65 +1378,14 @@ components:
       - date
       - values
       type: object
-    TimeZone:
-      description: Local time zone offset in minutes, used to adjust `date_from` and `date_to`.
-      maximum: 780
-      minimum: -720
-      type: integer
-    CalculatedPullRequestMetricsItem:
-      additionalProperties: false
-      description: Series of calculated metrics for a specific set of repositories and developers.
+    RepositorySet:
+      description: Set of repositories. An empty list raises a bad response 400. Duplicates are automatically ignored.
       example:
-        values:
-        - date: 2020-01-23
-          values:
-          - 0.8008282
-          - 0.8008282
-          confidence_mins:
-          - 0.5
-          - 0.5
-          confidence_maxs:
-          - 1.0
-          - 1.0
-          confidence_scores:
-          - 75
-          - 75
-        - date: 2020-01-24
-          values:
-          - 0.8008282
-          - 0.8008282
-          confidence_mins:
-          - 0.5
-          - 0.5
-          confidence_maxs:
-          - 1.0
-          - 1.0
-          confidence_scores:
-          - 75
-          - 75
-        for:
-          repositories:
-          - github.com/athenianco/athenian-webapp
-          - github.com/athenianco/athenian-api
-          with:
-            author:
-            - github.com/vmarkovtsev
-            - github.com/dpordomingo
-        granularity: day
-      properties:
-        for:
-          $ref: '#/components/schemas/ForSetPullRequests'
-        granularity:
-          $ref: '#/components/schemas/Granularity'
-        values:
-          description: The sequence steps from `date_from` till `date_to` by `granularity`.
-          items:
-            $ref: '#/components/schemas/CalculatedLinearMetricValues'
-          type: array
-      required:
-      - for
-      - values
-      type: object
+      - github.com/athenianco/athenian-webapp
+      - github.com/athenianco/athenian-api
+      items:
+        $ref: '#/components/schemas/RepositoryID'
+      type: array
     JIRAFilterWith:
       additionalProperties: false
       description: Group of JIRA issue participant names split by role.
@@ -1574,6 +1411,69 @@ components:
             type: string
           type: array
       type: object
+    DeploymentMetricID:
+      description: 'Supported deployment metrics.
+
+        * `dep-count` - number of deployments in the time period.
+
+        * `dep-duration-all` - average deployment procedure time - the difference between `date_finished` and `date_started` of `DeploymentNotification`.
+
+        * `dep-duration-successful` - average successful deployment procedure time - the difference between `date_finished` and `date_started` of `DeploymentNotification` with `conclusion = ''SUCCESS''`.
+
+        * `dep-duration-failed` - average failed deployment procedure time - the difference between `date_finished` and `date_started` of `DeploymentNotification` with `conclusion = ''FAILURE''`.
+
+        * `dep-success-count` - number of successful deployments in the time period.
+
+        * `dep-failure-count` - number of failed deployments in the time period.
+
+        * `dep-success-ratio` - ratio between successful and all deployments.
+
+        * `dep-change-failure-count` - number of successful deployments introducing a failure in the system. This pertains deployments effects so is different from `dep-failure-count` which is about deployments execution.  A deployment can be marked as introducing a failure by associating it with the `failure` label, with any value.
+
+        * `dep-change-failure-ratio` - ratio between `dep-change-failure-count` and `dep-success-count`.
+
+        * `dep-size-prs` - average number of deployed pull requests.
+
+        * `dep-size-releases` - average number of deployed releases.
+
+        * `dep-size-lines` - average number of deployed lines of code (changed = insertions + removals).
+
+        * `dep-size-commits` - average number of deployed commits.
+
+        * `dep-prs-count` - number of pull requests deployed in the time period.
+
+        * `dep-releases-count` - number of releases deployed in the time period.
+
+        * `dep-lines-count` - number of deployed lines of code (changed = insertions + removals).
+
+        * `dep-commits-count` - number of deployed commits.
+
+        * `dep-jira-issues-count` - number of JIRA issues mapped to deployed pull requests.
+
+        * `dep-jira-bug-fixes-count` - number of deployed bug fixes.
+
+        '
+      enum:
+      - dep-count
+      - dep-duration-all
+      - dep-duration-successful
+      - dep-duration-failed
+      - dep-success-count
+      - dep-failure-count
+      - dep-success-ratio
+      - dep-change-failure-count
+      - dep-change-failure-ratio
+      - dep-size-prs
+      - dep-size-releases
+      - dep-size-lines
+      - dep-size-commits
+      - dep-prs-count
+      - dep-releases-count
+      - dep-lines-count
+      - dep-commits-count
+      - dep-jira-issues-count
+      - dep-jira-bug-fixes-count
+      type: string
     CodeCheckMetricID:
       description: 'The mentioned terms such as "check suite" and "check run" belong to [the official documentation on GitHub](https://docs.github.com/en/rest/guides/getting-started-with-the-checks-api#about-check-runs).
 
@@ -1639,361 +1539,6 @@ components:
       - chk-suite-imbalance
       example: chk-suites-count
       type: string
-    RepositoryID:
-      description: 'Repository name which uniquely identifies any repository in any service provider.
-
-        The format matches the repository URL without the protocol part. No ".git" should be appended.
-
-        We support a special syntax for repository sets: "{reposet id}" adds all the repositories
-
-        from the given set.
-
-        '
-      example: github.com/athenianco/athenian-webapp
-      type: string
-    ReleaseMetricID:
-      description: 'Currently supported release metric types.
-
-        * `release-count` - number of all releases in the time interval.
-
-        * `release-tag-count` - number of releases by tag in the time interval.
-
-        * `release-branch-count` - number of releases by branch merge in the time interval.
-
-        * `release-prs` - number of PRs released in the time interval.
-
-        * `release-tag-prs` - number of PRs released by tag in the time interval.
-
-        * `release-branch-prs` - number of PRs released by branch merge in the time interval.
-
-        * `release-commits` - number of commits which were released in the time interval.
-
-        * `release-tag-commits` - number of commits which were released by tag in the time interval.
-
-        * `release-branch-commits` - number of commits which were released by branch merge in the time interval.
-
-        * `release-lines` - sum of the changed (added or removed) diff lines of the commits released in the time interval.
-
-        * `release-tag-lines` - sum of the changed (added or removed) diff lines of the commits released by tag in the time interval.
-
-        * `release-branch-lines` - sum of the changed (added or removed) diff lines of the commits released by branch merge in the time interval.
-
-        * `release-avg-prs` - average (by release) number of PRs released in the time interval. Quantiles are applied.
-
-        * `release-tag-avg-prs` - average (by release) number of PRs released by tag in the time interval. Quantiles are applied.
-
-        * `release-branch-avg-prs` - average number of PRs released by branch merge in the time interval. Quantiles are applied.
-
-        * `release-avg-commits` - average (by release) number of commits released in the time interval. Quantiles are applied.
-
-        * `release-tag-avg-commits` - average (by release) number of commits released by tag in the time interval. Quantiles are applied.
-
-        * `release-branch-avg-commits` - average (by release) number of commits released by branch merge in the time interval. Quantiles are applied.
-
-        * `release-avg-lines` - average (by release) number of changed (added + removed) diff lines of the commits released in the time interval. Quantiles are applied.
-
-        * `release-tag-avg-lines` - average (by release) number of changed (added + removed) diff lines of the commits released by tag in the time interval. Quantiles are applied.
-
-        * `release-branch-avg-lines` - average (by release) number of changed (added + removed) diff lines of the commits released by branch merge in the time interval. Quantiles are applied.
-
-        * `release-age` - average timedelta between releases of the same alignment (as determined by the commit DAG). Quantiles are applied.
-
-        * `release-tag-age` - average timedelta between releases by tag of the same alignment (as determined by the commit DAG). Quantiles are applied.
-
-        * `release-branch-age` - average timedelta between releases by branch of the same alignment (as determined by the commit DAG). Quantiles are applied.
-
-        * `release-time-to-deploy` - average time passed since release happened until deployed.'
-      enum:
-      - release-count
-      - release-tag-count
-      - release-branch-count
-      - release-prs
-      - release-tag-prs
-      - release-branch-prs
-      - release-commits
-      - release-tag-commits
-      - release-branch-commits
-      - release-lines
-      - release-tag-lines
-      - release-branch-lines
-      - release-avg-prs
-      - release-tag-avg-prs
-      - release-branch-avg-prs
-      - release-avg-commits
-      - release-tag-avg-commits
-      - release-branch-avg-commits
-      - release-avg-lines
-      - release-tag-avg-lines
-      - release-branch-avg-lines
-      - release-age
-      - release-tag-age
-      - release-branch-age
-      - release-time-to-deploy
-      type: string
-    WithBothJiraAndJiragroups:
-      description: An object having both jira and jiragroups fields.
-      properties:
-        jira: {}
-        jiragroups: {}
-      required:
-      - jira
-      - jiragroups
-      type: object
-    GenericError:
-      example:
-        detail: 'Unsupported metric: pr-xxx-time'
-        status: 400
-        title: Bad request syntax or unsupported method.
-        type: /errors/InvalidRequestError
-      properties:
-        detail:
-          description: Human-readable explanation specific to this occurrence of the problem.
-          example: 'Unsupported metric: pr-xxx-time'
-          type: string
-        instance:
-          description: URI reference that identifies the specific occurrence of the problem. It is `null` for 4xx, Sentry event ID for 5xx.
-          example: 2763c4eabd7240f59829ee1a02546293
-          type: string
-        status:
-          description: Duplicated HTTP status code.
-          example: 400
-          type: integer
-        title:
-          description: Short, human-readable summary of the problem type.
-          example: Bad request syntax or unsupported method.
-          type: string
-        type:
-          description: URI reference that identifies the problem type (RFC 7807).
-          example: /errors/InvalidRequestError
-          type: string
-      required:
-      - status
-      - title
-      - type
-      type: object
-    JIRAMetricID:
-      description: 'Currently supported JIRA activity metrics.
-
-        * `jira-open` - number of issues active by the end of the time interval.
-
-        * `jira-resolved` - number of issues closed in the given time range.
-
-        * `jira-raised` - number of issues reported in the given time range.
-
-        * `jira-acknowledged` - number of issues that are "In Progress" or "Resolved". This number matches the issues considered to calculate `jira-acknowledge-time` before applying the quantiles.
-
-        * `jira-acknowledged-q` - number of issues that are "In Progress" or "Resolved". This number matches the issues considered to calculate `jira-acknowledge-time` after applying the quantiles.
-
-        * `jira-life-time` - Mean Life Time - the time between min(issue creation, work began) and max(issue resolution, fixes released).
-
-        * `jira-life-time-below-threshold-ratio` - ratio of issues with a `jira-life-time` below the threshold, disregarding the quantiles. The default threshold is 5 days.
-
-        * `jira-lead-time` - Mean Lead Time - the time between when the work began and max(issue resolution, fixes released).
-
-        * `jira-lead-time-below-threshold-ratio` - ratio of issues with a `jira-lead-time` below the threshold, disregarding the quantiles. The default threshold is 5 days.
-
-        * `jira-acknowledge-time` - Mean Acknowledge Time - the time between when the issue was created and the work began = `min(transitioned to "In Progress", PR created)`. It equals to 0 for retrofitted issues with PRs before their creation times.
-
-        * `jira-acknowledge-time-below-threshold-ratio` - ratio of issues with a `jira-acknowledge-time` below the threshold, disregarding the quantiles. The default threshold is 3 days.
-
-        * `jira-pr-lag-time` - the time between when the issue transitioned to "In Progress" and the first PR was created. It equals to 0 if the difference is negative or no PRs are mapped to the issue.
-
-        * `jira-backlog-time` - the time between when the issue was created and transitioned to "In Progress".
-
-        * `jira-resolution-rate` - ratio between the number of resolved issues to the number of raised issues.'
-      enum:
-      - jira-open
-      - jira-resolved
-      - jira-raised
-      - jira-acknowledged
-      - jira-acknowledged-q
-      - jira-life-time
-      - jira-life-time-below-threshold-ratio
-      - jira-lead-time
-      - jira-lead-time-below-threshold-ratio
-      - jira-acknowledge-time
-      - jira-acknowledge-time-below-threshold-ratio
-      - jira-pr-lag-time
-      - jira-backlog-time
-      - jira-resolution-rate
-      example: jira-resolved
-      type: string
-    CodeBypassingPRsMeasurement:
-      additionalProperties: false
-      description: Statistics about code pushed outside of pull requests in a certain time interval.
-      example:
-        date: 2020-01-23
-        bypassed_commits: 1
-        bypassed_lines: 20
-        total_commits: 2
-        total_lines: 50
-      properties:
-        date:
-          description: Commits were pushed beginning with this date. They were not pushed later than +granularity.
-          format: date
-          type: string
-        bypassed_commits:
-          description: Number of commits that bypassed PRs in the time interval.
-          minimum: 0
-          type: integer
-        bypassed_lines:
-          description: Number of changed (added + removed) lines that bypassed PRs in the time interval.
-          minimum: 0
-          type: integer
-        total_commits:
-          description: Overall number of commits in the time interval.
-          minimum: 0
-          type: integer
-        total_lines:
-          description: Overall number of changed (added + removed) lines in the time interval.
-          minimum: 0
-          type: integer
-      required:
-      - bypassed_commits
-      - bypassed_lines
-      - date
-      - total_commits
-      - total_lines
-      type: object
-    DeveloperSet:
-      description: A set of developers. An empty list disables the filter and includes everybody. Duplicates are automatically ignored.
-      example:
-      - github.com/vmarkovtsev
-      - github.com/dpordomingo
-      items:
-        $ref: '#/components/schemas/DeveloperID'
-      type: array
-    ForSetDevelopers:
-      additionalProperties: false
-      description: 'Filter for `/metrics/developers`.
-
-        Achieve the best performance by packing all your filters in a single `ForSetDevelopers`
-
-        instead of sending multiple `ForSetDevelopers`-s. For example, use `repogroups`
-
-        to request separate metrics for several repository sets.
-
-        '
-      example:
-        repositories:
-        - github.com/athenianco/athenian-webapp
-        - github.com/athenianco/athenian-api
-        developers:
-        - github.com/vmarkovtsev
-        - github.com/dpordomingo
-      properties:
-        repositories:
-          $ref: '#/components/schemas/RepositorySet'
-        developers:
-          allOf:
-          - description: List of developers. Must contain at least one item. Duplicates are not ignored.
-          - $ref: '#/components/schemas/DeveloperSet'
-        repogroups:
-          allOf:
-          - description: Split metrics per defined repository groups.
-          - $ref: '#/components/schemas/IndexedGroups'
-        aggregate_devgroups:
-          allOf:
-          - description: Aggregate metrics for each defined developer group.
-          - $ref: '#/components/schemas/IndexedGroups'
-        labels_include:
-          description: PRs must be labeled with at least one name from this list so that the related metrics include them.
-          items:
-            type: string
-          type: array
-        labels_exclude:
-          description: PRs must not be labeled with any name from this list so that the related metrics exclude them.
-          items:
-            type: string
-          type: array
-        jira:
-          $ref: '#/components/schemas/JIRAFilter'
-      required:
-      - developers
-      - repositories
-      type: object
-    DeploymentMetricsRequest:
-      additionalProperties: false
-      description: Request body of `/metrics/deployments`, the deployments selector.
-      example:
-        for:
-        - repositories:
-          - github.com/athenianco/athenian-webapp
-          - github.com/athenianco/athenian-api
-          withgroups:
-          - pr_author:
-            - github.com/se7entyse7en
-            - github.com/vmarkovtsev
-          jira:
-            labels_include:
-            - bug
-        metrics:
-        - dep-duration-successful
-        - dep-success-ratio
-        date_from: 2021-07-20
-        date_to: 2021-10-07
-        granularities:
-        - all
-        - 2 week
-        account: 1
-      properties:
-        for:
-          description: 'Sets of filters for which to calculate the metrics.
-
-            The aggregation is `AND` between individual properties like `repositories` or `with`.
-
-            The aggregation is `OR` inside each property.'
-          items:
-            $ref: '#/components/schemas/ForSetDeployments'
-          type: array
-        metrics:
-          description: Requested metric identifiers.
-          items:
-            $ref: '#/components/schemas/DeploymentMetricID'
-          type: array
-        date_from:
-          description: Date from when to start measuring the metrics.
-          format: date
-          type: string
-        date_to:
-          description: Date until which to measure the metrics.
-          format: date
-          type: string
-        timezone:
-          $ref: '#/components/schemas/TimeZone'
-        granularities:
-          $ref: '#/components/schemas/Granularities'
-        quantiles:
-          $ref: '#/components/schemas/Quantiles'
-        account:
-          description: Session account ID.
-          type: integer
-      required:
-      - account
-      - date_from
-      - date_to
-      - for
-      - granularities
-      - metrics
-      type: object
-    ReleaseMatchStrategy:
-      description: 'Release workflow choice: how we should detect releases.
-
-        * `branch`: merges to certain branches are considered releases and nothing else.
-
-        * `event`: releases are manually registered with `POST /events/releases`.
-
-        * `tag`: tags with certain name patterns are considered releases and nothing else.
-
-        * `tag_or_branch`: follow "tag"; if the repository does not have tags, fallback to "branch".'
-      enum:
-      - branch
-      - event
-      - tag
-      - tag_or_branch
-      type: string
-    NoSourceDataError:
-      $ref: '#/components/schemas/GenericError'
     PullRequestMetricID:
       description: 'Currently supported PR metric types.
 
@@ -2209,246 +1754,139 @@ components:
       - pr-comments-per
       example: pr-lead-time
       type: string
-    ForSetDeployments:
-      additionalProperties: false
-      description: 'Filters for `/metrics/deployments`. Nothing is strictly required.
-
-        Achieve the best performance by packing all your filters in a single `ForSetDeployments`
-
-        instead of sending multiple `ForSetDeployments`-s. For example, use `repogroups` and `withgroups`
-
-        to request separate metrics for several repository sets and teams.
-
-        '
-      example:
-        repositories:
-        - github.com/athenianco/athenian-webapp
-        - github.com/athenianco/athenian-api
-        withgroups:
-        - pr_author:
-          - github.com/se7entyse7en
-          - github.com/vmarkovtsev
-        jira:
-          labels_include:
-          - bug
-        environments:
-        - production
+    WithBothJiraAndJiragroups:
+      description: An object having both jira and jiragroups fields.
       properties:
-        repositories:
-          $ref: '#/components/schemas/RepositorySet'
-        repogroups:
-          $ref: '#/components/schemas/IndexedGroups'
-        with:
-          $ref: '#/components/schemas/DeploymentWith'
-        withgroups:
-          description: Alternative to `with` - calculate metrics for distinct filters separately.
-          items:
-            $ref: '#/components/schemas/DeploymentWith'
-          type: array
-        pr_labels_include:
-          description: At least one of these labels must be present in at least one deployed PR.
-          items:
-            type: string
-          type: array
-        pr_labels_exclude:
-          description: None of these labels must be present in each deployed PR.
-          items:
-            type: string
-          type: array
-        jira:
-          $ref: '#/components/schemas/JIRAFilter'
-        with_labels:
-          description: Deployments should contain at least one of the specified label values. `null` matches any label value and effectively checks the label existence.
-          type: object
-        without_labels:
-          description: Deployments may not contain the specified label values. `null` matches any label value and effectively ensures that the label does not exist.
-          type: object
-        environments:
-          description: 'List of environments for which to calculate the metrics.
-
-            We calculate the metrics for each environment independently.
-
-            '
-          items:
-            type: string
-          type: array
-        envgroups:
-          description: 'List of environment groups for which to calculate the metrics.
-
-            '
-          items:
-            items:
-              type: string
-            type: array
-          type: array
+        jira: {}
+        jiragroups: {}
+      required:
+      - jira
+      - jiragroups
       type: object
-    Quantiles:
-      description: 'Cut the distributions at certain quantiles.
+    JIRAMetricID:
+      description: 'Currently supported JIRA activity metrics.
 
-        The default values are [0, 1] which means no cutting.'
-      example:
-      - 0
-      - 0.95
-      items:
-        maximum: 1
-        minimum: 0
-        type: number
-      maxItems: 2
-      minItems: 2
-      type: array
-    RepositorySet:
-      description: Set of repositories. An empty list raises a bad response 400. Duplicates are automatically ignored.
-      example:
-      - github.com/athenianco/athenian-webapp
-      - github.com/athenianco/athenian-api
-      items:
-        $ref: '#/components/schemas/RepositoryID'
-      type: array
+        * `jira-open` - number of issues active by the end of the time interval.
+
+        * `jira-resolved` - number of issues closed in the given time range.
+
+        * `jira-raised` - number of issues reported in the given time range.
+
+        * `jira-acknowledged` - number of issues that are "In Progress" or "Resolved". This number matches the issues considered to calculate `jira-acknowledge-time` before applying the quantiles.
+
+        * `jira-acknowledged-q` - number of issues that are "In Progress" or "Resolved". This number matches the issues considered to calculate `jira-acknowledge-time` after applying the quantiles.
+
+        * `jira-life-time` - Mean Life Time - the time between min(issue creation, work began) and max(issue resolution, fixes released).
+
+        * `jira-life-time-below-threshold-ratio` - ratio of issues with a `jira-life-time` below the threshold, disregarding the quantiles. The default threshold is 5 days.
+
+        * `jira-lead-time` - Mean Lead Time - the time between when the work began and max(issue resolution, fixes released).
+
+        * `jira-lead-time-below-threshold-ratio` - ratio of issues with a `jira-lead-time` below the threshold, disregarding the quantiles. The default threshold is 5 days.
+
+        * `jira-acknowledge-time` - Mean Acknowledge Time - the time between when the issue was created and the work began = `min(transitioned to "In Progress", PR created)`. It equals to 0 for retrofitted issues with PRs before their creation times.
+
+        * `jira-acknowledge-time-below-threshold-ratio` - ratio of issues with a `jira-acknowledge-time` below the threshold, disregarding the quantiles. The default threshold is 3 days.
+
+        * `jira-pr-lag-time` - the time between when the issue transitioned to "In Progress" and the first PR was created. It equals to 0 if the difference is negative or no PRs are mapped to the issue.
+
+        * `jira-backlog-time` - the time between when the issue was created and transitioned to "In Progress".
+
+        * `jira-resolution-rate` - ratio between the number of resolved issues to the number of raised issues.'
+      enum:
+      - jira-open
+      - jira-resolved
+      - jira-raised
+      - jira-acknowledged
+      - jira-acknowledged-q
+      - jira-life-time
+      - jira-life-time-below-threshold-ratio
+      - jira-lead-time
+      - jira-lead-time-below-threshold-ratio
+      - jira-acknowledge-time
+      - jira-acknowledge-time-below-threshold-ratio
+      - jira-pr-lag-time
+      - jira-backlog-time
+      - jira-resolution-rate
+      example: jira-resolved
+      type: string
+    ReleaseMatchStrategy:
+      description: 'Release workflow choice: how we should detect releases.
+
+        * `branch`: merges to certain branches are considered releases and nothing else.
+
+        * `event`: releases are manually registered with `POST /events/releases`.
+
+        * `tag`: tags with certain name patterns are considered releases and nothing else.
+
+        * `tag_or_branch`: follow "tag"; if the repository does not have tags, fallback to "branch".'
+      enum:
+      - branch
+      - event
+      - tag
+      - tag_or_branch
+      type: string
     Granularities:
       description: The splits of the specified time range.
       items:
         $ref: '#/components/schemas/Granularity'
       minItems: 1
       type: array
-    JIRAGroups:
-      description: 'Calculate metrics separately for each JIRA Filter in the list.
-
-        Not compatible with `jira` field.
-
-        '
-      items:
-        $ref: '#/components/schemas/JIRAFilter'
-      type: array
-    DeveloperID:
-      description: 'User name which uniquely identifies any developer on any service provider.
-
-        The format matches the profile URL without the protocol part.
-
-        '
-      example: github.com/vmarkovtsev
-      type: string
-    CalculatedDeveloperMetricsItem:
+    CalculatedReleaseMetric:
       additionalProperties: false
-      description: Measured developer metrics for each `DeveloperMetricsRequest.for`. Each repository group maps to a distinct `CalculatedDeveloperMetricsItem`.
+      description: Calculated release metric values.
       example:
-        values:
-        - - date: 2020-01-23
-            values:
-            - 5
-            - 10
-        - - date: 2020-01-23
-            values:
-            - 20
-            - 100
         for:
-          repositories:
-          - github.com/athenianco/athenian-webapp
-          - github.com/athenianco/athenian-api
-          developers:
-          - github.com/vmarkovtsev
-          - github.com/dpordomingo
-        granularity: all
+        - athenianco/athenian-api
+        - athenianco/athenian-webapp
+        metrics:
+        - release-count
+        granularity: day
+        matches:
+          athenianco/athenian-api: branch
+          athenianco/athenian-webapp: event
+        values:
+        - confidence_maxs:
+          - 1.0
+          - 1.0
+          confidence_mins:
+          - 0.5
+          - 0.5
+          confidence_scores:
+          - 75
+          - 75
+          date: 2020-01-23
+          values:
+          - 0.8008282
+          - 0.8008282
       properties:
         for:
-          $ref: '#/components/schemas/ForSetDevelopers'
+          $ref: '#/components/schemas/RepositorySet'
+        with:
+          $ref: '#/components/schemas/ReleaseWith'
+        jira:
+          $ref: '#/components/schemas/JIRAFilter'
+        matches:
+          additionalProperties:
+            $ref: '#/components/schemas/ReleaseMatchStrategy'
+          description: Applied release matching strategies for the repositories in `for`.
+          type: object
+        metrics:
+          items:
+            $ref: '#/components/schemas/ReleaseMetricID'
+          type: array
         granularity:
           $ref: '#/components/schemas/Granularity'
         values:
-          description: The sequence matches `CalculatedDeveloperMetricsItem.for.developers`.
+          description: The sequence steps from `date_from` till `date_to` by `granularity`.
           items:
-            description: The sequence steps from `date_from` till `date_to` by `granularity`.
-            items:
-              $ref: '#/components/schemas/CalculatedLinearMetricValues'
-            type: array
+            $ref: '#/components/schemas/CalculatedLinearMetricValues'
           type: array
       required:
-      - for
       - granularity
-      - values
-      type: object
-    CalculatedReleaseMetrics:
-      description: 'Response from `/metrics/releases`.
-
-        The order of the items is *not* guaranteed to match any expectations.
-
-        '
-      items:
-        $ref: '#/components/schemas/CalculatedReleaseMetric'
-      type: array
-    PullRequestMetricsRequest:
-      additionalProperties: false
-      description: Request for calculating metrics on top of pull requests data.
-      example:
-        for:
-        - repositories:
-          - github.com/athenianco/athenian-webapp
-          - github.com/athenianco/athenian-api
-          with:
-            author:
-            - github.com/vmarkovtsev
-            - github.com/dpordomingo
-        - repositories:
-          - github.com/athenianco/metadata
-          - github.com/athenianco/athenian-api
-          with:
-            author:
-            - github.com/vmarkovtsev
-            - github.com/se7entyse7en
-        metrics:
-        - pr-lead-time
-        - pr-wip-time
-        date_from: 2020-01-23
-        date_to: 2020-01-24
-        granularities:
-        - day
-        account: 1
-        exclude_inactive: true
-      properties:
-        for:
-          description: 'Sets of developers and repositories for which to calculate the metrics.
-
-            The aggregation is `AND` between repositories and developers.
-
-            The aggregation is `OR` inside both repositories and developers.'
-          items:
-            $ref: '#/components/schemas/ForSetPullRequests'
-          type: array
-        metrics:
-          description: Requested metric identifiers.
-          items:
-            $ref: '#/components/schemas/PullRequestMetricID'
-          type: array
-        date_from:
-          description: Date from when to start measuring the metrics.
-          format: date
-          type: string
-        date_to:
-          description: Date until which to measure the metrics.
-          format: date
-          type: string
-        timezone:
-          $ref: '#/components/schemas/TimeZone'
-        granularities:
-          $ref: '#/components/schemas/Granularities'
-        quantiles:
-          $ref: '#/components/schemas/Quantiles'
-        exclude_inactive:
-          description: Value indicating whether PRs without events in the given time frame shall be ignored.
-          type: boolean
-        account:
-          description: Session account ID.
-          type: integer
-        fresh:
-          description: Force metrics calculation on the most up to date data.
-          type: boolean
-      required:
-      - account
-      - date_from
-      - date_to
-      - exclude_inactive
-      - for
-      - granularities
+      - matches
       - metrics
+      - values
       type: object
     CodeCheckMetricsRequest:
       additionalProperties: false
@@ -2517,6 +1955,79 @@ components:
       - for
       - granularities
       - metrics
+      type: object
+    JIRAFilter:
+      additionalProperties: false
+      description: 'Filters related to JIRA traits. The aggregation between each filter type is *AND*.
+
+        '
+      example:
+        epics:
+        - DEV-167
+        - DEV-230
+        labels_include:
+        - api,performance
+        - metadata
+        labels_exclude:
+        - feature
+        issue_types:
+        - Bug
+        - Task
+        priorities:
+        - high
+        - low
+        projects:
+        - DEV
+        - ENG
+        status_categories:
+        - In Progress
+      properties:
+        epics:
+          description: JIRA issues must be included in the epics from the list.
+          items:
+            type: string
+          type: array
+        labels_include:
+          description: 'Only issues having at least one label from the list will be included
+
+            Several labels may be concatenated by a comma `,` so that all of them
+
+            are required.
+
+            '
+          items:
+            type: string
+          type: array
+        labels_exclude:
+          description: Issues having one label from the list will be excluded.
+          items:
+            type: string
+          type: array
+        issue_types:
+          description: 'Issues must have one of the given types, e.g. Bug, Task, Design Document, etc.
+
+            '
+          items:
+            type: string
+          type: array
+        priorities:
+          description: Issues must have a priority from the given list.
+          items:
+            type: string
+          type: array
+        projects:
+          description: Issues must be contained in a project in the given project keys list.
+          items:
+            type: string
+          type: array
+        status_categories:
+          description: The JIRA issues must have a status belonging to one of these categories.
+          items:
+            $ref: '#/components/schemas/JIRAStatusCategory'
+          type: array
+        unmapped:
+          description: Select PRs that are not mapped to any JIRA issue. May not be specified with anything else.
+          type: boolean
       type: object
     ForSetPullRequests:
       additionalProperties: false
@@ -2594,6 +2105,95 @@ components:
           minItems: 1
           type: array
       type: object
+    CalculatedDeveloperMetricsItem:
+      additionalProperties: false
+      description: Measured developer metrics for each `DeveloperMetricsRequest.for`. Each repository group maps to a distinct `CalculatedDeveloperMetricsItem`.
+      example:
+        values:
+        - - date: 2020-01-23
+            values:
+            - 5
+            - 10
+        - - date: 2020-01-23
+            values:
+            - 20
+            - 100
+        for:
+          repositories:
+          - github.com/athenianco/athenian-webapp
+          - github.com/athenianco/athenian-api
+          developers:
+          - github.com/vmarkovtsev
+          - github.com/dpordomingo
+        granularity: all
+      properties:
+        for:
+          $ref: '#/components/schemas/ForSetDevelopers'
+        granularity:
+          $ref: '#/components/schemas/Granularity'
+        values:
+          description: The sequence matches `CalculatedDeveloperMetricsItem.for.developers`.
+          items:
+            description: The sequence steps from `date_from` till `date_to` by `granularity`.
+            items:
+              $ref: '#/components/schemas/CalculatedLinearMetricValues'
+            type: array
+          type: array
+      required:
+      - for
+      - granularity
+      - values
+      type: object
+    CalculatedDeploymentMetric:
+      additionalProperties: false
+      description: Calculated metrics for a deployments group.
+      example:
+        for:
+          repositories:
+          - github.com/athenianco/athenian-webapp
+          - github.com/athenianco/athenian-api
+          with:
+            pr_author:
+            - github.com/se7entyse7en
+            - github.com/vmarkovtsev
+        metrics:
+        - dep-duration-successful
+        - dep-success-ratio
+        granularity: all
+        values:
+        - date: 2020-07-20
+          values:
+          - 600s
+          - 0.91
+          confidence_mins:
+          - 550s
+          - null
+          confidence_maxs:
+          - 630s
+          - null
+          confidence_scores:
+          - 84
+          - null
+      properties:
+        for:
+          $ref: '#/components/schemas/ForSetDeployments'
+        metrics:
+          items:
+            $ref: '#/components/schemas/DeploymentMetricID'
+          type: array
+        granularity:
+          $ref: '#/components/schemas/Granularity'
+        values:
+          description: The sequence steps from `date_from` till `date_to` by `granularity`.
+          items:
+            $ref: '#/components/schemas/CalculatedLinearMetricValues'
+          type: array
+      required:
+      - for
+      - granularity
+      - metrics
+      - values
+      type: object
     PullRequestWith:
       additionalProperties: false
       description: 'Triage PRs by various developer participation. The aggregation is `OR` between
@@ -2630,6 +2230,231 @@ components:
         releaser:
           $ref: '#/components/schemas/DeveloperSet'
       type: object
+    CalculatedReleaseMetrics:
+      description: 'Response from `/metrics/releases`.
+
+        The order of the items is *not* guaranteed to match any expectations.
+
+        '
+      items:
+        $ref: '#/components/schemas/CalculatedReleaseMetric'
+      type: array
+    ReleaseMetricID:
+      description: 'Currently supported release metric types.
+
+        * `release-count` - number of all releases in the time interval.
+
+        * `release-tag-count` - number of releases by tag in the time interval.
+
+        * `release-branch-count` - number of releases by branch merge in the time interval.
+
+        * `release-prs` - number of PRs released in the time interval.
+
+        * `release-tag-prs` - number of PRs released by tag in the time interval.
+
+        * `release-branch-prs` - number of PRs released by branch merge in the time interval.
+
+        * `release-commits` - number of commits which were released in the time interval.
+
+        * `release-tag-commits` - number of commits which were released by tag in the time interval.
+
+        * `release-branch-commits` - number of commits which were released by branch merge in the time interval.
+
+        * `release-lines` - sum of the changed (added or removed) diff lines of the commits released in the time interval.
+
+        * `release-tag-lines` - sum of the changed (added or removed) diff lines of the commits released by tag in the time interval.
+
+        * `release-branch-lines` - sum of the changed (added or removed) diff lines of the commits released by branch merge in the time interval.
+
+        * `release-avg-prs` - average (by release) number of PRs released in the time interval. Quantiles are applied.
+
+        * `release-tag-avg-prs` - average (by release) number of PRs released by tag in the time interval. Quantiles are applied.
+
+        * `release-branch-avg-prs` - average number of PRs released by branch merge in the time interval. Quantiles are applied.
+
+        * `release-avg-commits` - average (by release) number of commits released in the time interval. Quantiles are applied.
+
+        * `release-tag-avg-commits` - average (by release) number of commits released by tag in the time interval. Quantiles are applied.
+
+        * `release-branch-avg-commits` - average (by release) number of commits released by branch merge in the time interval. Quantiles are applied.
+
+        * `release-avg-lines` - average (by release) number of changed (added + removed) diff lines of the commits released in the time interval. Quantiles are applied.
+
+        * `release-tag-avg-lines` - average (by release) number of changed (added + removed) diff lines of the commits released by tag in the time interval. Quantiles are applied.
+
+        * `release-branch-avg-lines` - average (by release) number of changed (added + removed) diff lines of the commits released by branch merge in the time interval. Quantiles are applied.
+
+        * `release-age` - average timedelta between releases of the same alignment (as determined by the commit DAG). Quantiles are applied.
+
+        * `release-tag-age` - average timedelta between releases by tag of the same alignment (as determined by the commit DAG). Quantiles are applied.
+
+        * `release-branch-age` - average timedelta between releases by branch of the same alignment (as determined by the commit DAG). Quantiles are applied.
+
+        * `release-time-to-deploy` - average time passed since release happened until deployed.'
+      enum:
+      - release-count
+      - release-tag-count
+      - release-branch-count
+      - release-prs
+      - release-tag-prs
+      - release-branch-prs
+      - release-commits
+      - release-tag-commits
+      - release-branch-commits
+      - release-lines
+      - release-tag-lines
+      - release-branch-lines
+      - release-avg-prs
+      - release-tag-avg-prs
+      - release-branch-avg-prs
+      - release-avg-commits
+      - release-tag-avg-commits
+      - release-branch-avg-commits
+      - release-avg-lines
+      - release-tag-avg-lines
+      - release-branch-avg-lines
+      - release-age
+      - release-tag-age
+      - release-branch-age
+      - release-time-to-deploy
+      type: string
+    ReleaseMetricsRequest:
+      additionalProperties: false
+      description: Request of `/metrics/releases` to calculate metrics on releases.
+      example:
+        for:
+        - - athenianco/athenian-api
+          - athenianco/athenian-webapp
+        with:
+        - pr_author:
+          - github.com/se7entyse7en
+          releaser:
+          - github.com/gkwillie
+        metrics:
+        - release-count
+        granularities:
+        - day
+        date_from: 2020-01-01
+        date_to: 2020-10-01
+        account: 1
+      not:
+        $ref: '#/components/schemas/WithBothJiraAndJiragroups'
+      properties:
+        for:
+          description: 'List of repository groups for which to calculate the metrics.
+
+            An empty repository (empty array) group will match nothing.
+
+            Use `null` as repository group to match every repository.
+
+            '
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/RepositorySet'
+            - enum:
+              - null
+              type:
+              - string
+              - 'null'
+          type: array
+        with:
+          description: List of developer groups for which to calculate the metrics.
+          items:
+            $ref: '#/components/schemas/ReleaseWith'
+          type: array
+        labels_include:
+          description: At least one of these labels must be present in at least one released PR.
+          items:
+            type: string
+          type: array
+        labels_exclude:
+          description: None of these labels must be present in each released PR.
+          items:
+            type: string
+          type: array
+        jira:
+          $ref: '#/components/schemas/JIRAFilter'
+        jiragroups:
+          $ref: '#/components/schemas/JIRAGroups'
+        metrics:
+          description: List of desired release metrics.
+          items:
+            $ref: '#/components/schemas/ReleaseMetricID'
+          type: array
+        date_from:
+          description: Date from when to start measuring the metrics.
+          format: date
+          type: string
+        date_to:
+          description: Date until which to measure the metrics.
+          format: date
+          type: string
+        timezone:
+          $ref: '#/components/schemas/TimeZone'
+        granularities:
+          $ref: '#/components/schemas/Granularities'
+        quantiles:
+          $ref: '#/components/schemas/Quantiles'
+        account:
+          description: Session account ID.
+          type: integer
+      required:
+      - account
+      - date_from
+      - date_to
+      - for
+      - granularities
+      - metrics
+      type: object
+    MissingSettingsError:
+      $ref: '#/components/schemas/GenericError'
+    CalculatedCodeCheckMetricsItem:
+      additionalProperties: false
+      description: Series of calculated metrics for a specific set of repositories and commit authors.
+      example:
+        values:
+        - date: 2020-01-23
+          values:
+          - 200
+        for:
+          repositories:
+          - github.com/athenianco/athenian-webapp
+          - github.com/athenianco/athenian-api
+          pushers:
+          - github.com/vmarkovtsev
+          - github.com/dpordomingo
+        granularity: all
+      properties:
+        for:
+          $ref: '#/components/schemas/ForSetCodeChecks'
+        granularity:
+          $ref: '#/components/schemas/Granularity'
+        check_runs:
+          description: We calculated metrics for check suites with this number of runs. Not null only if the user specified `split_by_check_runs = true`.
+          type: integer
+        suites_ratio:
+          description: Number of check suites with `check_runs` number of check runs divided by the overall number of check suites. Not null only if the user specified `split_by_check_runs = true`.
+          format: float
+          maximum: 1
+          minimum: 0
+          type: number
+        values:
+          description: The sequence steps from `date_from` till `date_to` by `granularity`.
+          items:
+            $ref: '#/components/schemas/CalculatedLinearMetricValues'
+          type: array
+      required:
+      - for
+      - values
+      type: object
+    JIRAStatusCategory:
+      description: The category of a JIRA issue status.
+      enum:
+      - To Do
+      - In Progress
+      - Done
+      - No Category
+      type: string
     IndexedGroups:
       description: 'Lists of indexes in `repositories` or `developers` that define independent groups
 
@@ -2646,73 +2471,248 @@ components:
         type: array
       minItems: 1
       type: array
-    DeveloperMetricID:
-      description: 'Currently supported developer metric types.
+    CodeFilter:
+      additionalProperties: false
+      description: Filter for revealing code bypassing PRs.
+      example:
+        account: 1
+        date_from: 2020-01-01
+        date_to: 2020-03-01
+        granularity: day
+        in:
+        - '{1}'
+        - github.com/athenianco/athenian-webapp
+        with_author:
+        - github.com/vmarkovtsev
+      properties:
+        account:
+          description: Session account ID.
+          type: integer
+        date_from:
+          description: Commits must be made later than or equal to this date.
+          format: date
+          type: string
+        date_to:
+          description: Commits must be made earlier than or equal to this date.
+          format: date
+          type: string
+        timezone:
+          $ref: '#/components/schemas/TimeZone'
+        in:
+          $ref: '#/components/schemas/RepositorySet'
+        with_author:
+          $ref: '#/components/schemas/DeveloperSet'
+        with_committer:
+          $ref: '#/components/schemas/DeveloperSet'
+        granularity:
+          $ref: '#/components/schemas/Granularity'
+        only_default_branch:
+          description: 'Consider only commits that are accessible from the head of the default branch.
 
-        * `dev-commits-pushed`: how many commits were pushed.
+            For example, if your workflow includes PR-ing feature branches, you rebase and merge
 
-        * `dev-lines-changed`: how many lines were either inserted or removed in the pushed commits.
+            them and don''t delete afterward, `bypassing_prs` will report the commits in those
 
-        * `dev-prs-created`: how many PRs were created.
-
-        * `dev-prs-reviewed`: how many *distinct* PRs were reviewed (approved, rejected or neutral).
-
-        * `dev-prs-merged`: how many PRs were merged by this developer. This is *not* how many authored PRs were merged!
-
-        * `dev-releases`: how many releases were authored by this developer.
-
-        * `dev-reviews`: how many reviews were submitted. One PR may have several reviews by the same developer! This value equals to the sum of `dev-review-approvals`, `dev-review-rejections` and `dev-review-neutrals`.
-
-        * `dev-review-approvals`: how many approvals this developer submitted. One PR may have several approvals by the same developer!
-
-        * `dev-review-rejections`: how many rejections this developer submitted. One PR may have several rejections by the same developer!
-
-        * `dev-review-neutrals`: how many neutral ("comment") reviews this developer submitted. One PR may have several neutral reviews by the same developer!
-
-        * `dev-pr-comments`: how many comments (both regular and review) this developer posted.
-
-        * `dev-regular-pr-comments`: how many regular comments (not review suggestions!) this developer posted.
-
-        * `dev-review-pr-comments`: how many review suggestions (summaries are not considered!) this developer posted.
-
-        * `dev-active`: indicates whether this developer has made commits on more than X days during T days. `X / T = 0.2` at the moment.
-
-        * `dev-active0`: indicates whether this developer has made at least one commit.
-
-        * `dev-worked`: indicates whether this developer has shown any activity.'
-      enum:
-      - dev-commits-pushed
-      - dev-lines-changed
-      - dev-prs-created
-      - dev-prs-reviewed
-      - dev-prs-merged
-      - dev-releases
-      - dev-reviews
-      - dev-review-approvals
-      - dev-review-rejections
-      - dev-review-neutrals
-      - dev-pr-comments
-      - dev-regular-pr-comments
-      - dev-review-pr-comments
-      - dev-active
-      - dev-active0
-      - dev-worked
-      example: dev-prs-created
+            feature branches unless you set `only_default_branch` to `true`.'
+          type: boolean
+      required:
+      - account
+      - date_from
+      - date_to
+      - granularity
+      - in
+      type: object
+    DeveloperMetricsRequest:
+      additionalProperties: false
+      description: Request for calculating metrics on top of developer activities.
+      example:
+        for:
+        - repositories:
+          - github.com/athenianco/athenian-webapp
+          - github.com/athenianco/athenian-api
+          developers:
+          - github.com/vmarkovtsev
+          - github.com/dpordomingo
+        - repositories:
+          - github.com/athenianco/athenian-webapp
+          - github.com/athenianco/athenian-api
+          developers:
+          - github.com/vmarkovtsev
+          - github.com/dpordomingo
+        metrics:
+        - dev-reviews
+        - dev-prs-created
+        - dev-pr-comments
+        date_from: 2019-10-23
+        date_to: 2020-05-23
+        granularities:
+        - all
+        account: 1
+      properties:
+        for:
+          description: Sets of developers and repositories to calculate the metrics for.
+          items:
+            $ref: '#/components/schemas/ForSetDevelopers'
+          type: array
+        metrics:
+          description: Requested metric identifiers.
+          items:
+            $ref: '#/components/schemas/DeveloperMetricID'
+          type: array
+        date_from:
+          description: Date from when to start measuring the metrics.
+          format: date
+          type: string
+        date_to:
+          description: Date until which to measure the metrics.
+          format: date
+          type: string
+        timezone:
+          $ref: '#/components/schemas/TimeZone'
+        account:
+          description: Session account ID.
+          type: integer
+        granularities:
+          $ref: '#/components/schemas/Granularities'
+      required:
+      - account
+      - date_from
+      - date_to
+      - for
+      - granularities
+      - metrics
+      type: object
+    TimeDuration:
+      description: Time duration value.
+      pattern: ^\d+s$
       type: string
-    Granularity:
-      description: 'How often the metrics are reported. The value must satisfy the
+    CalculatedJIRAMetrics:
+      description: 'Response from `/metrics/jira`.
 
-        following regular expression: /^all|(([1-9]\d* )?(aligned )?(day|week|month|year))$/.
+        The order of the items is *not* guaranteed to match any expectations.
 
-        "all" produces a single interval [`date_from`, `date_to`].
+        '
+      items:
+        $ref: '#/components/schemas/CalculatedJIRAMetricValues'
+      type: array
+    CalculatedDeploymentMetrics:
+      description: 'Response from `/metrics/deployments`, metrics calculated for each
 
-        "aligned week/month/year" produces intervals cut by calendar week/month/year borders,
+        selected deployments group.
 
-        for example, when `date_from` is `2020-01-15` and `date_to` is `2020-03-10`,
+        The order of the items is *not* guaranteed to match any expectations.
 
-        the intervals will be `2020-01-15` - `2020-02-01` - `2020-03-01` - `2020-03-10`.'
-      example: 2 week
-      type: string
+        '
+      items:
+        $ref: '#/components/schemas/CalculatedDeploymentMetric'
+      type: array
+    JIRAGroups:
+      description: 'Calculate metrics separately for each JIRA Filter in the list.
+
+        Not compatible with `jira` field.
+
+        '
+      items:
+        $ref: '#/components/schemas/JIRAFilter'
+      type: array
+    CodeBypassingPRsMeasurement:
+      additionalProperties: false
+      description: Statistics about code pushed outside of pull requests in a certain time interval.
+      example:
+        date: 2020-01-23
+        bypassed_commits: 1
+        bypassed_lines: 20
+        total_commits: 2
+        total_lines: 50
+      properties:
+        date:
+          description: Commits were pushed beginning with this date. They were not pushed later than +granularity.
+          format: date
+          type: string
+        bypassed_commits:
+          description: Number of commits that bypassed PRs in the time interval.
+          minimum: 0
+          type: integer
+        bypassed_lines:
+          description: Number of changed (added + removed) lines that bypassed PRs in the time interval.
+          minimum: 0
+          type: integer
+        total_commits:
+          description: Overall number of commits in the time interval.
+          minimum: 0
+          type: integer
+        total_lines:
+          description: Overall number of changed (added + removed) lines in the time interval.
+          minimum: 0
+          type: integer
+      required:
+      - bypassed_commits
+      - bypassed_lines
+      - date
+      - total_commits
+      - total_lines
+      type: object
+    ForSetCodeChecks:
+      additionalProperties: false
+      description: 'Filters for `/metrics/code_checks` and `/histograms/code_checks`.
+
+        Achieve the best performance by packing all your filters in a single `ForSetCodeChecks`
+
+        instead of sending multiple `ForSetCodeChecks`-s. For example, use `repogroups` and `pushers`
+
+        to request separate metrics for several repository sets and teams.
+
+        '
+      example:
+        repositories:
+        - github.com/athenianco/athenian-webapp
+        - github.com/athenianco/athenian-api
+        pushers:
+        - github.com/vmarkovtsev
+        - github.com/dpordomingo
+        jira:
+          labels_include:
+          - bug
+      properties:
+        repositories:
+          $ref: '#/components/schemas/RepositorySet'
+        repogroups:
+          $ref: '#/components/schemas/IndexedGroups'
+        pushers:
+          $ref: '#/components/schemas/CommitPushers'
+        pusher_groups:
+          description: 'Check runs must be triggered by commits authored by these people.
+
+            We aggregate by each group so that you can request metrics of several teams at once.
+
+            We treat `pushers` as another group, if specified.'
+          items:
+            $ref: '#/components/schemas/CommitPushers'
+          type: array
+        labels_include:
+          description: At least one of these labels must be present in the checked PRs.
+          items:
+            type: string
+          type: array
+        labels_exclude:
+          description: None of these labels must be present in each checked PR.
+          items:
+            type: string
+          type: array
+        jira:
+          allOf:
+          - description: Analyze only those check runs that belong to PRs mapped to JIRA issues that satisfy this filter.
+          - $ref: '#/components/schemas/JIRAFilter'
+        lines:
+          description: Split by changed number of lines (inserted + removed) in pull requests.
+          items:
+            minimum: 0
+            type: integer
+          minItems: 2
+          type: array
+      required:
+      - repositories
+      type: object
   responses:
     InvalidRequestErrorResponse:
       content:

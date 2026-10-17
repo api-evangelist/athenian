@@ -166,33 +166,32 @@ paths:
       x-codegen-request-body-name: body
       x-openapi-router-controller: athenian.api.controllers.security_controller
 components:
+  parameters:
+    pathAccountID:
+      description: Numeric identifier of the account.
+      explode: false
+      in: path
+      name: id
+      required: true
+      schema:
+        type: integer
+      style: simple
   schemas:
-    PatchTokenRequest:
+    CreateTokenRequest:
       additionalProperties: false
-      description: Request body of `/token/{id}` PATCH. Allows changing the token name.
+      description: Request body of `/token/create` - creating a new Personal Access Token.
       example:
-        name: release-webhook
+        account: 1
+        name: Release webhook
       properties:
-        name:
-          description: New name of the token.
-          type: string
-      type: object
-    CreatedToken:
-      additionalProperties: false
-      description: Value and ID of the generated Personal Access Token.
-      example:
-        id: 1007
-        token: 99129c581b6d2950233dac583629ba591319b2c6
-      properties:
-        id:
-          description: Token identifier - can be used in `/token/{id}` DELETE.
+        account:
+          description: Account ID.
           type: integer
-        token:
-          description: Secret token - not stored server-side!
+        name:
           type: string
       required:
-      - id
-      - token
+      - account
+      - name
       type: object
     GenericError:
       example:
@@ -226,22 +225,6 @@ components:
       - title
       - type
       type: object
-    CreateTokenRequest:
-      additionalProperties: false
-      description: Request body of `/token/create` - creating a new Personal Access Token.
-      example:
-        account: 1
-        name: Release webhook
-      properties:
-        account:
-          description: Account ID.
-          type: integer
-        name:
-          type: string
-      required:
-      - account
-      - name
-      type: object
     ListedToken:
       additionalProperties: false
       description: Details about a token - without the token itself, which is not stored.
@@ -269,16 +252,33 @@ components:
       items:
         $ref: '#/components/schemas/ListedToken'
       type: array
-  parameters:
-    pathAccountID:
-      description: Numeric identifier of the account.
-      explode: false
-      in: path
-      name: id
-      required: true
-      schema:
-        type: integer
-      style: simple
+    PatchTokenRequest:
+      additionalProperties: false
+      description: Request body of `/token/{id}` PATCH. Allows changing the token name.
+      example:
+        name: release-webhook
+      properties:
+        name:
+          description: New name of the token.
+          type: string
+      type: object
+    CreatedToken:
+      additionalProperties: false
+      description: Value and ID of the generated Personal Access Token.
+      example:
+        id: 1007
+        token: 99129c581b6d2950233dac583629ba591319b2c6
+      properties:
+        id:
+          description: Token identifier - can be used in `/token/{id}` DELETE.
+          type: integer
+        token:
+          description: Secret token - not stored server-side!
+          type: string
+      required:
+      - id
+      - token
+      type: object
   securitySchemes:
     apiKeyAuth:
       description: 'Authorization by the value of `X-API-Key` header aka API token.

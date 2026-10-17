@@ -211,6 +211,11 @@ paths:
       x-openapi-router-controller: athenian.api.controllers.reposet_controller
 components:
   schemas:
+    RepositorySetList:
+      description: List of repository sets owned by a user.
+      items:
+        $ref: '#/components/schemas/RepositorySetListItem'
+      type: array
     RepositoryID:
       description: 'Repository name which uniquely identifies any repository in any service provider.
 
@@ -223,30 +228,34 @@ components:
         '
       example: github.com/athenianco/athenian-webapp
       type: string
-    RepositorySetCreateRequest:
+    RepositorySetListItem:
       additionalProperties: false
-      description: Repository set creation request.
+      description: Element of RepositorySetList.
       example:
-        account: 1
-        items:
-        - github.com/athenianco/athenian-webapp
-        - github.com/athenianco/athenian-api
-        name: users
+        items_count: 6
+        created: 2020-01-23 04:56:07+00:00
+        id: 1
+        name: all
+        updated: 2020-01-23 04:56:07+00:00
       properties:
-        account:
-          description: Account identifier. That account will own the created repository set. The user must be an admin of the account.
+        id:
+          description: Repository set identifier.
           type: integer
-        items:
-          items:
-            $ref: '#/components/schemas/RepositoryID'
-          type: array
         name:
-          description: Unique editable identifier of the repository set.
+          description: Repository set name.
           type: string
-      required:
-      - account
-      - items
-      - name
+        created:
+          description: Date and time of creation of the repository set.
+          format: date-time
+          type: string
+        updated:
+          description: Date and time of the last change of the repository set.
+          format: date-time
+          type: string
+        items_count:
+          description: Number of repositories in the set.
+          minimum: 1
+          type: integer
       type: object
     GenericError:
       example:
@@ -299,11 +308,31 @@ components:
         precomputed:
           type: boolean
       type: object
-    RepositorySetList:
-      description: List of repository sets owned by a user.
-      items:
-        $ref: '#/components/schemas/RepositorySetListItem'
-      type: array
+    RepositorySetCreateRequest:
+      additionalProperties: false
+      description: Repository set creation request.
+      example:
+        account: 1
+        items:
+        - github.com/athenianco/athenian-webapp
+        - github.com/athenianco/athenian-api
+        name: users
+      properties:
+        account:
+          description: Account identifier. That account will own the created repository set. The user must be an admin of the account.
+          type: integer
+        items:
+          items:
+            $ref: '#/components/schemas/RepositoryID'
+          type: array
+        name:
+          description: Unique editable identifier of the repository set.
+          type: string
+      required:
+      - account
+      - items
+      - name
+      type: object
     CreatedIdentifier:
       additionalProperties: false
       example:
@@ -315,35 +344,6 @@ components:
           type: integer
       required:
       - id
-      type: object
-    RepositorySetListItem:
-      additionalProperties: false
-      description: Element of RepositorySetList.
-      example:
-        items_count: 6
-        created: 2020-01-23 04:56:07+00:00
-        id: 1
-        name: all
-        updated: 2020-01-23 04:56:07+00:00
-      properties:
-        id:
-          description: Repository set identifier.
-          type: integer
-        name:
-          description: Repository set name.
-          type: string
-        created:
-          description: Date and time of creation of the repository set.
-          format: date-time
-          type: string
-        updated:
-          description: Date and time of the last change of the repository set.
-          format: date-time
-          type: string
-        items_count:
-          description: Number of repositories in the set.
-          minimum: 1
-          type: integer
       type: object
   parameters:
     pathAccountID:

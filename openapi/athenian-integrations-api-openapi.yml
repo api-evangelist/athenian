@@ -121,14 +121,6 @@ components:
   schemas:
     MissingSettingsError:
       $ref: '#/components/schemas/GenericError'
-    DeveloperID:
-      description: 'User name which uniquely identifies any developer on any service provider.
-
-        The format matches the profile URL without the protocol part.
-
-        '
-      example: github.com/vmarkovtsev
-      type: string
     GenericError:
       example:
         detail: 'Unsupported metric: pr-xxx-time'
@@ -160,6 +152,83 @@ components:
       - status
       - title
       - type
+      type: object
+    MatchedIdentities:
+      description: Response from `/match/identities` - mapping from supplied identities to GitHub organization members. The order matches the order of `MatchIdentitiesRequest.identities`.
+      example:
+      - from:
+          emails:
+          - gkwillie@athenian.co
+        to: null
+        confidence: 0.5
+      - from:
+          names:
+          - Vadim Markovtsev
+        to: github.com/vmarkovtsev
+        confidence: 1
+      items:
+        $ref: '#/components/schemas/MatchedIdentity'
+      type: array
+    DeveloperID:
+      description: 'User name which uniquely identifies any developer on any service provider.
+
+        The format matches the profile URL without the protocol part.
+
+        '
+      example: github.com/vmarkovtsev
+      type: string
+    NoSourceDataError:
+      $ref: '#/components/schemas/GenericError'
+    MatchedIdentity:
+      description: Identity mapping of a specific contributor.
+      example:
+        confidence: 1
+        from:
+          names:
+          - Vadim Markovtsev
+        to: github.com/vmarkovtsev
+      properties:
+        from:
+          $ref: '#/components/schemas/ContributorIdentity'
+        to:
+          anyOf:
+          - type:
+            - string
+            - 'null'
+          - $ref: '#/components/schemas/DeveloperID'
+        confidence:
+          description: Value from 0 to 1 indicating how similar are the users.
+          format: float
+          maximum: 1
+          minimum: 0
+          type: number
+      required:
+      - confidence
+      - from
+      - to
+      type: object
+    MatchIdentitiesRequest:
+      additionalProperties: false
+      description: Request body of `/match/identities`.
+      example:
+        account: 1
+        identities:
+        - emails:
+          - eiso@athenian.co
+        - names:
+          - Vadim Markovtsev
+          - vmarkovtsev
+      properties:
+        account:
+          description: User's account ID.
+          type: integer
+        identities:
+          items:
+            $ref: '#/components/schemas/ContributorIdentity'
+          type: array
+      required:
+      - account
+      - identities
       type: object
     ContributorIdentity:
       additionalProperties: false
@@ -193,75 +262,6 @@ components:
             example: .granularity
             type: string
         type: object
-    MatchedIdentities:
-      description: Response from `/match/identities` - mapping from supplied identities to GitHub organization members. The order matches the order of `MatchIdentitiesRequest.identities`.
-      example:
-      - from:
-          emails:
-          - gkwillie@athenian.co
-        to: null
-        confidence: 0.5
-      - from:
-          names:
-          - Vadim Markovtsev
-        to: github.com/vmarkovtsev
-        confidence: 1
-      items:
-        $ref: '#/components/schemas/MatchedIdentity'
-      type: array
-    MatchIdentitiesRequest:
-      additionalProperties: false
-      description: Request body of `/match/identities`.
-      example:
-        account: 1
-        identities:
-        - emails:
-          - eiso@athenian.co
-        - names:
-          - Vadim Markovtsev
-          - vmarkovtsev
-      properties:
-        account:
-          description: User's account ID.
-          type: integer
-        identities:
-          items:
-            $ref: '#/components/schemas/ContributorIdentity'
-          type: array
-      required:
-      - account
-      - identities
-      type: object
-    NoSourceDataError:
-      $ref: '#/components/schemas/GenericError'
-    MatchedIdentity:
-      description: Identity mapping of a specific contributor.
-      example:
-        confidence: 1
-        from:
-          names:
-          - Vadim Markovtsev
-        to: github.com/vmarkovtsev
-      properties:
-        from:
-          $ref: '#/components/schemas/ContributorIdentity'
-        to:
-          anyOf:
-          - type:
-            - string
-            - 'null'
-          - $ref: '#/components/schemas/DeveloperID'
-        confidence:
-          description: Value from 0 to 1 indicating how similar are the users.
-          format: float
-          maximum: 1
-          minimum: 0
-          type: number
-      required:
-      - confidence
-      - from
-      - to
-      type: object
   responses:
     InvalidRequestErrorResponse:
       content:
