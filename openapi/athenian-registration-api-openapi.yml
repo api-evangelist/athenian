@@ -572,3 +572,9 @@ components:
       scheme: bearer
       type: http
       x-bearerInfoFunc: athenian.api.controllers.security_controller.info_from_bearerAuth
+x-provenance:
+  method: harvested
+  publisher: Athenian
+  source: https://raw.githubusercontent.com/athenianco/api-spec/HEAD/openapi.yaml
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)
