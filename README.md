@@ -64,6 +64,105 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Athenian is a company surfaced as a portfolio company of point-nine and added to the API Evangelist network as a stub for enrichment. This profile is a lead awaiting the enrichment pipeline.
+> **No longer operating.** This company or product has shut down, been discontinued, or been deprecated. This profile is kept as a historical record and is not maintained or rated.
 
-Backed by: point-nine — https://athenian.com
+**Status:** discontinued
+
+Athenian was a full-cycle software-development analytics platform founded in 2019 by Eiso Kant, with a seed round led by Point Nine. It integrated GitHub, JIRA, and CI/CD tooling to give engineering leaders end-to-end visibility into their delivery pipeline — lead time, cycle time, deployment frequency, PR review dynamics, and goal alignment — deliberately measuring teams and events rather than ranking individuals. The company has since wound down: athenian.com and athenian.co now redirect to github.com/athenianco and the production API host api.athenian.co no longer resolves. However, the OpenAPI specification (athenianco/api-spec, 79 operations, 218 schemas) and the open-source API implementation (athenian-api-open, MIT) remain publicly published on GitHub, which is why this profile is enriched from the real, still-available API contract.
+
+**Areas:** Company · Engineering Intelligence · Software Development Analytics · Developer Productivity · DevOps · Metrics · Git · Jira · CI/CD · Analytics
+
+## Athenian on APIs.io (historical record)
+
+Everything profiled for Athenian is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/athenian/](https://apis.io/providers/athenian/)** — or go straight to one of the APIs or properties below.
+
+### APIs (15)
+
+- [Athenian Align API](https://apis.io/apis/athenian/athenian-align-api/) — The align API from Athenian — 3 operation(s) for align.
+- [Athenian Events API](https://apis.io/apis/athenian/athenian-events-api/) — The events API from Athenian — 4 operation(s) for events.
+- [Athenian Filter API](https://apis.io/apis/athenian/athenian-filter-api/) — The filter API from Athenian — 11 operation(s) for filter.
+- [Athenian Get API](https://apis.io/apis/athenian/athenian-get-api/) — The get API from Athenian — 4 operation(s) for get.
+- [Athenian Histograms API](https://apis.io/apis/athenian/athenian-histograms-api/) — The histograms API from Athenian — 3 operation(s) for histograms.
+- [Athenian Integrations API](https://apis.io/apis/athenian/athenian-integrations-api/) — The integrations API from Athenian — 2 operation(s) for integrations.
+- [Athenian Metrics API](https://apis.io/apis/athenian/athenian-metrics-api/) — The metrics API from Athenian — 7 operation(s) for metrics.
+- [Athenian Pagination API](https://apis.io/apis/athenian/athenian-pagination-api/) — The pagination API from Athenian — 1 operation(s) for pagination.
+- [Athenian Registration API](https://apis.io/apis/athenian/athenian-registration-api/) — The registration API from Athenian — 6 operation(s) for registration.
+- [Athenian Reposet API](https://apis.io/apis/athenian/athenian-reposet-api/) — The reposet API from Athenian — 3 operation(s) for reposet.
+- [Athenian Security API](https://apis.io/apis/athenian/athenian-security-api/) — The security API from Athenian — 3 operation(s) for security.
+- [Athenian Settings API](https://apis.io/apis/athenian/athenian-settings-api/) — The settings API from Athenian — 13 operation(s) for settings.
+- [Athenian Team API](https://apis.io/apis/athenian/athenian-team-api/) — The team API from Athenian — 3 operation(s) for team.
+- [Athenian User API](https://apis.io/apis/athenian/athenian-user-api/) — The user API from Athenian — 6 operation(s) for user.
+- [Athenian Version API](https://apis.io/apis/athenian/athenian-version-api/) — The version API from Athenian — 1 operation(s) for version.
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [athenian](https://apis.io/servers/athenian/athenian/)
+
+#### Agentic access (1)
+
+Which operations an agent can call, which act, and which need a human in the loop.
+
+- [Athenian Agentic Access](https://apis.io/agentic-access/athenian/athenian-agentic-access/)
+
+#### Collections (16)
+
+Postman and Open Collection request collections.
+
+- [{{ title }} align API](https://apis.io/collections/athenian/open-athenian-align-api/)
+- [{{ title }} align default API](https://apis.io/collections/athenian/open-athenian-default-api/)
+- [{{ title }} align events API](https://apis.io/collections/athenian/open-athenian-events-api/)
+- [{{ title }} align filter API](https://apis.io/collections/athenian/open-athenian-filter-api/)
+- [{{ title }} align get API](https://apis.io/collections/athenian/open-athenian-get-api/)
+- [{{ title }} align histograms API](https://apis.io/collections/athenian/open-athenian-histograms-api/)
+- [{{ title }} align integrations API](https://apis.io/collections/athenian/open-athenian-integrations-api/)
+- [{{ title }} align metrics API](https://apis.io/collections/athenian/open-athenian-metrics-api/)
+- [{{ title }} align pagination API](https://apis.io/collections/athenian/open-athenian-pagination-api/)
+- [{{ title }} align registration API](https://apis.io/collections/athenian/open-athenian-registration-api/)
+- [{{ title }} align reposet API](https://apis.io/collections/athenian/open-athenian-reposet-api/)
+- [{{ title }} align security API](https://apis.io/collections/athenian/open-athenian-security-api/)
+- [{{ title }} align settings API](https://apis.io/collections/athenian/open-athenian-settings-api/)
+- [{{ title }} align team API](https://apis.io/collections/athenian/open-athenian-team-api/)
+- [{{ title }} align user API](https://apis.io/collections/athenian/open-athenian-user-api/)
+- [{{ title }} align version API](https://apis.io/collections/athenian/open-athenian-version-api/)
+
+#### Overlays (1)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Athenian Openapi Overlay](https://apis.io/overlays/athenian/athenian-openapi-overlay/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Athenian Authentication](https://apis.io/security/athenian/athenian-authentication/)
+- [Athenian Domain Security](https://apis.io/security/athenian/athenian-domain-security/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://athenian.com)
+- [GitHub](https://github.com/athenianco)
+
+## API Evangelist rating
+
+**Not rated** — this company is recorded as no longer operating, so no score is published. If it is in fact operating, say so on this repository and it will be re-profiled.
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Athenian: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/athenian/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
